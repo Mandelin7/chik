@@ -64,6 +64,7 @@ jobs:
         . ../venv/bin/activate
         pip3 install setuptools_scm
         echo "CHIA_INSTALLER_VERSION=$(python3 ./build_scripts/installer-version.py)" >>$GITHUB_OUTPUT
+        echo "CHIA_INSTALLER_VERSION=$(python3 ./build_scripts/installer-version.py)"
         deactivate
 
     - name: Test for secrets access
