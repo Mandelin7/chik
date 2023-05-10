@@ -8,11 +8,11 @@ git submodule
 # If the env variable NOTARIZE and the username and password variables are
 # set, this will attempt to Notarize the signed DMG.
 
-if [ ! "$CHIA_INSTALLER_VERSION" ]; then
-	echo "WARNING: No environment variable CHIA_INSTALLER_VERSION set. Using 0.0.0."
-	CHIA_INSTALLER_VERSION="0.0.0"
+if [ ! "$CHIK_INSTALLER_VERSION" ]; then
+	echo "WARNING: No environment variable CHIK_INSTALLER_VERSION set. Using 0.0.0."
+	CHIK_INSTALLER_VERSION="0.0.0"
 fi
-echo "Chia Installer Version is: $CHIA_INSTALLER_VERSION"
+echo "Chik Installer Version is: $CHIK_INSTALLER_VERSION"
 
 echo "Installing npm utilities"
 cd npm_macos || exit 1
@@ -40,7 +40,7 @@ cd ../chia-blockchain-gui/packages/gui || exit 1
 # sets the version for chia-blockchain in package.json
 brew install jq
 cp package.json package.json.orig
-jq --arg VER "$CHIA_INSTALLER_VERSION" '.version=$VER' package.json > temp.json && mv temp.json package.json
+jq --arg VER "$CHIK_INSTALLER_VERSION" '.version=$VER' package.json > temp.json && mv temp.json package.json
 
 echo "Building macOS Electron app"
 OPT_ARCH="--x64"
@@ -73,10 +73,10 @@ mv dist/* ../../../build_scripts/dist/
 cd ../../../build_scripts || exit 1
 
 mkdir final_installer
-DMG_NAME="chia-${CHIA_INSTALLER_VERSION}.dmg"
+DMG_NAME="chia-${CHIK_INSTALLER_VERSION}.dmg"
 if [ "$(arch)" = "arm64" ]; then
-  mv dist/"${DMG_NAME}" dist/chia-"${CHIA_INSTALLER_VERSION}"-arm64.dmg
-  DMG_NAME=chia-${CHIA_INSTALLER_VERSION}-arm64.dmg
+  mv dist/"${DMG_NAME}" dist/chia-"${CHIK_INSTALLER_VERSION}"-arm64.dmg
+  DMG_NAME=chia-${CHIK_INSTALLER_VERSION}-arm64.dmg
 fi
 mv dist/"$DMG_NAME" final_installer/
 

@@ -17,11 +17,11 @@ fi
 # If the env variable NOTARIZE and the username and password variables are
 # set, this will attempt to Notarize the signed DMG
 
-if [ ! "$CHIA_INSTALLER_VERSION" ]; then
-	echo "WARNING: No environment variable CHIA_INSTALLER_VERSION set. Using 0.0.0."
-	CHIA_INSTALLER_VERSION="0.0.0"
+if [ ! "$CHIK_INSTALLER_VERSION" ]; then
+	echo "WARNING: No environment variable CHIK_INSTALLER_VERSION set. Using 0.0.0."
+	CHIK_INSTALLER_VERSION="0.0.0"
 fi
-echo "Chia Installer Version is: $CHIA_INSTALLER_VERSION"
+echo "Chik Installer Version is: $CHIK_INSTALLER_VERSION"
 
 echo "Installing npm and electron packagers"
 cd npm_linux || exit 1
@@ -43,7 +43,7 @@ if [ "$LAST_EXIT_CODE" -ne 0 ]; then
 fi
 
 # Builds CLI only rpm
-CLI_RPM_BASE="chia-blockchain-cli-$CHIA_INSTALLER_VERSION-1.$REDHAT_PLATFORM"
+CLI_RPM_BASE="chia-blockchain-cli-$CHIK_INSTALLER_VERSION-1.$REDHAT_PLATFORM"
 mkdir -p "dist/$CLI_RPM_BASE/opt/chia"
 mkdir -p "dist/$CLI_RPM_BASE/usr/bin"
 cp -r dist/daemon/* "dist/$CLI_RPM_BASE/opt/chia/"
@@ -60,7 +60,7 @@ fpm -s dir -t rpm \
   -p "dist/$CLI_RPM_BASE.rpm" \
   --name chia-blockchain-cli \
   --license Apache-2.0 \
-  --version "$CHIA_INSTALLER_VERSION" \
+  --version "$CHIK_INSTALLER_VERSION" \
   --architecture "$REDHAT_PLATFORM" \
   --description "Chia is a modern cryptocurrency built from scratch, designed to be efficient, decentralized, and secure." \
   --depends /usr/lib64/libcrypt.so.1 \
@@ -74,7 +74,7 @@ cd ../chia-blockchain-gui/packages/gui || exit 1
 
 # sets the version for chia-blockchain in package.json
 cp package.json package.json.orig
-jq --arg VER "$CHIA_INSTALLER_VERSION" '.version=$VER' package.json > temp.json && mv temp.json package.json
+jq --arg VER "$CHIK_INSTALLER_VERSION" '.version=$VER' package.json > temp.json && mv temp.json package.json
 
 echo "Building Linux(rpm) Electron app"
 OPT_ARCH="--x64"
@@ -101,8 +101,8 @@ if [ "$LAST_EXIT_CODE" -ne 0 ]; then
 	exit $LAST_EXIT_CODE
 fi
 
-GUI_RPM_NAME="chia-blockchain-${CHIA_INSTALLER_VERSION}-1.${REDHAT_PLATFORM}.rpm"
-mv "dist/${PRODUCT_NAME}-${CHIA_INSTALLER_VERSION}.rpm" "../../../build_scripts/dist/${GUI_RPM_NAME}"
+GUI_RPM_NAME="chia-blockchain-${CHIK_INSTALLER_VERSION}-1.${REDHAT_PLATFORM}.rpm"
+mv "dist/${PRODUCT_NAME}-${CHIK_INSTALLER_VERSION}.rpm" "../../../build_scripts/dist/${GUI_RPM_NAME}"
 cd ../../../build_scripts || exit 1
 
 echo "Create final installer"

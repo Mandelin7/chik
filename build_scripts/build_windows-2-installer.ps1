@@ -7,11 +7,11 @@ mkdir build_scripts\win_build
 git status
 git submodule
 
-if (-not (Test-Path env:CHIA_INSTALLER_VERSION)) {
-  $env:CHIA_INSTALLER_VERSION = '0.0.0'
-  Write-Output "WARNING: No environment variable CHIA_INSTALLER_VERSION set. Using 0.0.0"
+if (-not (Test-Path env:CHIK_INSTALLER_VERSION)) {
+  $env:CHIK_INSTALLER_VERSION = '0.0.0'
+  Write-Output "WARNING: No environment variable CHIK_INSTALLER_VERSION set. Using 0.0.0"
 }
-Write-Output "Chia Version is: $env:CHIA_INSTALLER_VERSION"
+Write-Output "Chik Version is: $env:CHIK_INSTALLER_VERSION"
 Write-Output "   ---"
 
 Write-Output "   ---"
@@ -51,7 +51,7 @@ Write-Output "Increase the stack for chia command for (chia plots create) chiapo
 editbin.exe /STACK:8000000 daemon\chia.exe
 Write-Output "   ---"
 
-$packageVersion = "$env:CHIA_INSTALLER_VERSION"
+$packageVersion = "$env:CHIK_INSTALLER_VERSION"
 $packageName = "Chia-$packageVersion"
 
 Write-Output "packageName is $packageName"
@@ -60,7 +60,7 @@ Write-Output "   ---"
 Write-Output "fix version in package.json"
 choco install jq
 cp package.json package.json.orig
-jq --arg VER "$env:CHIA_INSTALLER_VERSION" '.version=$VER' package.json > temp.json
+jq --arg VER "$env:CHIK_INSTALLER_VERSION" '.version=$VER' package.json > temp.json
 rm package.json
 mv temp.json package.json
 Write-Output "   ---"
