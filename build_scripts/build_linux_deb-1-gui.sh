@@ -27,7 +27,7 @@ fi
 # Remove unused packages
 rm -rf node_modules
 
-# Other than `chia-blockchain-gui/package/gui`, all other packages are no longer necessary after build.
+# Other than `chik-blockchain-gui/package/gui`, all other packages are no longer necessary after build.
 # Since these unused packages make cache unnecessarily fat, here unused packages are removed.
 echo "Remove unused @chia-network packages to make cache slim"
 ls -l packages
