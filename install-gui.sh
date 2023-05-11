@@ -13,13 +13,13 @@ if [ "${SCRIPT_DIR}" != "$(pwd)" ]; then
 fi
 
 if [ -z "$VIRTUAL_ENV" ]; then
-  echo "This requires the chia python virtual environment."
+  echo "This requires the chik python virtual environment."
   echo "Execute '. ./activate' before running."
   exit 1
 fi
 
 if [ "$(id -u)" = 0 ]; then
-  echo "The Chia Blockchain GUI can not be installed or run by the root user."
+  echo "The Chik Blockchain GUI can not be installed or run by the root user."
   exit 1
 fi
 
@@ -88,7 +88,7 @@ do_install_npm_locally(){
 }
 
 # Work around for inconsistent `npm` exec path issue
-# https://github.com/Chia-Network/chia-blockchain/pull/10460#issuecomment-1054492495
+# https://github.com/Chik-Network/chik-blockchain/pull/10460#issuecomment-1054492495
 patch_inconsistent_npm_issue(){
   node_module_dir=$1
   if [ ! -d "$node_module_dir" ]; then
@@ -201,7 +201,7 @@ if [ ! "$CI" ]; then
   fi
 
   # Work around for inconsistent `npm` exec path issue
-  # https://github.com/Chia-Network/chia-blockchain/pull/10460#issuecomment-1054492495
+  # https://github.com/Chik-Network/chik-blockchain/pull/10460#issuecomment-1054492495
   patch_inconsistent_npm_issue "../node_modules"
 
   npm ci
@@ -215,6 +215,6 @@ else
 fi
 
 echo ""
-echo "Chia blockchain install-gui.sh completed."
+echo "Chik blockchain install-gui.sh completed."
 echo ""
 echo "Type 'bash start-gui.sh &' to start the GUI."

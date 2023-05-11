@@ -15,7 +15,7 @@ if ($d)
 
 if ([Environment]::Is64BitOperatingSystem -eq $false)
 {
-    Write-Output "Chia requires a 64-bit Windows installation"
+    Write-Output "Chik requires a 64-bit Windows installation"
     Exit 1
 }
 
@@ -118,12 +118,12 @@ if ($p)
 }
 
 Write-Output ""
-Write-Output "Chia blockchain .\Install.ps1 complete."
+Write-Output "Chik blockchain .\Install.ps1 complete."
 Write-Output "For assistance join us on Keybase in the #support chat channel:"
-Write-Output "https://keybase.io/team/chia_network.public"
+Write-Output "https://keybase.io/team/chik_network.public"
 Write-Output ""
 Write-Output "Try the Quick Start Guide to running chik-blockchain:"
-Write-Output "https://github.com/Chia-Network/chik-blockchain/wiki/Quick-Start-Guide"
+Write-Output "https://github.com/Chik-Network/chik-blockchain/wiki/Quick-Start-Guide"
 Write-Output ""
 Write-Output "To install the GUI run '.\venv\scripts\Activate.ps1' then '.\Install-gui.ps1'."
 Write-Output ""

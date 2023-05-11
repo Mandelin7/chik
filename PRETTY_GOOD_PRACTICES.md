@@ -149,8 +149,8 @@ def f(x, y, z):
 
 ### Examples
 
-- https://github.com/Chia-Network/chia-blockchain/pull/11467
-- https://github.com/Chia-Network/chia-blockchain/pull/10166
+- https://github.com/Chik-Network/chik-blockchain/pull/11467
+- https://github.com/Chik-Network/chik-blockchain/pull/10166
 
 
 ## Classes

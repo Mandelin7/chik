@@ -7,7 +7,7 @@ PWD=$(pwd)
 
 rm -rf ../venv || true
 rm -rf venv || true
-rm -rf chia_blockchain.egg-info || true
+rm -rf chik_blockchain.egg-info || true
 rm -rf build_scripts/final_installer || true
 rm -rf build_scripts/dist || true
 rm -rf build_scripts/pyinstaller || true
@@ -15,7 +15,7 @@ rm -rf chik-blockchain-gui/build || true
 rm -rf chik-blockchain-gui/daemon || true
 rm -rf chik-blockchain-gui/node_modules || true
 rm chik-blockchain-gui/temp.json || true
-( cd "$PWD/chia-blockchain-gui" && git checkout HEAD -- package-lock.json ) || true
+( cd "$PWD/chik-blockchain-gui" && git checkout HEAD -- package-lock.json ) || true
 cd "$PWD" || true
 
 # Clean up old globally installed node_modules that might conflict with the current build

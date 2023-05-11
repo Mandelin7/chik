@@ -3,5 +3,5 @@
 
 set -e
 
-ln -s /opt/chia/resources/app.asar.unpacked/daemon/chia /usr/bin/chia || true
-ln -s /opt/chia/chia-blockchain /usr/bin/chia-blockchain || true
+ln -s /opt/chik/resources/app.asar.unpacked/daemon/chik /usr/bin/chik || true
+ln -s /opt/chik/chik-blockchain /usr/bin/chik-blockchain || true

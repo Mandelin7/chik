@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-run_block: Convert an encoded FullBlock from the Chia blockchain into a list of transactions
+run_block: Convert an encoded FullBlock from the Chik blockchain into a list of transactions
 
 As input, takes a file containing a [FullBlock](../chik/types/full_block.py) in json format
 
@@ -11,7 +11,7 @@ curl --insecure --cert $config_root/config/ssl/full_node/private_full_node.crt \
      -d '{ "header_hash": "'$hash'" }' -H "Content-Type: application/json" \
      -X POST https://localhost:$port/get_block
 
-$ca_root is the directory containing your current Chia config files
+$ca_root is the directory containing your current Chik config files
 $hash is the header_hash of the [BlockRecord](../chik/consensus/block_record.py)
 $port is the Full Node RPC API port
 ```

@@ -24,7 +24,7 @@ config/keys.yaml
 config/plots.yaml
 
 # Bundled code
-chia-blockchain.tar.gz.tar.gz
+chik-blockchain.tar.gz.tar.gz
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -50,7 +50,7 @@ activate
 .idea
 
 # Packaging
-chia-blockchain.tar.gz
+chik-blockchain.tar.gz
 
 # Timelord utilities
 vdf_bench
@@ -98,7 +98,7 @@ build/
 .pymon
 
 # cache for tooling such as tools/manage_clvm.py
-.chia_cache/
+.chik_cache/
 
 #       =====                       =====
 #     DO NOT EDIT BELOW - GENERATED

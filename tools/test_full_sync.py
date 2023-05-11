@@ -17,11 +17,11 @@ import aiosqlite
 import click
 import zstd
 
-from chik.cmds.init_funcs import chia_init
+from chik.cmds.init_funcs import chik_init
 from chik.consensus.default_constants import DEFAULT_CONSTANTS
 from chik.full_node.full_node import FullNode
 from chik.server.outbound_message import Message, NodeType
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.ws_connection import WSChikConnection
 from chik.simulator.block_tools import make_unfinished_block
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.full_block import FullBlock
@@ -69,7 +69,7 @@ class FakeServer:
 
     def get_connections(
         self, node_type: Optional[NodeType] = None, *, outbound: Optional[bool] = False
-    ) -> List[WSChiaConnection]:
+    ) -> List[WSChikConnection]:
         return []
 
     def is_duplicate_or_self_connection(self, target_node: PeerInfo) -> bool:
@@ -125,7 +125,7 @@ async def run_sync_test(
         if start_at_checkpoint is not None:
             shutil.copytree(Path(start_at_checkpoint) / ".", root_path, dirs_exist_ok=True)
 
-        chia_init(root_path, should_check_keys=False, v1_db=(db_version == 1))
+        chik_init(root_path, should_check_keys=False, v1_db=(db_version == 1))
         config = load_config(root_path, "config.yaml")
 
         if test_constants:
@@ -153,7 +153,7 @@ async def run_sync_test(
             else:
                 height = 0
 
-            peer: WSChiaConnection = FakePeer()  # type: ignore[assignment]
+            peer: WSChikConnection = FakePeer()  # type: ignore[assignment]
 
             print()
             counter = 0
@@ -332,7 +332,7 @@ async def run_sync_checkpoint(
 ) -> None:
     root_path.mkdir(parents=True, exist_ok=True)
 
-    chia_init(root_path, should_check_keys=False, v1_db=False)
+    chik_init(root_path, should_check_keys=False, v1_db=False)
     config = load_config(root_path, "config.yaml")
 
     overrides = config["network_overrides"]["constants"][config["selected_network"]]
@@ -348,7 +348,7 @@ async def run_sync_checkpoint(
         full_node.set_server(FakeServer())  # type: ignore[arg-type]
         await full_node._start()
 
-        peer: WSChiaConnection = FakePeer()  # type: ignore[assignment]
+        peer: WSChikConnection = FakePeer()  # type: ignore[assignment]
 
         print()
         height = 0

@@ -123,7 +123,7 @@ jobs:
         echo "CHIK_INSTALLER_VERSION=$CHIK_INSTALLER_VERSION" >>$GITHUB_OUTPUT
         deactivate
 
-      # Get the most recent release from chik-plotter-madmax
+      # Get the most recent release from chia-plotter-madmax
     - uses: actions/github-script@v6
       id: 'latest-madmax'
       with:
@@ -182,7 +182,7 @@ jobs:
       run: |
         .\Install.ps1 -d
 
-    #- uses: chik-network/actions/activate-venv@main
+    #- uses: chia-network/actions/activate-venv@main
 
     - name: Build GUI
       continue-on-error: false

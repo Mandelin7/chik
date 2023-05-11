@@ -76,10 +76,10 @@ legacy_keyring_dependencies = [
 
 kwargs = dict(
     name="chik-blockchain",
-    author="Mariano Sorgente",
-    author_email="mariano@chik.net",
-    description="Chia blockchain full node, farmer, timelord, and wallet.",
-    url="https://chia.net/",
+    author="Chik Blockchain",
+    author_email="contact@chiknetwork.org",
+    description="Chik blockchain full node, farmer, timelord, and wallet.",
+    url="https://chiknetwork.org/",
     license="Apache License",
     python_requires=">=3.7, <4",
     keywords="chik blockchain node",
@@ -128,35 +128,35 @@ kwargs = dict(
     entry_points={
         "console_scripts": [
             "chik = chik.cmds.chik:main",
-            "chia_daemon = chik.daemon.server:main",
-            "chia_wallet = chik.server.start_wallet:main",
-            "chia_full_node = chik.server.start_full_node:main",
-            "chia_harvester = chik.server.start_harvester:main",
-            "chia_farmer = chik.server.start_farmer:main",
-            "chia_introducer = chik.server.start_introducer:main",
-            "chia_crawler = chik.seeder.start_crawler:main",
-            "chia_seeder = chik.seeder.dns_server:main",
-            "chia_timelord = chik.server.start_timelord:main",
-            "chia_timelord_launcher = chik.timelord.timelord_launcher:main",
-            "chia_full_node_simulator = chik.simulator.start_simulator:main",
-            "chia_data_layer = chik.server.start_data_layer:main",
-            "chia_data_layer_http = chik.data_layer.data_layer_server:main",
-            "chia_data_layer_s3_plugin = chik.data_layer.s3_plugin_service:run_server",
+            "chik_daemon = chik.daemon.server:main",
+            "chik_wallet = chik.server.start_wallet:main",
+            "chik_full_node = chik.server.start_full_node:main",
+            "chik_harvester = chik.server.start_harvester:main",
+            "chik_farmer = chik.server.start_farmer:main",
+            "chik_introducer = chik.server.start_introducer:main",
+            "chik_crawler = chik.seeder.start_crawler:main",
+            "chik_seeder = chik.seeder.dns_server:main",
+            "chik_timelord = chik.server.start_timelord:main",
+            "chik_timelord_launcher = chik.timelord.timelord_launcher:main",
+            "chik_full_node_simulator = chik.simulator.start_simulator:main",
+            "chik_data_layer = chik.server.start_data_layer:main",
+            "chik_data_layer_http = chik.data_layer.data_layer_server:main",
+            "chik_data_layer_s3_plugin = chik.data_layer.s3_plugin_service:run_server",
         ]
     },
     package_data={
         "chik": ["pyinstaller.spec"],
         "": ["*.clsp", "*.clsp.hex", "*.clvm", "*.clib", "py.typed"],
         "chik.util": ["initial-*.yaml", "english.txt"],
-        "chik.ssl": ["chia_ca.crt", "chia_ca.key", "dst_root_ca.pem"],
+        "chik.ssl": ["chik_ca.crt", "chik_ca.key", "dst_root_ca.pem"],
         "mozilla-ca": ["cacert.pem"],
     },
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     zip_safe=False,
     project_urls={
-        "Source": "https://github.com/Chia-Network/chia-blockchain/",
-        "Changelog": "https://github.com/Chia-Network/chia-blockchain/blob/main/CHANGELOG.md",
+        "Source": "https://github.com/Chik-Network/chik-blockchain/",
+        "Changelog": "https://github.com/Chik-Network/chik-blockchain/blob/main/CHANGELOG.md",
     },
 )
 
@@ -164,5 +164,5 @@ if "setup_file" in sys.modules:
     # include dev deps in regular deps when run in snyk
     dependencies.extend(dev_dependencies)
 
-if len(os.environ.get("CHIA_SKIP_SETUP", "")) < 1:
+if len(os.environ.get("CHIK_SKIP_SETUP", "")) < 1:
     setup(**kwargs)  # type: ignore

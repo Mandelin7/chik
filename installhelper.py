@@ -49,7 +49,7 @@ def make_semver(version_str: str) -> str:
     return version
 
 
-def get_chia_version() -> str:
+def get_chik_version() -> str:
     version: str = "0.0"
     output = subprocess.run(["chik", "version"], capture_output=True)
     if output.returncode == 0:
@@ -64,7 +64,7 @@ def update_version(package_json_path: str):
     with open(package_json_path) as f:
         data = json.load(f)
 
-    data["version"] = get_chia_version()
+    data["version"] = get_chik_version()
 
     with open(package_json_path, "w") as w:
         json.dump(data, indent=4, fp=w)
