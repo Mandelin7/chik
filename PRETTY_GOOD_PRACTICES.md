@@ -604,15 +604,15 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    # Note that the wallet state manager module imports the wallets.
-    # This would create a problematic circular import condition at
-    # runtime that `if TYPE_CHECKING:` avoids.
-    from chia.wallet.wallet_state_manager import WalletStateManager
+  # Note that the wallet state manager module imports the wallets.
+  # This would create a problematic circular import condition at
+  # runtime that `if TYPE_CHECKING:` avoids.
+  from chik.wallet.wallet_state_manager import WalletStateManager
 
 
 @dataclass
 class SomeWallet:
-    wallet_state_manager: WalletStateManager
+  wallet_state_manager: WalletStateManager
 ```
 
 ## Tests

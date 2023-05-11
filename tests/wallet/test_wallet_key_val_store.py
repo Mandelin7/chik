@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from chia.types.full_block import FullBlock
-from chia.types.header_block import HeaderBlock
-from chia.wallet.key_val_store import KeyValStore
+from chik.types.full_block import FullBlock
+from chik.types.header_block import HeaderBlock
+from chik.wallet.key_val_store import KeyValStore
 from tests.util.db_connection import DBConnection
 
 

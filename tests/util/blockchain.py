@@ -6,14 +6,14 @@ import tempfile
 from pathlib import Path
 from typing import List, Optional
 
-from chia.consensus.blockchain import Blockchain
-from chia.consensus.constants import ConsensusConstants
-from chia.full_node.block_store import BlockStore
-from chia.full_node.coin_store import CoinStore
-from chia.simulator.block_tools import BlockTools
-from chia.types.full_block import FullBlock
-from chia.util.db_wrapper import DBWrapper2
-from chia.util.default_root import DEFAULT_ROOT_PATH
+from chik.consensus.blockchain import Blockchain
+from chik.consensus.constants import ConsensusConstants
+from chik.full_node.block_store import BlockStore
+from chik.full_node.coin_store import CoinStore
+from chik.simulator.block_tools import BlockTools
+from chik.types.full_block import FullBlock
+from chik.util.db_wrapper import DBWrapper2
+from chik.util.default_root import DEFAULT_ROOT_PATH
 
 
 async def create_blockchain(constants: ConsensusConstants, db_version: int):

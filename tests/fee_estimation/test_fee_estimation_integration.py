@@ -6,9 +6,9 @@ from typing import Dict, List
 import pytest
 from chia_rs import Coin
 
-from chia.consensus.cost_calculator import NPCResult
-from chia.full_node.bitcoin_fee_estimator import create_bitcoin_fee_estimator
-from chia.full_node.fee_estimation import (
+from chik.consensus.cost_calculator import NPCResult
+from chik.full_node.bitcoin_fee_estimator import create_bitcoin_fee_estimator
+from chik.full_node.fee_estimation import (
     EmptyFeeMempoolInfo,
     EmptyMempoolInfo,
     FeeBlockInfo,
@@ -16,16 +16,16 @@ from chia.full_node.fee_estimation import (
     MempoolInfo,
     MempoolItemInfo,
 )
-from chia.full_node.fee_estimator_interface import FeeEstimatorInterface
-from chia.full_node.fee_tracker import FeeTracker
-from chia.full_node.mempool import Mempool, MempoolRemoveReason
-from chia.simulator.block_tools import test_constants
-from chia.simulator.wallet_tools import WalletTool
-from chia.types.clvm_cost import CLVMCost
-from chia.types.fee_rate import FeeRate, FeeRateV2
-from chia.types.mempool_item import MempoolItem
-from chia.types.spend_bundle_conditions import Spend, SpendBundleConditions
-from chia.util.ints import uint32, uint64
+from chik.full_node.fee_estimator_interface import FeeEstimatorInterface
+from chik.full_node.fee_tracker import FeeTracker
+from chik.full_node.mempool import Mempool, MempoolRemoveReason
+from chik.simulator.block_tools import test_constants
+from chik.simulator.wallet_tools import WalletTool
+from chik.types.clvm_cost import CLVMCost
+from chik.types.fee_rate import FeeRate, FeeRateV2
+from chik.types.mempool_item import MempoolItem
+from chik.types.spend_bundle_conditions import Spend, SpendBundleConditions
+from chik.util.ints import uint32, uint64
 from tests.core.mempool.test_mempool_manager import (
     create_test_block_record,
     instantiate_mempool_manager,

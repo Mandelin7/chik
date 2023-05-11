@@ -102,7 +102,7 @@ install_python3_and_sqlite3_from_source_with_yum() {
   echo "cd $TMP_PATH"
   cd "$TMP_PATH"
   # Install sqlite>=3.37
-  # yum install sqlite-devel brings sqlite3.7 which is not compatible with chia
+  # yum install sqlite-devel brings sqlite3.7 which is not compatible with chik
   echo "wget https://www.sqlite.org/2022/sqlite-autoconf-3370200.tar.gz"
   wget https://www.sqlite.org/2022/sqlite-autoconf-3370200.tar.gz
   tar xf sqlite-autoconf-3370200.tar.gz
@@ -115,7 +115,7 @@ install_python3_and_sqlite3_from_source_with_yum() {
   make -j"$(nproc)" | stdbuf -o0 cut -b1-"$(tput cols)" | sed -u 'i\\o033[2K' | stdbuf -o0 tr '\n' '\r'; echo
   echo "sudo make install"
   sudo make install | stdbuf -o0 cut -b1-"$(tput cols)" | sed -u 'i\\o033[2K' | stdbuf -o0 tr '\n' '\r'; echo
-  # yum install python3 brings Python3.6 which is not supported by chia
+  # yum install python3 brings Python3.6 which is not supported by chik
   cd ..
   echo "wget https://www.python.org/ftp/python/3.9.11/Python-3.9.11.tgz"
   wget https://www.python.org/ftp/python/3.9.11/Python-3.9.11.tgz

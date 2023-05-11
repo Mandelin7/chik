@@ -13,9 +13,9 @@ import pytest_asyncio
 # https://github.com/pytest-dev/pytest/issues/7469
 from _pytest.fixtures import SubRequest
 
-from chia.data_layer.data_layer_util import NodeType, Status
-from chia.data_layer.data_store import DataStore
-from chia.types.blockchain_format.sized_bytes import bytes32
+from chik.data_layer.data_layer_util import NodeType, Status
+from chik.data_layer.data_store import DataStore
+from chik.types.blockchain_format.sized_bytes import bytes32
 from tests.core.data_layer.util import (
     ChiaRoot,
     Example,
@@ -32,7 +32,7 @@ from tests.util.misc import closing_chia_root_popen
 
 @pytest.fixture(name="chia_daemon", scope="function")
 def chia_daemon_fixture(chia_root: ChiaRoot) -> Iterator[None]:
-    with closing_chia_root_popen(chia_root=chia_root, args=[sys.executable, "-m", "chia.daemon.server"]):
+    with closing_chia_root_popen(chia_root=chia_root, args=[sys.executable, "-m", "chik.daemon.server"]):
         # TODO: this is not pretty as a hard coded time
         # let it settle
         time.sleep(5)

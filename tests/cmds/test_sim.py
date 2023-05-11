@@ -4,8 +4,8 @@ from shutil import rmtree
 
 from click.testing import CliRunner, Result
 
-from chia.cmds.chia import cli
-from chia.util.default_root import SIMULATOR_ROOT_PATH
+from chik.cmds.chia import cli
+from chik.util.default_root import SIMULATOR_ROOT_PATH
 
 mnemonic = (  # ignore any secret warnings
     "cup smoke miss park baby say island tomorrow segment lava bitter easily settle gift renew arrive kangaroo dilemma "

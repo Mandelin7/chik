@@ -5,24 +5,24 @@ from typing import List, Tuple
 import pytest
 import pytest_asyncio
 
-from chia.cmds.units import units
-from chia.consensus.block_record import BlockRecord
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.full_node.full_node import FullNode
-from chia.server.outbound_message import NodeType
-from chia.server.server import ChiaServer
-from chia.server.start_service import Service
-from chia.simulator.block_tools import BlockTools, create_block_tools_async, test_constants
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.keyring import TempKeyring
-from chia.simulator.setup_nodes import SimulatorsAndWallets, setup_full_system
-from chia.simulator.setup_services import setup_full_node
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol, GetAllCoinsProtocol, ReorgProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.wallet_node import WalletNode
+from chik.cmds.units import units
+from chik.consensus.block_record import BlockRecord
+from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from chik.full_node.full_node import FullNode
+from chik.server.outbound_message import NodeType
+from chik.server.server import ChiaServer
+from chik.server.start_service import Service
+from chik.simulator.block_tools import BlockTools, create_block_tools_async, test_constants
+from chik.simulator.full_node_simulator import FullNodeSimulator
+from chik.simulator.keyring import TempKeyring
+from chik.simulator.setup_nodes import SimulatorsAndWallets, setup_full_system
+from chik.simulator.setup_services import setup_full_node
+from chik.simulator.simulator_protocol import FarmNewBlockProtocol, GetAllCoinsProtocol, ReorgProtocol
+from chik.simulator.time_out_assert import time_out_assert
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.peer_info import PeerInfo
+from chik.util.ints import uint16, uint32, uint64
+from chik.wallet.wallet_node import WalletNode
 
 test_constants_modified = test_constants.replace(
     **{
@@ -281,11 +281,11 @@ class TestSimulation:
         argvalues=[
             [0, 0],
             [1, 2],
-            [(2 * units["chia"]) - 1, 2],
-            [2 * units["chia"], 2],
-            [(2 * units["chia"]) + 1, 4],
-            [3 * units["chia"], 4],
-            [10 * units["chia"], 10],
+            [(2 * units["chik"]) - 1, 2],
+            [2 * units["chik"], 2],
+            [(2 * units["chik"]) + 1, 4],
+            [3 * units["chik"], 4],
+            [10 * units["chik"], 10],
         ],
     )
     async def test_simulation_farm_rewards(

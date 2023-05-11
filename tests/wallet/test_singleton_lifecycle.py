@@ -6,15 +6,15 @@ import pytest
 from blspy import G2Element
 from clvm_tools import binutils
 
-from chia.types.announcement import Announcement
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import INFINITE_COST, Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.spend_bundle import SpendBundle
-from chia.util.ints import uint64
-from chia.wallet.puzzles.load_clvm import load_clvm
+from chik.types.announcement import Announcement
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.program import INFINITE_COST, Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_spend import CoinSpend
+from chik.types.condition_opcodes import ConditionOpcode
+from chik.types.spend_bundle import SpendBundle
+from chik.util.ints import uint64
+from chik.wallet.puzzles.load_clvm import load_clvm
 from tests.core.full_node.test_conditions import check_spend_bundle_validity, initial_blocks
 
 SINGLETON_MOD = load_clvm("singleton_top_layer.clsp")

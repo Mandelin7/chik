@@ -8,25 +8,25 @@ import pytest
 from blspy import AugSchemeMPL, G1Element, G2Element
 from clvm_tools.binutils import disassemble
 
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.rpc.wallet_rpc_api import WalletRpcApi
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
-from chia.simulator.time_out_assert import adjusted_timeout, time_out_assert, time_out_assert_not_none
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.types.spend_bundle import SpendBundle
-from chia.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
-from chia.util.byte_types import hexstr_to_bytes
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.did_wallet.did_wallet import DIDWallet
-from chia.wallet.nft_wallet.nft_wallet import NFTWallet
-from chia.wallet.util.address_type import AddressType
-from chia.wallet.util.compute_memos import compute_memos
-from chia.wallet.util.wallet_types import WalletType
-from chia.wallet.wallet import CHIP_0002_SIGN_MESSAGE_PREFIX
-from chia.wallet.wallet_state_manager import WalletStateManager
+from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from chik.rpc.wallet_rpc_api import WalletRpcApi
+from chik.simulator.full_node_simulator import FullNodeSimulator
+from chik.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
+from chik.simulator.time_out_assert import adjusted_timeout, time_out_assert, time_out_assert_not_none
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.peer_info import PeerInfo
+from chik.types.spend_bundle import SpendBundle
+from chik.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
+from chik.util.byte_types import hexstr_to_bytes
+from chik.util.ints import uint16, uint32, uint64
+from chik.wallet.did_wallet.did_wallet import DIDWallet
+from chik.wallet.nft_wallet.nft_wallet import NFTWallet
+from chik.wallet.util.address_type import AddressType
+from chik.wallet.util.compute_memos import compute_memos
+from chik.wallet.util.wallet_types import WalletType
+from chik.wallet.wallet import CHIP_0002_SIGN_MESSAGE_PREFIX
+from chik.wallet.wallet_state_manager import WalletStateManager
 
 
 async def get_nft_count(wallet: NFTWallet) -> int:
@@ -454,7 +454,7 @@ async def test_nft_wallet_rpc_creation_and_list(self_hostname: str, two_wallet_n
 )
 @pytest.mark.asyncio
 async def test_nft_wallet_rpc_update_metadata(self_hostname: str, two_wallet_nodes: Any, trusted: Any) -> None:
-    from chia.types.blockchain_format.sized_bytes import bytes32
+    from chik.types.blockchain_format.sized_bytes import bytes32
 
     num_blocks = 3
     full_nodes, wallets, _ = two_wallet_nodes

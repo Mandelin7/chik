@@ -8,10 +8,10 @@ import subprocess
 from dataclasses import dataclass
 from typing import IO, TYPE_CHECKING, Any, Dict, Iterator, List, Optional, Union
 
-from chia.data_layer.data_layer_util import NodeType, Side, Status
-from chia.data_layer.data_store import DataStore
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
+from chik.data_layer.data_layer_util import NodeType, Side, Status
+from chik.data_layer.data_store import DataStore
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
 
 # from subprocess.pyi
 _FILE = Union[None, int, IO[Any]]
@@ -141,7 +141,7 @@ class ChiaRoot:
             kwargs["env"]["SYSTEMROOT"] = os.environ["SYSTEMROOT"]
 
         modified_args: List[Union[str, os_PathLike_str]] = [
-            self.scripts_path.joinpath("chia"),
+            self.scripts_path.joinpath("chik"),
             "--root-path",
             self.path,
             *args,

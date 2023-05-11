@@ -16,14 +16,14 @@ import pytest_asyncio
 from _pytest.fixtures import SubRequest
 
 # Set spawn after stdlib imports, but before other imports
-from chia.clvm.spend_sim import CostLogger
-from chia.full_node.full_node import FullNode
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.protocols import full_node_protocol
-from chia.server.server import ChiaServer
-from chia.server.start_service import Service
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.setup_nodes import (
+from chik.clvm.spend_sim import CostLogger
+from chik.full_node.full_node import FullNode
+from chik.full_node.full_node_api import FullNodeAPI
+from chik.protocols import full_node_protocol
+from chik.server.server import ChiaServer
+from chik.server.start_service import Service
+from chik.simulator.full_node_simulator import FullNodeSimulator
+from chik.simulator.setup_nodes import (
     SimulatorsAndWallets,
     setup_full_system_connect_to_deamon,
     setup_n_nodes,
@@ -31,17 +31,17 @@ from chia.simulator.setup_nodes import (
     setup_simulators_and_wallets_service,
     setup_two_nodes,
 )
-from chia.simulator.setup_services import setup_daemon, setup_introducer, setup_timelord
-from chia.simulator.time_out_assert import time_out_assert
-from chia.simulator.wallet_tools import WalletTool
-from chia.types.peer_info import PeerInfo
-from chia.util.config import create_default_chia_config, lock_and_load_config
-from chia.util.ints import uint16, uint64
-from chia.util.keychain import Keychain
-from chia.util.task_timing import main as task_instrumentation_main
-from chia.util.task_timing import start_task_instrumentation, stop_task_instrumentation
-from chia.wallet.wallet import Wallet
-from chia.wallet.wallet_node import WalletNode
+from chik.simulator.setup_services import setup_daemon, setup_introducer, setup_timelord
+from chik.simulator.time_out_assert import time_out_assert
+from chik.simulator.wallet_tools import WalletTool
+from chik.types.peer_info import PeerInfo
+from chik.util.config import create_default_chia_config, lock_and_load_config
+from chik.util.ints import uint16, uint64
+from chik.util.keychain import Keychain
+from chik.util.task_timing import main as task_instrumentation_main
+from chik.util.task_timing import start_task_instrumentation, stop_task_instrumentation
+from chik.wallet.wallet import Wallet
+from chik.wallet.wallet_node import WalletNode
 from tests.core.data_layer.util import ChiaRoot
 from tests.core.node_height import node_height_at_least
 from tests.simulation.test_simulation import test_constants_modified
@@ -50,10 +50,10 @@ multiprocessing.set_start_method("spawn")
 
 from pathlib import Path
 
-from chia.simulator.block_tools import BlockTools, create_block_tools, create_block_tools_async, test_constants
-from chia.simulator.keyring import TempKeyring
-from chia.simulator.setup_nodes import setup_farmer_multi_harvester
-from chia.util.keyring_wrapper import KeyringWrapper
+from chik.simulator.block_tools import BlockTools, create_block_tools, create_block_tools_async, test_constants
+from chik.simulator.keyring import TempKeyring
+from chik.simulator.setup_nodes import setup_farmer_multi_harvester
+from chik.util.keyring_wrapper import KeyringWrapper
 
 
 @pytest.fixture(name="node_name_for_file")
@@ -99,7 +99,7 @@ def self_hostname():
 
 
 # NOTE:
-#       Instantiating the bt fixture results in an attempt to create the chia root directory
+#       Instantiating the bt fixture results in an attempt to create the chik root directory
 #       which the build scripts symlink to a sometimes-not-there directory.
 #       When not there, Python complains since, well, the symlink is not a directory nor points to a directory.
 #
@@ -112,7 +112,7 @@ async def empty_blockchain(request):
     """
     Provides a list of 10 valid blocks, as well as a blockchain with 9 blocks added to it.
     """
-    from chia.simulator.setup_nodes import test_constants
+    from chik.simulator.setup_nodes import test_constants
     from tests.util.blockchain import create_blockchain
 
     bc1, db_wrapper, db_path = await create_blockchain(test_constants, request.param)
@@ -615,7 +615,7 @@ async def get_daemon(bt):
 
 @pytest.fixture(scope="function")
 def empty_keyring():
-    with TempKeyring(user="user-chia-1.8", service="chia-user-chia-1.8") as keychain:
+    with TempKeyring(user="user-chik-1.8", service="chik-user-chik-1.8") as keychain:
         yield keychain
         KeyringWrapper.cleanup_shared_instance()
 

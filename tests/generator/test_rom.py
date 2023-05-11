@@ -5,22 +5,22 @@ from typing import List, Tuple
 from clvm_tools import binutils
 from clvm_tools.clvmc import compile_clvm_text
 
-from chia.consensus.condition_costs import ConditionCost
-from chia.full_node.mempool_check_conditions import get_name_puzzle_conditions
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.serialized_program import SerializedProgram
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.generator_types import BlockGenerator
-from chia.types.spend_bundle_conditions import ELIGIBLE_FOR_DEDUP, Spend
-from chia.util.ints import uint32
-from chia.wallet.puzzles.load_clvm import load_clvm
-from chia.wallet.puzzles.rom_bootstrap_generator import GENERATOR_MOD
+from chik.consensus.condition_costs import ConditionCost
+from chik.full_node.mempool_check_conditions import get_name_puzzle_conditions
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.serialized_program import SerializedProgram
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.generator_types import BlockGenerator
+from chik.types.spend_bundle_conditions import ELIGIBLE_FOR_DEDUP, Spend
+from chik.util.ints import uint32
+from chik.wallet.puzzles.load_clvm import load_clvm
+from chik.wallet.puzzles.rom_bootstrap_generator import GENERATOR_MOD
 
 MAX_COST = int(1e15)
 COST_PER_BYTE = int(12000)
 
 
-DESERIALIZE_MOD = load_clvm("chialisp_deserialisation.clsp", package_or_requirement="chia.wallet.puzzles")
+DESERIALIZE_MOD = load_clvm("chialisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles")
 
 
 GENERATOR_CODE = """

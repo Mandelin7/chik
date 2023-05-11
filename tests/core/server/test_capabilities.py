@@ -4,9 +4,9 @@ from typing import List, Tuple
 
 import pytest
 
-from chia.protocols.shared_protocol import Capability
-from chia.server.capabilities import known_active_capabilities
-from chia.util.ints import uint16
+from chik.protocols.shared_protocol import Capability
+from chik.server.capabilities import known_active_capabilities
+from chik.util.ints import uint16
 
 
 @pytest.mark.parametrize(

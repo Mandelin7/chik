@@ -6,18 +6,18 @@ from typing import Any, List, Tuple
 import pytest
 import pytest_asyncio
 
-from chia.full_node.full_node import FullNode
-from chia.rpc.full_node_rpc_api import FullNodeRpcApi
-from chia.rpc.full_node_rpc_client import FullNodeRpcClient
-from chia.server.start_service import Service
-from chia.simulator.block_tools import BlockTools
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.wallet_tools import WalletTool
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.spend_bundle import SpendBundle
-from chia.util.ints import uint64
-from chia.wallet.wallet_node import WalletNode
+from chik.full_node.full_node import FullNode
+from chik.rpc.full_node_rpc_api import FullNodeRpcApi
+from chik.rpc.full_node_rpc_client import FullNodeRpcClient
+from chik.server.start_service import Service
+from chik.simulator.block_tools import BlockTools
+from chik.simulator.simulator_protocol import FarmNewBlockProtocol
+from chik.simulator.wallet_tools import WalletTool
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.spend_bundle import SpendBundle
+from chik.util.ints import uint64
+from chik.wallet.wallet_node import WalletNode
 
 
 @pytest_asyncio.fixture(scope="function")

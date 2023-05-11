@@ -8,18 +8,18 @@ import pytest
 from blspy import G1Element
 from clvm_tools import binutils
 
-from chia.consensus.condition_costs import ConditionCost
-from chia.consensus.cost_calculator import NPCResult
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.full_node.bundle_tools import simple_solution_generator
-from chia.full_node.mempool_check_conditions import get_name_puzzle_conditions, get_puzzle_and_solution_for_coin
-from chia.simulator.block_tools import test_constants
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.serialized_program import SerializedProgram
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.generator_types import BlockGenerator
-from chia.wallet.puzzles import p2_delegated_puzzle_or_hidden_puzzle
+from chik.consensus.condition_costs import ConditionCost
+from chik.consensus.cost_calculator import NPCResult
+from chik.consensus.default_constants import DEFAULT_CONSTANTS
+from chik.full_node.bundle_tools import simple_solution_generator
+from chik.full_node.mempool_check_conditions import get_name_puzzle_conditions, get_puzzle_and_solution_for_coin
+from chik.simulator.block_tools import test_constants
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.serialized_program import SerializedProgram
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.generator_types import BlockGenerator
+from chik.wallet.puzzles import p2_delegated_puzzle_or_hidden_puzzle
 from tests.util.misc import assert_runtime
 
 from .make_block_generator import make_block_generator
@@ -47,7 +47,7 @@ def large_block_generator(size):
     except FileNotFoundError:
         generator = make_block_generator(size)
         blob = bytes(generator.program)
-        #  TODO: Re-enable large-block*.hex but cache in ~/.chia/subdir
+        #  TODO: Re-enable large-block*.hex but cache in ~/.chik/subdir
         #  with open(hex_path, "w") as f:
         #      f.write(blob.hex())
         return blob
@@ -251,7 +251,7 @@ class TestCostCalculation:
 async def test_get_puzzle_and_solution_for_coin_performance():
     from clvm.casts import int_from_bytes
 
-    from chia.full_node.mempool_check_conditions import DESERIALIZE_MOD
+    from chik.full_node.mempool_check_conditions import DESERIALIZE_MOD
     from tests.core.large_block import LARGE_BLOCK
 
     spends: List[Coin] = []

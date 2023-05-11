@@ -17,17 +17,17 @@ import aiosqlite
 import click
 import zstd
 
-from chia.cmds.init_funcs import chia_init
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.full_node.full_node import FullNode
-from chia.server.outbound_message import Message, NodeType
-from chia.server.ws_connection import WSChiaConnection
-from chia.simulator.block_tools import make_unfinished_block
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.full_block import FullBlock
-from chia.types.peer_info import PeerInfo
-from chia.util.config import load_config
-from chia.util.ints import uint16
+from chik.cmds.init_funcs import chia_init
+from chik.consensus.default_constants import DEFAULT_CONSTANTS
+from chik.full_node.full_node import FullNode
+from chik.server.outbound_message import Message, NodeType
+from chik.server.ws_connection import WSChiaConnection
+from chik.simulator.block_tools import make_unfinished_block
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.full_block import FullBlock
+from chik.types.peer_info import PeerInfo
+from chik.util.config import load_config
+from chik.util.ints import uint16
 from tools.test_constants import test_constants as TEST_CONSTANTS
 
 

@@ -7,14 +7,14 @@ import pytest
 from blspy import G2Element
 from chia_rs import Coin
 
-from chia.clvm.spend_sim import SimClient, SpendSim, sim_and_client
-from chia.consensus.constants import ConsensusConstants
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.full_node.bitcoin_fee_estimator import BitcoinFeeEstimator
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.types.spend_bundle import SpendBundle
+from chik.clvm.spend_sim import SimClient, SpendSim, sim_and_client
+from chik.consensus.constants import ConsensusConstants
+from chik.consensus.default_constants import DEFAULT_CONSTANTS
+from chik.full_node.bitcoin_fee_estimator import BitcoinFeeEstimator
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_spend import CoinSpend
+from chik.types.spend_bundle import SpendBundle
 
 log = logging.getLogger(__name__)
 

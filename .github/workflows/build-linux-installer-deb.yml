@@ -66,7 +66,7 @@ jobs:
         echo "CHIK_INSTALLER_VERSION=$(python3 ./build_scripts/installer-version.py)" >>$GITHUB_OUTPUT
         deactivate
 
-      # Get the most recent release from chia-plotter-madmax
+      # Get the most recent release from chik-plotter-madmax
     - uses: actions/github-script@v6
       id: 'latest-madmax'
       with:
@@ -123,7 +123,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
         development: true
 
-    - uses: chia-network/actions/activate-venv@main
+    - uses: chik-network/actions/activate-venv@main
 
     - name: Build GUI
       continue-on-error: false

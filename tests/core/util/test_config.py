@@ -15,8 +15,8 @@ from typing import Any, Dict, Optional
 import pytest
 import yaml
 
-from chia.simulator.time_out_assert import adjusted_timeout
-from chia.util.config import (
+from chik.simulator.time_out_assert import adjusted_timeout
+from chik.util.config import (
     config_path_for_filename,
     create_default_chia_config,
     initial_config_file,

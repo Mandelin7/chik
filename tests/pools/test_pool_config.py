@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from blspy import AugSchemeMPL, PrivateKey
 
-from chia.pools.pool_config import PoolWalletConfig
-from chia.util.config import create_default_chia_config, load_config, lock_config, save_config
+from chik.pools.pool_config import PoolWalletConfig
+from chik.util.config import create_default_chia_config, load_config, lock_config, save_config
 
 
 def test_pool_config(tmp_path):

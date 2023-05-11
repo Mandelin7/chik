@@ -11,48 +11,48 @@ import pytest
 import pytest_asyncio
 from blspy import G2Element
 
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.consensus.coinbase import create_puzzlehash_for_pk
-from chia.rpc.full_node_rpc_client import FullNodeRpcClient
-from chia.rpc.rpc_server import RpcServer
-from chia.rpc.wallet_rpc_api import WalletRpcApi
-from chia.rpc.wallet_rpc_client import WalletRpcClient
-from chia.server.server import ChiaServer
-from chia.server.start_service import Service
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.announcement import Announcement
-from chia.types.blockchain_format.coin import Coin, coin_as_list
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_record import CoinRecord
-from chia.types.coin_spend import CoinSpend
-from chia.types.peer_info import PeerInfo
-from chia.types.signing_mode import SigningMode
-from chia.types.spend_bundle import SpendBundle
-from chia.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
-from chia.util.config import load_config, lock_and_load_config, save_config
-from chia.util.db_wrapper import DBWrapper2
-from chia.util.hash import std_hash
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.cat_wallet.cat_constants import DEFAULT_CATS
-from chia.wallet.cat_wallet.cat_utils import construct_cat_puzzle
-from chia.wallet.cat_wallet.cat_wallet import CATWallet
-from chia.wallet.derive_keys import master_sk_to_wallet_sk, master_sk_to_wallet_sk_unhardened
-from chia.wallet.did_wallet.did_wallet import DIDWallet
-from chia.wallet.nft_wallet.nft_wallet import NFTWallet
-from chia.wallet.puzzles.cat_loader import CAT_MOD
-from chia.wallet.trading.trade_status import TradeStatus
-from chia.wallet.transaction_record import TransactionRecord
-from chia.wallet.transaction_sorting import SortKey
-from chia.wallet.uncurried_puzzle import uncurry_puzzle
-from chia.wallet.util.address_type import AddressType
-from chia.wallet.util.compute_memos import compute_memos
-from chia.wallet.util.wallet_types import WalletType
-from chia.wallet.wallet import Wallet
-from chia.wallet.wallet_node import WalletNode
-from chia.wallet.wallet_protocol import WalletProtocol
+from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from chik.consensus.coinbase import create_puzzlehash_for_pk
+from chik.rpc.full_node_rpc_client import FullNodeRpcClient
+from chik.rpc.rpc_server import RpcServer
+from chik.rpc.wallet_rpc_api import WalletRpcApi
+from chik.rpc.wallet_rpc_client import WalletRpcClient
+from chik.server.server import ChiaServer
+from chik.server.start_service import Service
+from chik.simulator.full_node_simulator import FullNodeSimulator
+from chik.simulator.simulator_protocol import FarmNewBlockProtocol
+from chik.simulator.time_out_assert import time_out_assert
+from chik.types.announcement import Announcement
+from chik.types.blockchain_format.coin import Coin, coin_as_list
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_record import CoinRecord
+from chik.types.coin_spend import CoinSpend
+from chik.types.peer_info import PeerInfo
+from chik.types.signing_mode import SigningMode
+from chik.types.spend_bundle import SpendBundle
+from chik.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
+from chik.util.config import load_config, lock_and_load_config, save_config
+from chik.util.db_wrapper import DBWrapper2
+from chik.util.hash import std_hash
+from chik.util.ints import uint16, uint32, uint64
+from chik.wallet.cat_wallet.cat_constants import DEFAULT_CATS
+from chik.wallet.cat_wallet.cat_utils import construct_cat_puzzle
+from chik.wallet.cat_wallet.cat_wallet import CATWallet
+from chik.wallet.derive_keys import master_sk_to_wallet_sk, master_sk_to_wallet_sk_unhardened
+from chik.wallet.did_wallet.did_wallet import DIDWallet
+from chik.wallet.nft_wallet.nft_wallet import NFTWallet
+from chik.wallet.puzzles.cat_loader import CAT_MOD
+from chik.wallet.trading.trade_status import TradeStatus
+from chik.wallet.transaction_record import TransactionRecord
+from chik.wallet.transaction_sorting import SortKey
+from chik.wallet.uncurried_puzzle import uncurry_puzzle
+from chik.wallet.util.address_type import AddressType
+from chik.wallet.util.compute_memos import compute_memos
+from chik.wallet.util.wallet_types import WalletType
+from chik.wallet.wallet import Wallet
+from chik.wallet.wallet_node import WalletNode
+from chik.wallet.wallet_protocol import WalletProtocol
 
 log = logging.getLogger(__name__)
 
@@ -820,7 +820,7 @@ async def test_offer_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment)
         assert cr.coin in spend_bundle.additions()
     with pytest.raises(ValueError):
         await wallet_1_rpc.get_coin_records_by_names([a.name() for a in spend_bundle.additions() if a.amount == 4])
-    # Create an offer of 5 chia for one CAT
+    # Create an offer of 5 chik for one CAT
     offer, trade_record = await wallet_1_rpc.create_offer_for_ids(
         {uint32(1): -5, cat_asset_id.hex(): 1}, validate_only=True
     )
@@ -1378,13 +1378,13 @@ async def test_notification_rpcs(wallet_rpc_environment: WalletRpcTestEnvironmen
 # be included in the test code.
 #
 # Example 1:
-# $ chia keys generate
-# $ chia keys sign -d 'hello world' -t 'm/12381/8444/1/1'
+# $ chik keys generate
+# $ chik keys sign -d 'hello world' -t 'm/12381/8444/1/1'
 #
 # Example 2:
-# $ chia wallet get_address
+# $ chik wallet get_address
 # xch1vk0dj7cx7d638h80mcuw70xqlnr56pmuhzajemn5ym02vhl3mzyqrrd4wp
-# $ chia wallet sign_message -m $(echo -n 'hello world' | xxd -p)
+# $ chik wallet sign_message -m $(echo -n 'hello world' | xxd -p)
 # -a xch1vk0dj7cx7d638h80mcuw70xqlnr56pmuhzajemn5ym02vhl3mzyqrrd4wp
 #
 @pytest.mark.parametrize(
@@ -1392,7 +1392,7 @@ async def test_notification_rpcs(wallet_rpc_environment: WalletRpcTestEnvironmen
     [
         # Valid signatures
         (
-            # chia keys sign -d "Let's eat, Grandma" -t "m/12381/8444/1/1"
+            # chik keys sign -d "Let's eat, Grandma" -t "m/12381/8444/1/1"
             {
                 "message": "4c65742773206561742c204772616e646d61",  # Let's eat, Grandma
                 "pubkey": (
@@ -1408,7 +1408,7 @@ async def test_notification_rpcs(wallet_rpc_environment: WalletRpcTestEnvironmen
             {"isValid": True},
         ),
         (
-            # chia wallet sign_message -m $(echo -n 'Happy happy joy joy' | xxd -p)
+            # chik wallet sign_message -m $(echo -n 'Happy happy joy joy' | xxd -p)
             # -a xch1e2pcue5q7t4sg8gygz3aht369sk78rzzs92zx65ktn9a9qurw35saajvkh
             {
                 "message": "4861707079206861707079206a6f79206a6f79",  # Happy happy joy joy
@@ -1426,7 +1426,7 @@ async def test_notification_rpcs(wallet_rpc_environment: WalletRpcTestEnvironmen
             {"isValid": True},
         ),
         (
-            # chia wallet sign_message -m $(echo -n 'Happy happy joy joy' | xxd -p)
+            # chik wallet sign_message -m $(echo -n 'Happy happy joy joy' | xxd -p)
             # -a xch1e2pcue5q7t4sg8gygz3aht369sk78rzzs92zx65ktn9a9qurw35saajvkh
             {
                 "message": "4861707079206861707079206a6f79206a6f79",  # Happy happy joy joy

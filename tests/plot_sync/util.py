@@ -5,16 +5,16 @@ from dataclasses import dataclass
 from secrets import token_bytes
 from typing import Optional
 
-from chia.farmer.farmer import Farmer
-from chia.harvester.harvester import Harvester
-from chia.plot_sync.sender import Sender
-from chia.protocols.harvester_protocol import PlotSyncIdentifier
-from chia.server.outbound_message import Message, NodeType
-from chia.server.start_service import Service
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo, UnresolvedPeerInfo
-from chia.util.ints import uint16, uint64
+from chik.farmer.farmer import Farmer
+from chik.harvester.harvester import Harvester
+from chik.plot_sync.sender import Sender
+from chik.protocols.harvester_protocol import PlotSyncIdentifier
+from chik.server.outbound_message import Message, NodeType
+from chik.server.start_service import Service
+from chik.simulator.time_out_assert import time_out_assert
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.peer_info import PeerInfo, UnresolvedPeerInfo
+from chik.util.ints import uint16, uint64
 
 
 @dataclass

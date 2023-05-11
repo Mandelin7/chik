@@ -7,11 +7,11 @@ from typing import Tuple, Union
 
 from click.testing import CliRunner
 
-from chia.cmds.chia import cli
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.server.server import ChiaServer
-from chia.simulator.block_tools import BlockTools
-from chia.simulator.full_node_simulator import FullNodeSimulator
+from chik.cmds.chia import cli
+from chik.full_node.full_node_api import FullNodeAPI
+from chik.server.server import ChiaServer
+from chik.simulator.block_tools import BlockTools
+from chik.simulator.full_node_simulator import FullNodeSimulator
 
 
 def test_print_fee_info_cmd(
@@ -19,7 +19,7 @@ def test_print_fee_info_cmd(
 ) -> None:
     _, _, _ = one_node_one_block
     scripts_path = Path(sysconfig.get_path("scripts"))
-    subprocess.run([scripts_path.joinpath("chia"), "show", "-f"], check=True)
+    subprocess.run([scripts_path.joinpath("chik"), "show", "-f"], check=True)
 
 
 def test_show_fee_info(

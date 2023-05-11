@@ -9,21 +9,21 @@ from typing import Dict, List
 import pytest
 from blspy import G2Element
 
-from chia.consensus.cost_calculator import NPCResult
-from chia.full_node.bundle_tools import simple_solution_generator
-from chia.full_node.mempool_check_conditions import get_name_puzzle_conditions
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.blockchain_format.program import INFINITE_COST
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.ints import uint32, uint64
-from chia.wallet.cat_wallet.cat_wallet import CATWallet
-from chia.wallet.outer_puzzles import AssetType
-from chia.wallet.puzzle_drivers import PuzzleInfo
-from chia.wallet.trading.offer import Offer
-from chia.wallet.trading.trade_status import TradeStatus
-from chia.wallet.transaction_record import TransactionRecord
-from chia.wallet.util.transaction_type import TransactionType
+from chik.consensus.cost_calculator import NPCResult
+from chik.full_node.bundle_tools import simple_solution_generator
+from chik.full_node.mempool_check_conditions import get_name_puzzle_conditions
+from chik.simulator.simulator_protocol import FarmNewBlockProtocol
+from chik.simulator.time_out_assert import time_out_assert
+from chik.types.blockchain_format.program import INFINITE_COST
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.util.ints import uint32, uint64
+from chik.wallet.cat_wallet.cat_wallet import CATWallet
+from chik.wallet.outer_puzzles import AssetType
+from chik.wallet.puzzle_drivers import PuzzleInfo
+from chik.wallet.trading.offer import Offer
+from chik.wallet.trading.trade_status import TradeStatus
+from chik.wallet.transaction_record import TransactionRecord
+from chik.wallet.util.transaction_type import TransactionType
 
 buffer_blocks = 4
 

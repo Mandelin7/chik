@@ -87,7 +87,7 @@ build_scripts\win_build
 build_scripts/win_build
 win_code_sign_cert.p12
 
-# chia-blockchain wheel build folder
+# chik-blockchain wheel build folder
 build/
 
 # Temporal `n` (node version manager) directory

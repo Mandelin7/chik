@@ -4,8 +4,8 @@ from typing import Dict, List
 
 import pytest
 
-from chia.cmds.check_wallet_db import DerivationPath, Wallet, check_addresses_used_contiguous, check_for_gaps
-from chia.wallet.util.wallet_types import WalletType
+from chik.cmds.check_wallet_db import DerivationPath, Wallet, check_addresses_used_contiguous, check_for_gaps
+from chik.wallet.util.wallet_types import WalletType
 
 
 def test_check_for_gaps_end_lt_start() -> None:
@@ -41,7 +41,7 @@ def test_check_for_gaps_start_equal_end_ok() -> None:
 
 def test_wallet_db_type_invalid() -> None:
     """
-    Test that we can construct chia.cmds.check_wallet_db.Wallet with an invalid wallet_type.
+    Test that we can construct chik.cmds.check_wallet_db.Wallet with an invalid wallet_type.
     Otherwise, we would need to store Wallet.wallet_type as an int, or extend WalletType.
     """
     wallet_id = 1

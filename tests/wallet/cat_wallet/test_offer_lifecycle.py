@@ -6,25 +6,25 @@ from typing import Any, Dict, List, Optional
 import pytest
 from blspy import G2Element
 
-from chia.clvm.spend_sim import sim_and_client
-from chia.types.announcement import Announcement
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.types.spend_bundle import SpendBundle
-from chia.util.ints import uint64
-from chia.wallet.cat_wallet.cat_utils import (
+from chik.clvm.spend_sim import sim_and_client
+from chik.types.announcement import Announcement
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_spend import CoinSpend
+from chik.types.mempool_inclusion_status import MempoolInclusionStatus
+from chik.types.spend_bundle import SpendBundle
+from chik.util.ints import uint64
+from chik.wallet.cat_wallet.cat_utils import (
     SpendableCAT,
     construct_cat_puzzle,
     unsigned_spend_bundle_for_spendable_cats,
 )
-from chia.wallet.outer_puzzles import AssetType
-from chia.wallet.payment import Payment
-from chia.wallet.puzzle_drivers import PuzzleInfo
-from chia.wallet.puzzles.cat_loader import CAT_MOD
-from chia.wallet.trading.offer import OFFER_MOD, NotarizedPayment, Offer
+from chik.wallet.outer_puzzles import AssetType
+from chik.wallet.payment import Payment
+from chik.wallet.puzzle_drivers import PuzzleInfo
+from chik.wallet.puzzles.cat_loader import CAT_MOD
+from chik.wallet.trading.offer import OFFER_MOD, NotarizedPayment, Offer
 
 acs = Program.to(1)
 acs_ph = acs.get_tree_hash()

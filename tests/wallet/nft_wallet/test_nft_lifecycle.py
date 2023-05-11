@@ -6,15 +6,15 @@ from typing import List
 import pytest
 from blspy import G2Element
 
-from chia.clvm.spend_sim import CostLogger, sim_and_client
-from chia.types.announcement import Announcement
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.types.spend_bundle import SpendBundle
-from chia.util.errors import Err
-from chia.wallet.nft_wallet.nft_puzzles import (
+from chik.clvm.spend_sim import CostLogger, sim_and_client
+from chik.types.announcement import Announcement
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_spend import CoinSpend
+from chik.types.mempool_inclusion_status import MempoolInclusionStatus
+from chik.types.spend_bundle import SpendBundle
+from chik.util.errors import Err
+from chik.wallet.nft_wallet.nft_puzzles import (
     NFT_METADATA_UPDATER,
     NFT_TRANSFER_PROGRAM_DEFAULT,
     construct_ownership_layer,

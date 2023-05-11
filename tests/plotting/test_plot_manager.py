@@ -12,9 +12,9 @@ from typing import Callable, Iterator, List, Optional
 import pytest
 from blspy import G1Element
 
-from chia.plotting.cache import CURRENT_VERSION, CacheDataV1
-from chia.plotting.manager import Cache, PlotManager
-from chia.plotting.util import (
+from chik.plotting.cache import CURRENT_VERSION, CacheDataV1
+from chik.plotting.manager import Cache, PlotManager
+from chik.plotting.util import (
     PlotInfo,
     PlotRefreshEvents,
     PlotRefreshResult,
@@ -23,11 +23,11 @@ from chia.plotting.util import (
     remove_plot,
     remove_plot_directory,
 )
-from chia.simulator.block_tools import get_plot_dir
-from chia.simulator.time_out_assert import time_out_assert
-from chia.util.config import create_default_chia_config, lock_and_load_config, save_config
-from chia.util.ints import uint16, uint32
-from chia.util.misc import VersionedBlob
+from chik.simulator.block_tools import get_plot_dir
+from chik.simulator.time_out_assert import time_out_assert
+from chik.util.config import create_default_chia_config, lock_and_load_config, save_config
+from chik.util.ints import uint16, uint32
+from chik.util.misc import VersionedBlob
 from tests.plotting.util import get_test_plots
 
 log = logging.getLogger(__name__)

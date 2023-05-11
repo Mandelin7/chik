@@ -4,14 +4,14 @@ import dataclasses
 
 import pytest
 
-from chia.consensus.blockchain import AddBlockResult
-from chia.protocols import full_node_protocol
-from chia.simulator.block_tools import test_constants
-from chia.types.blockchain_format.vdf import VDFProof
-from chia.types.weight_proof import WeightProof
-from chia.util.generator_tools import get_block_header
-from chia.wallet.key_val_store import KeyValStore
-from chia.wallet.wallet_blockchain import WalletBlockchain
+from chik.consensus.blockchain import AddBlockResult
+from chik.protocols import full_node_protocol
+from chik.simulator.block_tools import test_constants
+from chik.types.blockchain_format.vdf import VDFProof
+from chik.types.weight_proof import WeightProof
+from chik.util.generator_tools import get_block_header
+from chik.wallet.key_val_store import KeyValStore
+from chik.wallet.wallet_blockchain import WalletBlockchain
 from tests.util.db_connection import DBConnection
 
 

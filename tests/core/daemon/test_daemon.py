@@ -9,21 +9,21 @@ from typing import Any, Dict, List, Optional, Tuple, Type, Union, cast
 import aiohttp
 import pytest
 
-from chia.daemon.keychain_server import (
+from chik.daemon.keychain_server import (
     DeleteLabelRequest,
     GetKeyRequest,
     GetKeyResponse,
     GetKeysResponse,
     SetLabelRequest,
 )
-from chia.daemon.server import WebSocketServer, service_plotter
-from chia.server.outbound_message import NodeType
-from chia.simulator.time_out_assert import time_out_assert, time_out_assert_custom_interval
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16
-from chia.util.keychain import Keychain, KeyData
-from chia.util.keyring_wrapper import DEFAULT_PASSPHRASE_IF_NO_MASTER_PASSPHRASE
-from chia.util.ws_message import create_payload
+from chik.daemon.server import WebSocketServer, service_plotter
+from chik.server.outbound_message import NodeType
+from chik.simulator.time_out_assert import time_out_assert, time_out_assert_custom_interval
+from chik.types.peer_info import PeerInfo
+from chik.util.ints import uint16
+from chik.util.keychain import Keychain, KeyData
+from chik.util.keyring_wrapper import DEFAULT_PASSPHRASE_IF_NO_MASTER_PASSPHRASE
+from chik.util.ws_message import create_payload
 from tests.core.node_height import node_height_at_least
 
 

@@ -11,18 +11,18 @@ import aiohttp.client_exceptions
 import pytest
 from typing_extensions import Protocol
 
-from chia.daemon.client import DaemonProxy, connect_to_daemon_and_validate
-from chia.rpc.data_layer_rpc_client import DataLayerRpcClient
-from chia.rpc.farmer_rpc_client import FarmerRpcClient
-from chia.rpc.full_node_rpc_client import FullNodeRpcClient
-from chia.rpc.harvester_rpc_client import HarvesterRpcClient
-from chia.rpc.rpc_client import RpcClient
-from chia.rpc.wallet_rpc_client import WalletRpcClient
-from chia.simulator.socket import find_available_listen_port
-from chia.simulator.time_out_assert import adjusted_timeout
-from chia.util.config import lock_and_load_config, save_config
-from chia.util.ints import uint16
-from chia.util.misc import sendable_termination_signals
+from chik.daemon.client import DaemonProxy, connect_to_daemon_and_validate
+from chik.rpc.data_layer_rpc_client import DataLayerRpcClient
+from chik.rpc.farmer_rpc_client import FarmerRpcClient
+from chik.rpc.full_node_rpc_client import FullNodeRpcClient
+from chik.rpc.harvester_rpc_client import HarvesterRpcClient
+from chik.rpc.rpc_client import RpcClient
+from chik.rpc.wallet_rpc_client import WalletRpcClient
+from chik.simulator.socket import find_available_listen_port
+from chik.simulator.time_out_assert import adjusted_timeout
+from chik.util.config import lock_and_load_config, save_config
+from chik.util.ints import uint16
+from chik.util.misc import sendable_termination_signals
 from tests.core.data_layer.util import ChiaRoot
 from tests.util.misc import closing_chia_root_popen
 
@@ -60,7 +60,7 @@ async def test_daemon_terminates(signal_number: signal.Signals, chia_root: ChiaR
         config["daemon_port"] = port
         save_config(root_path=chia_root.path, filename="config.yaml", config_data=config)
 
-    with closing_chia_root_popen(chia_root=chia_root, args=[sys.executable, "-m", "chia.daemon.server"]) as process:
+    with closing_chia_root_popen(chia_root=chia_root, args=[sys.executable, "-m", "chik.daemon.server"]) as process:
         client = await wait_for_daemon_connection(root_path=chia_root.path, config=config)
 
         try:
@@ -77,18 +77,18 @@ async def test_daemon_terminates(signal_number: signal.Signals, chia_root: ChiaR
 @pytest.mark.parametrize(
     argnames=["create_service", "module_path", "service_config_name"],
     argvalues=[
-        [DataLayerRpcClient.create, "chia.server.start_data_layer", "data_layer"],
-        [FarmerRpcClient.create, "chia.server.start_farmer", "farmer"],
-        [FullNodeRpcClient.create, "chia.server.start_full_node", "full_node"],
-        [HarvesterRpcClient.create, "chia.server.start_harvester", "harvester"],
-        [WalletRpcClient.create, "chia.server.start_wallet", "wallet"],
+        [DataLayerRpcClient.create, "chik.server.start_data_layer", "data_layer"],
+        [FarmerRpcClient.create, "chik.server.start_farmer", "farmer"],
+        [FullNodeRpcClient.create, "chik.server.start_full_node", "full_node"],
+        [HarvesterRpcClient.create, "chik.server.start_harvester", "harvester"],
+        [WalletRpcClient.create, "chik.server.start_wallet", "wallet"],
         # TODO: review and somehow test the other services too
-        # [, "chia.server.start_introducer", "introducer"],
-        # [, "chia.seeder.start_crawler", ""],
-        # [, "chia.server.start_timelord", "timelord"],
-        # [, "chia.timelord.timelord_launcher", ],
-        # [, "chia.simulator.start_simulator", ],
-        # [, "chia.data_layer.data_layer_server", "data_layer"],
+        # [, "chik.server.start_introducer", "introducer"],
+        # [, "chik.seeder.start_crawler", ""],
+        # [, "chik.server.start_timelord", "timelord"],
+        # [, "chik.timelord.timelord_launcher", ],
+        # [, "chik.simulator.start_simulator", ],
+        # [, "chik.data_layer.data_layer_server", "data_layer"],
     ],
 )
 @pytest.mark.asyncio
@@ -112,7 +112,7 @@ async def test_services_terminate(
     # TODO: make the wallet start up regardless so this isn't needed
     with closing_chia_root_popen(
         chia_root=chia_root,
-        args=[sys.executable, "-m", "chia.daemon.server"],
+        args=[sys.executable, "-m", "chik.daemon.server"],
     ):
         # Make sure the daemon is running and responsive before starting other services.
         # This probably shouldn't be required.  For now, it helps at least with the

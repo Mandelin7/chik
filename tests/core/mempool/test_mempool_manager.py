@@ -7,11 +7,11 @@ import pytest
 from blspy import G1Element, G2Element
 from chiabip158 import PyBIP158
 
-from chia.consensus.constants import ConsensusConstants
-from chia.consensus.cost_calculator import NPCResult
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.full_node.mempool_check_conditions import mempool_check_time_locks
-from chia.full_node.mempool_manager import (
+from chik.consensus.constants import ConsensusConstants
+from chik.consensus.cost_calculator import NPCResult
+from chik.consensus.default_constants import DEFAULT_CONSTANTS
+from chik.full_node.mempool_check_conditions import mempool_check_time_locks
+from chik.full_node.mempool_manager import (
     MEMPOOL_MIN_FEE_INCREASE,
     MempoolManager,
     TimelockConditions,
@@ -20,19 +20,19 @@ from chia.full_node.mempool_manager import (
     optional_max,
     optional_min,
 )
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.serialized_program import SerializedProgram
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_record import CoinRecord
-from chia.types.coin_spend import CoinSpend
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.types.mempool_item import MempoolItem
-from chia.types.spend_bundle import SpendBundle
-from chia.types.spend_bundle_conditions import Spend, SpendBundleConditions
-from chia.util.errors import Err, ValidationError
-from chia.util.ints import uint32, uint64
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.serialized_program import SerializedProgram
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_record import CoinRecord
+from chik.types.coin_spend import CoinSpend
+from chik.types.condition_opcodes import ConditionOpcode
+from chik.types.mempool_inclusion_status import MempoolInclusionStatus
+from chik.types.mempool_item import MempoolItem
+from chik.types.spend_bundle import SpendBundle
+from chik.types.spend_bundle_conditions import Spend, SpendBundleConditions
+from chik.util.errors import Err, ValidationError
+from chik.util.ints import uint32, uint64
 
 IDENTITY_PUZZLE = Program.to(1)
 IDENTITY_PUZZLE_HASH = IDENTITY_PUZZLE.get_tree_hash()

@@ -27,16 +27,16 @@ sys.path = [path for path in sys.path if path != os.fspath(here)]
 
 from clvm_tools_rs import compile_clvm  # noqa: E402
 
-from chia.types.blockchain_format.serialized_program import SerializedProgram  # noqa: E402
+from chik.types.blockchain_format.serialized_program import SerializedProgram  # noqa: E402
 
 clvm_suffix = ".clvm"
 clsp_suffix = ".clsp"
 hex_suffix = ".clsp.hex"
 all_suffixes = {"clsp": clsp_suffix, "hex": hex_suffix, "clvm": clvm_suffix}
 # TODO: these could be cli options
-top_levels = {"chia"}
-hashes_path = root.joinpath("chia/wallet/puzzles/deployed_puzzle_hashes.json")
-std_libraries = root.joinpath("chia/wallet/puzzles")
+top_levels = {"chik"}
+hashes_path = root.joinpath("chik/wallet/puzzles/deployed_puzzle_hashes.json")
+std_libraries = root.joinpath("chik/wallet/puzzles")
 
 
 class ManageClvmError(Exception):

@@ -4,14 +4,14 @@ from random import Random
 
 import pytest
 
-from chia.full_node.bitcoin_fee_estimator import BitcoinFeeEstimator
-from chia.full_node.coin_store import CoinStore
-from chia.full_node.fee_estimate_store import FeeStore
-from chia.full_node.fee_estimation import MempoolItemInfo
-from chia.full_node.fee_estimator import SmartFeeEstimator
-from chia.full_node.fee_tracker import FeeTracker
-from chia.full_node.mempool_manager import MempoolManager
-from chia.util.ints import uint32, uint64
+from chik.full_node.bitcoin_fee_estimator import BitcoinFeeEstimator
+from chik.full_node.coin_store import CoinStore
+from chik.full_node.fee_estimate_store import FeeStore
+from chik.full_node.fee_estimation import MempoolItemInfo
+from chik.full_node.fee_estimator import SmartFeeEstimator
+from chik.full_node.fee_tracker import FeeTracker
+from chik.full_node.mempool_manager import MempoolManager
+from chik.util.ints import uint32, uint64
 from tests.core.consensus.test_pot_iterations import test_constants
 from tests.util.db_connection import DBConnection
 

@@ -11,23 +11,23 @@ import pytest
 import pytest_asyncio
 from blspy import G1Element
 
-from chia.farmer.farmer_api import Farmer
-from chia.harvester.harvester import Harvester
-from chia.plot_sync.delta import Delta, PathListDelta, PlotListDelta
-from chia.plot_sync.receiver import Receiver
-from chia.plot_sync.sender import Sender
-from chia.plot_sync.util import Constants, State
-from chia.plotting.manager import PlotManager
-from chia.plotting.util import add_plot_directory, remove_plot_directory
-from chia.protocols.harvester_protocol import Plot
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.server.start_service import Service
-from chia.simulator.block_tools import BlockTools
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.config import create_default_chia_config, lock_and_load_config, save_config
-from chia.util.ints import uint8, uint32, uint64
-from chia.util.streamable import _T_Streamable
+from chik.farmer.farmer_api import Farmer
+from chik.harvester.harvester import Harvester
+from chik.plot_sync.delta import Delta, PathListDelta, PlotListDelta
+from chik.plot_sync.receiver import Receiver
+from chik.plot_sync.sender import Sender
+from chik.plot_sync.util import Constants, State
+from chik.plotting.manager import PlotManager
+from chik.plotting.util import add_plot_directory, remove_plot_directory
+from chik.protocols.harvester_protocol import Plot
+from chik.protocols.protocol_message_types import ProtocolMessageTypes
+from chik.server.start_service import Service
+from chik.simulator.block_tools import BlockTools
+from chik.simulator.time_out_assert import time_out_assert
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.util.config import create_default_chia_config, lock_and_load_config, save_config
+from chik.util.ints import uint8, uint32, uint64
+from chik.util.streamable import _T_Streamable
 from tests.plot_sync.util import start_harvester_service
 from tests.plotting.test_plot_manager import Directory, MockPlotInfo
 from tests.plotting.util import get_test_plots

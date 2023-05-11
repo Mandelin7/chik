@@ -4,13 +4,13 @@ from typing import Iterator, List, Tuple
 
 import pytest
 
-from chia.cmds.units import units
-from chia.server.server import ChiaServer
-from chia.simulator.block_tools import BlockTools
-from chia.simulator.full_node_simulator import FullNodeSimulator, backoff_times
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16, uint64
-from chia.wallet.wallet_node import WalletNode
+from chik.cmds.units import units
+from chik.server.server import ChiaServer
+from chik.simulator.block_tools import BlockTools
+from chik.simulator.full_node_simulator import FullNodeSimulator, backoff_times
+from chik.types.peer_info import PeerInfo
+from chik.util.ints import uint16, uint64
+from chik.wallet.wallet_node import WalletNode
 
 
 def test_backoff_yields_initial_first() -> None:
@@ -99,11 +99,11 @@ async def test_simulation_farm_blocks_to_wallet(
     argvalues=[
         [0, 0],
         [1, 2],
-        [(2 * units["chia"]) - 1, 2],
-        [2 * units["chia"], 2],
-        [(2 * units["chia"]) + 1, 4],
-        [3 * units["chia"], 4],
-        [10 * units["chia"], 10],
+        [(2 * units["chik"]) - 1, 2],
+        [2 * units["chik"], 2],
+        [(2 * units["chik"]) + 1, 4],
+        [3 * units["chik"], 4],
+        [10 * units["chik"], 10],
     ],
 )
 async def test_simulation_farm_rewards_to_wallet(

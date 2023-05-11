@@ -5,29 +5,29 @@ from typing import List, Optional, Tuple
 import pytest
 from blspy import AugSchemeMPL, G1Element, G2Element, PrivateKey
 
-from chia.clvm.spend_sim import CostLogger, SimClient, SpendSim, sim_and_client
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.spend_bundle import SpendBundle
-from chia.util.errors import Err
-from chia.util.ints import uint64
-from chia.wallet.lineage_proof import LineageProof
-from chia.wallet.puzzles import p2_conditions, p2_delegated_puzzle_or_hidden_puzzle
+from chik.clvm.spend_sim import CostLogger, SimClient, SpendSim, sim_and_client
+from chik.consensus.default_constants import DEFAULT_CONSTANTS
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_spend import CoinSpend
+from chik.types.condition_opcodes import ConditionOpcode
+from chik.types.spend_bundle import SpendBundle
+from chik.util.errors import Err
+from chik.util.ints import uint64
+from chik.wallet.lineage_proof import LineageProof
+from chik.wallet.puzzles import p2_conditions, p2_delegated_puzzle_or_hidden_puzzle
 from tests.clvm.test_puzzles import public_key_for_index, secret_exponent_for_index
 from tests.util.key_tool import KeyTool
 
 """
 This test suite aims to test:
-    - chia.wallet.puzzles.singleton_top_layer.py
-    - chia.wallet.puzzles.singleton_top_layer.clsp
-    - chia.wallet.puzzles.singleton_top_layer_v1_1.py
-    - chia.wallet.puzzles.singleton_top_layer_v1_1.clsp
-    - chia.wallet.puzzles.p2_singleton.clsp
-    - chia.wallet.puzzles.p2_singleton_or_delayed_puzhash.clsp
+    - chik.wallet.puzzles.singleton_top_layer.py
+    - chik.wallet.puzzles.singleton_top_layer.clsp
+    - chik.wallet.puzzles.singleton_top_layer_v1_1.py
+    - chik.wallet.puzzles.singleton_top_layer_v1_1.clsp
+    - chik.wallet.puzzles.p2_singleton.clsp
+    - chik.wallet.puzzles.p2_singleton_or_delayed_puzhash.clsp
 """
 
 
@@ -92,11 +92,11 @@ class TestSingleton:
             starting_puzzle: Program = p2_delegated_puzzle_or_hidden_puzzle.puzzle_for_pk(pk)  # noqa
 
             if version == 0:
-                from chia.wallet.puzzles import singleton_top_layer
+                from chik.wallet.puzzles import singleton_top_layer
 
                 adapted_puzzle: Program = singleton_top_layer.adapt_inner_to_singleton(starting_puzzle)  # noqa
             else:
-                from chia.wallet.puzzles import singleton_top_layer_v1_1 as singleton_top_layer
+                from chik.wallet.puzzles import singleton_top_layer_v1_1 as singleton_top_layer
 
                 adapted_puzzle = starting_puzzle
             adapted_puzzle_hash: bytes32 = adapted_puzzle.get_tree_hash()
