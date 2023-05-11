@@ -14,7 +14,7 @@ from chik.simulator.full_node_simulator import FullNodeSimulator
 from chik.simulator.simulator_full_node_rpc_api import SimulatorFullNodeRpcApi
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.util.bech32m import decode_puzzle_hash
-from chik.util.chia_logging import initialize_logging
+from chik.util.chik_logging import initialize_logging
 from chik.util.config import load_config, load_config_cli, override_config
 from chik.util.default_root import DEFAULT_ROOT_PATH
 from chik.util.ints import uint16
