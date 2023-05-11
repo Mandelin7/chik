@@ -15,15 +15,15 @@ Write-Output "Chik Version is: $env:CHIK_INSTALLER_VERSION"
 Write-Output "   ---"
 
 Write-Output "   ---"
-Write-Output "Use pyinstaller to create chia .exe's"
+Write-Output "Use pyinstaller to create chik .exe's"
 Write-Output "   ---"
-$SPEC_FILE = (python -c 'import chia; print(chia.PYINSTALLER_SPEC_PATH)') -join "`n"
+$SPEC_FILE = (python -c 'import chik; print(chik.PYINSTALLER_SPEC_PATH)') -join "`n"
 pyinstaller --log-level INFO $SPEC_FILE
 
 Write-Output "   ---"
-Write-Output "Copy chia executables to chia-blockchain-gui\"
+Write-Output "Copy chik executables to chik-blockchain-gui\"
 Write-Output "   ---"
-Copy-Item "dist\daemon" -Destination "..\chia-blockchain-gui\packages\gui\" -Recurse
+Copy-Item "dist\daemon" -Destination "..\chik-blockchain-gui\packages\gui\" -Recurse
 
 Write-Output "   ---"
 Write-Output "Setup npm packager"
@@ -43,16 +43,16 @@ Write-Output "   ---"
 $Env:NODE_OPTIONS = "--max-old-space-size=3000"
 
 # Change to the GUI directory
-Set-Location -Path "chia-blockchain-gui\packages\gui" -PassThru
+Set-Location -Path "chik-blockchain-gui\packages\gui" -PassThru
 
 Write-Output "   ---"
-Write-Output "Increase the stack for chia command for (chia plots create) chiapos limitations"
+Write-Output "Increase the stack for chik command for (chik plots create) chikpos limitations"
 # editbin.exe needs to be in the path
-editbin.exe /STACK:8000000 daemon\chia.exe
+editbin.exe /STACK:8000000 daemon\chik.exe
 Write-Output "   ---"
 
 $packageVersion = "$env:CHIK_INSTALLER_VERSION"
-$packageName = "Chia-$packageVersion"
+$packageName = "Chik-$packageVersion"
 
 Write-Output "packageName is $packageName"
 
@@ -67,7 +67,7 @@ Write-Output "   ---"
 
 Write-Output "   ---"
 Write-Output "electron-builder"
-electron-builder build --win --x64 --config.productName="Chia"
+electron-builder build --win --x64 --config.productName="Chik"
 Get-ChildItem dist\win-unpacked\resources
 Write-Output "   ---"
 
@@ -75,7 +75,7 @@ If ($env:HAS_SECRET) {
    Write-Output "   ---"
    Write-Output "Verify signature"
    Write-Output "   ---"
-   signtool.exe verify /v /pa .\dist\ChiaSetup-$packageVersion.exe
+   signtool.exe verify /v /pa .\dist\ChikSetup-$packageVersion.exe
    }   Else    {
    Write-Output "Skipping verify signatures - no authorization to install certificates"
 }
@@ -83,9 +83,9 @@ If ($env:HAS_SECRET) {
 Write-Output "   ---"
 Write-Output "Moving final installers to expected location"
 Write-Output "   ---"
-Copy-Item ".\dist\win-unpacked" -Destination "$env:GITHUB_WORKSPACE\chia-blockchain-gui\Chia-win32-x64" -Recurse
-mkdir "$env:GITHUB_WORKSPACE\chia-blockchain-gui\release-builds\windows-installer" -ea 0
-Copy-Item ".\dist\ChiaSetup-$packageVersion.exe" -Destination "$env:GITHUB_WORKSPACE\chia-blockchain-gui\release-builds\windows-installer"
+Copy-Item ".\dist\win-unpacked" -Destination "$env:GITHUB_WORKSPACE\chik-blockchain-gui\Chik-win32-x64" -Recurse
+mkdir "$env:GITHUB_WORKSPACE\chik-blockchain-gui\release-builds\windows-installer" -ea 0
+Copy-Item ".\dist\ChikSetup-$packageVersion.exe" -Destination "$env:GITHUB_WORKSPACE\chik-blockchain-gui\release-builds\windows-installer"
 
 Write-Output "   ---"
 Write-Output "Windows Installer complete"

@@ -34,7 +34,7 @@ rm -rf dist
 mkdir dist
 
 echo "Create executables with pyinstaller"
-SPEC_FILE=$(python -c 'import chia; print(chia.PYINSTALLER_SPEC_PATH)')
+SPEC_FILE=$(python -c 'import chik; print(chik.PYINSTALLER_SPEC_PATH)')
 pyinstaller --log-level=INFO "$SPEC_FILE"
 LAST_EXIT_CODE=$?
 if [ "$LAST_EXIT_CODE" -ne 0 ]; then
@@ -43,11 +43,11 @@ if [ "$LAST_EXIT_CODE" -ne 0 ]; then
 fi
 
 # Builds CLI only rpm
-CLI_RPM_BASE="chia-blockchain-cli-$CHIK_INSTALLER_VERSION-1.$REDHAT_PLATFORM"
-mkdir -p "dist/$CLI_RPM_BASE/opt/chia"
+CLI_RPM_BASE="chik-blockchain-cli-$CHIK_INSTALLER_VERSION-1.$REDHAT_PLATFORM"
+mkdir -p "dist/$CLI_RPM_BASE/opt/chik"
 mkdir -p "dist/$CLI_RPM_BASE/usr/bin"
-cp -r dist/daemon/* "dist/$CLI_RPM_BASE/opt/chia/"
-ln -s ../../opt/chia/chia "dist/$CLI_RPM_BASE/usr/bin/chia"
+cp -r dist/daemon/* "dist/$CLI_RPM_BASE/opt/chik/"
+ln -s ../../opt/chik/chik "dist/$CLI_RPM_BASE/usr/bin/chik"
 # This is built into the base build image
 # shellcheck disable=SC1091
 . /etc/profile.d/rvm.sh
@@ -58,21 +58,21 @@ rvm use ruby-3
 fpm -s dir -t rpm \
   -C "dist/$CLI_RPM_BASE" \
   -p "dist/$CLI_RPM_BASE.rpm" \
-  --name chia-blockchain-cli \
+  --name chik-blockchain-cli \
   --license Apache-2.0 \
   --version "$CHIK_INSTALLER_VERSION" \
   --architecture "$REDHAT_PLATFORM" \
-  --description "Chia is a modern cryptocurrency built from scratch, designed to be efficient, decentralized, and secure." \
+  --description "Chik is a modern cryptocurrency built from scratch, designed to be efficient, decentralized, and secure." \
   --depends /usr/lib64/libcrypt.so.1 \
   .
 # CLI only rpm done
 
-cp -r dist/daemon ../chia-blockchain-gui/packages/gui
+cp -r dist/daemon ../chik-blockchain-gui/packages/gui
 
 # Change to the gui package
-cd ../chia-blockchain-gui/packages/gui || exit 1
+cd ../chik-blockchain-gui/packages/gui || exit 1
 
-# sets the version for chia-blockchain in package.json
+# sets the version for chik-blockchain in package.json
 cp package.json package.json.orig
 jq --arg VER "$CHIK_INSTALLER_VERSION" '.version=$VER' package.json > temp.json && mv temp.json package.json
 
@@ -81,15 +81,15 @@ OPT_ARCH="--x64"
 if [ "$REDHAT_PLATFORM" = "arm64" ]; then
   OPT_ARCH="--arm64"
 fi
-PRODUCT_NAME="chia"
+PRODUCT_NAME="chik"
 echo electron-builder build --linux rpm "${OPT_ARCH}" \
-  --config.extraMetadata.name=chia-blockchain \
-  --config.productName="${PRODUCT_NAME}" --config.linux.desktop.Name="Chia Blockchain" \
-  --config.rpm.packageName="chia-blockchain"
+  --config.extraMetadata.name=chik-blockchain \
+  --config.productName="${PRODUCT_NAME}" --config.linux.desktop.Name="Chik Blockchain" \
+  --config.rpm.packageName="chik-blockchain"
 electron-builder build --linux rpm "${OPT_ARCH}" \
-  --config.extraMetadata.name=chia-blockchain \
-  --config.productName="${PRODUCT_NAME}" --config.linux.desktop.Name="Chia Blockchain" \
-  --config.rpm.packageName="chia-blockchain"
+  --config.extraMetadata.name=chik-blockchain \
+  --config.productName="${PRODUCT_NAME}" --config.linux.desktop.Name="Chik Blockchain" \
+  --config.rpm.packageName="chik-blockchain"
 LAST_EXIT_CODE=$?
 ls -l dist/linux*-unpacked/resources
 
@@ -101,7 +101,7 @@ if [ "$LAST_EXIT_CODE" -ne 0 ]; then
 	exit $LAST_EXIT_CODE
 fi
 
-GUI_RPM_NAME="chia-blockchain-${CHIK_INSTALLER_VERSION}-1.${REDHAT_PLATFORM}.rpm"
+GUI_RPM_NAME="chik-blockchain-${CHIK_INSTALLER_VERSION}-1.${REDHAT_PLATFORM}.rpm"
 mv "dist/${PRODUCT_NAME}-${CHIK_INSTALLER_VERSION}.rpm" "../../../build_scripts/dist/${GUI_RPM_NAME}"
 cd ../../../build_scripts || exit 1
 

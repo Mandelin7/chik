@@ -9,9 +9,9 @@ cd npm_macos || exit 1
 npm ci
 PATH=$(npm bin):$PATH
 cd ../../ || exit 1
-git submodule update --init chia-blockchain-gui
+git submodule update --init chik-blockchain-gui
 
-cd ./chia-blockchain-gui || exit 1
+cd ./chik-blockchain-gui || exit 1
 echo "npm build"
 lerna clean -y
 npm ci
@@ -29,7 +29,7 @@ rm -rf node_modules
 
 # Other than `chik-blockchain-gui/package/gui`, all other packages are no longer necessary after build.
 # Since these unused packages make cache unnecessarily fat, unused packages should be removed.
-echo "Remove unused @chia-network packages to make cache slim"
+echo "Remove unused @chik-network packages to make cache slim"
 ls -l packages
 rm -rf packages/api
 rm -rf packages/api-react
@@ -44,5 +44,5 @@ rm -rf electron/dist # ~186MB
 rm -rf "@mui" # ~71MB
 rm -rf typescript # ~63MB
 
-# Remove `packages/gui/node_modules/@chia-network` because it causes an error on later `electron-packager` command
-rm -rf "@chia-network"
+# Remove `packages/gui/node_modules/@chik-network` because it causes an error on later `electron-packager` command
+rm -rf "@chik-network"

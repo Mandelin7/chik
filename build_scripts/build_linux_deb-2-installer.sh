@@ -36,7 +36,7 @@ rm -rf dist
 mkdir dist
 
 echo "Create executables with pyinstaller"
-SPEC_FILE=$(python -c 'import chia; print(chia.PYINSTALLER_SPEC_PATH)')
+SPEC_FILE=$(python -c 'import chik; print(chik.PYINSTALLER_SPEC_PATH)')
 pyinstaller --log-level=INFO "$SPEC_FILE"
 LAST_EXIT_CODE=$?
 if [ "$LAST_EXIT_CODE" -ne 0 ]; then
@@ -47,27 +47,27 @@ fi
 # Builds CLI only .deb
 # need j2 for templating the control file
 pip install j2cli
-CLI_DEB_BASE="chia-blockchain-cli_$CHIK_INSTALLER_VERSION-1_$PLATFORM"
-mkdir -p "dist/$CLI_DEB_BASE/opt/chia"
+CLI_DEB_BASE="chik-blockchain-cli_$CHIK_INSTALLER_VERSION-1_$PLATFORM"
+mkdir -p "dist/$CLI_DEB_BASE/opt/chik"
 mkdir -p "dist/$CLI_DEB_BASE/usr/bin"
 mkdir -p "dist/$CLI_DEB_BASE/DEBIAN"
 j2 -o "dist/$CLI_DEB_BASE/DEBIAN/control" assets/deb/control.j2
-cp -r dist/daemon/* "dist/$CLI_DEB_BASE/opt/chia/"
-ln -s ../../opt/chia/chia "dist/$CLI_DEB_BASE/usr/bin/chia"
+cp -r dist/daemon/* "dist/$CLI_DEB_BASE/opt/chik/"
+ln -s ../../opt/chik/chik "dist/$CLI_DEB_BASE/usr/bin/chik"
 dpkg-deb --build --root-owner-group "dist/$CLI_DEB_BASE"
 # CLI only .deb done
 
-cp -r dist/daemon ../chia-blockchain-gui/packages/gui
+cp -r dist/daemon ../chik-blockchain-gui/packages/gui
 
 # Change to the gui package
-cd ../chia-blockchain-gui/packages/gui || exit 1
+cd ../chik-blockchain-gui/packages/gui || exit 1
 
-# sets the version for chia-blockchain in package.json
+# sets the version for chik-blockchain in package.json
 cp package.json package.json.orig
 jq --arg VER "$CHIK_INSTALLER_VERSION" '.version=$VER' package.json > temp.json && mv temp.json package.json
 
 echo "Building Linux(deb) Electron app"
-PRODUCT_NAME="chia"
+PRODUCT_NAME="chik"
 if [ "$PLATFORM" = "arm64" ]; then
   # electron-builder does not work for arm64 as of Aug 16, 2022.
   # This is a temporary fix.
@@ -83,23 +83,23 @@ if [ "$PLATFORM" = "arm64" ]; then
   sudo gem install public_suffix -v 4.0.7
   sudo gem install fpm
   echo USE_SYSTEM_FPM=true electron-builder build --linux deb --arm64 \
-    --config.extraMetadata.name=chia-blockchain \
-    --config.productName="$PRODUCT_NAME" --config.linux.desktop.Name="Chia Blockchain" \
-    --config.deb.packageName="chia-blockchain"
+    --config.extraMetadata.name=chik-blockchain \
+    --config.productName="$PRODUCT_NAME" --config.linux.desktop.Name="Chik Blockchain" \
+    --config.deb.packageName="chik-blockchain"
   USE_SYSTEM_FPM=true electron-builder build --linux deb --arm64 \
-    --config.extraMetadata.name=chia-blockchain \
-    --config.productName="$PRODUCT_NAME" --config.linux.desktop.Name="Chia Blockchain" \
-    --config.deb.packageName="chia-blockchain"
+    --config.extraMetadata.name=chik-blockchain \
+    --config.productName="$PRODUCT_NAME" --config.linux.desktop.Name="Chik Blockchain" \
+    --config.deb.packageName="chik-blockchain"
   LAST_EXIT_CODE=$?
 else
   echo electron-builder build --linux deb --x64 \
-    --config.extraMetadata.name=chia-blockchain \
-    --config.productName="$PRODUCT_NAME" --config.linux.desktop.Name="Chia Blockchain" \
-    --config.deb.packageName="chia-blockchain"
+    --config.extraMetadata.name=chik-blockchain \
+    --config.productName="$PRODUCT_NAME" --config.linux.desktop.Name="Chik Blockchain" \
+    --config.deb.packageName="chik-blockchain"
   electron-builder build --linux deb --x64 \
-    --config.extraMetadata.name=chia-blockchain \
-    --config.productName="$PRODUCT_NAME" --config.linux.desktop.Name="Chia Blockchain" \
-    --config.deb.packageName="chia-blockchain"
+    --config.extraMetadata.name=chik-blockchain \
+    --config.productName="$PRODUCT_NAME" --config.linux.desktop.Name="Chik Blockchain" \
+    --config.deb.packageName="chik-blockchain"
   LAST_EXIT_CODE=$?
 fi
 ls -l dist/linux*-unpacked/resources
@@ -112,7 +112,7 @@ if [ "$LAST_EXIT_CODE" -ne 0 ]; then
 	exit $LAST_EXIT_CODE
 fi
 
-GUI_DEB_NAME=chia-blockchain_${CHIK_INSTALLER_VERSION}_${PLATFORM}.deb
+GUI_DEB_NAME=chik-blockchain_${CHIK_INSTALLER_VERSION}_${PLATFORM}.deb
 mv "dist/${PRODUCT_NAME}-${CHIK_INSTALLER_VERSION}.deb" "../../../build_scripts/dist/${GUI_DEB_NAME}"
 cd ../../../build_scripts || exit 1
 
