@@ -23,7 +23,7 @@ from chik.data_layer.download_data import is_filename_valid
 from chik.types.blockchain_format.sized_bytes import bytes32
 
 log = logging.getLogger(__name__)
-plugin_name = "Chia S3 Datalayer plugin"
+plugin_name = "Chik S3 Datalayer plugin"
 plugin_version = "0.1.0"
 
 

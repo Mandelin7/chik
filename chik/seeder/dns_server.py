@@ -12,7 +12,7 @@ from typing import Any, Dict, List
 import aiosqlite
 from dnslib import AAAA, CNAME, MX, NS, QTYPE, RR, SOA, A, DNSHeader, DNSRecord
 
-from chik.util.chia_logging import initialize_logging
+from chik.util.chik_logging import initialize_logging
 from chik.util.config import load_config
 from chik.util.default_root import DEFAULT_ROOT_PATH
 from chik.util.path import path_from_root

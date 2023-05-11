@@ -7,7 +7,7 @@ from typing import Tuple, Union
 
 from click.testing import CliRunner
 
-from chik.cmds.chia import cli
+from chik.cmds.chik import cli
 from chik.full_node.full_node_api import FullNodeAPI
 from chik.server.server import ChiaServer
 from chik.simulator.block_tools import BlockTools

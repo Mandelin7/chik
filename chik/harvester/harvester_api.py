@@ -15,7 +15,7 @@ from chik.protocols.farmer_protocol import FarmingInfo
 from chik.protocols.harvester_protocol import Plot, PlotSyncResponse
 from chik.protocols.protocol_message_types import ProtocolMessageTypes
 from chik.server.outbound_message import Message, make_msg
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.ws_connection import WSChikConnection
 from chik.types.blockchain_format.proof_of_space import (
     ProofOfSpace,
     calculate_pos_challenge,
@@ -36,7 +36,7 @@ class HarvesterAPI:
 
     @api_request(peer_required=True)
     async def harvester_handshake(
-        self, harvester_handshake: harvester_protocol.HarvesterHandshake, peer: WSChiaConnection
+        self, harvester_handshake: harvester_protocol.HarvesterHandshake, peer: WSChikConnection
     ) -> None:
         """
         Handshake between the harvester and farmer. The harvester receives the pool public keys,
@@ -52,7 +52,7 @@ class HarvesterAPI:
 
     @api_request(peer_required=True)
     async def new_signage_point_harvester(
-        self, new_challenge: harvester_protocol.NewSignagePointHarvester, peer: WSChiaConnection
+        self, new_challenge: harvester_protocol.NewSignagePointHarvester, peer: WSChikConnection
     ) -> None:
         """
         The harvester receives a new signage point from the farmer, this happens at the start of each slot.

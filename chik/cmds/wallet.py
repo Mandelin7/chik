@@ -142,25 +142,25 @@ def get_transactions_cmd(
 )
 @click.option("-f", "--fingerprint", help="Set the fingerprint to specify which key to use", type=int)
 @click.option("-i", "--id", help="Id of the wallet to use", type=int, default=1, show_default=True, required=True)
-@click.option("-a", "--amount", help="How much chik to send, in XCH", type=str, required=True)
+@click.option("-a", "--amount", help="How much chik to send, in XCK", type=str, required=True)
 @click.option("-e", "--memo", help="Additional memo for the transaction", type=str, default=None)
 @click.option(
     "-m",
     "--fee",
-    help="Set the fees for the transaction, in XCH",
+    help="Set the fees for the transaction, in XCK",
     type=str,
     default="0",
     show_default=True,
     required=True,
 )
-@click.option("-t", "--address", help="Address to send the XCH", type=str, required=True)
+@click.option("-t", "--address", help="Address to send the XCK", type=str, required=True)
 @click.option(
     "-o", "--override", help="Submits transaction without checking for unusual values", is_flag=True, default=False
 )
 @click.option(
     "-ma",
     "--min-coin-amount",
-    help="Ignore coins worth less then this much XCH or CAT units",
+    help="Ignore coins worth less then this much XCK or CAT units",
     type=str,
     required=False,
     default="0",
@@ -168,7 +168,7 @@ def get_transactions_cmd(
 @click.option(
     "-l",
     "--max-coin-amount",
-    help="Ignore coins worth more then this much XCH or CAT units",
+    help="Ignore coins worth more then this much XCK or CAT units",
     type=str,
     required=False,
     default="0",
@@ -326,7 +326,7 @@ def get_derivation_index_cmd(wallet_rpc_port: Optional[int], fingerprint: int) -
 @click.option("-a", "--address", help="The address you want to use for signing", type=str, required=True)
 @click.option("-m", "--hex_message", help="The hex message you want sign", type=str, required=True)
 def address_sign_message(wallet_rpc_port: Optional[int], fingerprint: int, address: str, hex_message: str) -> None:
-    extra_params: Dict[str, Any] = {"address": address, "message": hex_message, "type": AddressType.XCH}
+    extra_params: Dict[str, Any] = {"address": address, "message": hex_message, "type": AddressType.XCK}
     import asyncio
 
     from .wallet_funcs import sign_message
@@ -392,7 +392,7 @@ def add_token_cmd(wallet_rpc_port: Optional[int], asset_id: str, token_name: str
     asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, add_token))
 
 
-@wallet_cmd.command("make_offer", short_help="Create an offer of XCH/CATs/NFTs for XCH/CATs/NFTs")
+@wallet_cmd.command("make_offer", short_help="Create an offer of XCK/CATs/NFTs for XCK/CATs/NFTs")
 @click.option(
     "-wp",
     "--wallet-rpc-port",
@@ -417,7 +417,7 @@ def add_token_cmd(wallet_rpc_port: Optional[int], asset_id: str, token_name: str
 )
 @click.option("-p", "--filepath", help="The path to write the generated offer file to", required=True)
 @click.option(
-    "-m", "--fee", help="A fee to add to the offer when it gets taken, in XCH", default="0", show_default=True
+    "-m", "--fee", help="A fee to add to the offer when it gets taken, in XCK", default="0", show_default=True
 )
 @click.option(
     "-r",
@@ -508,7 +508,7 @@ def get_offers_cmd(
 @click.option("-f", "--fingerprint", help="Set the fingerprint to specify which key to use", type=int)
 @click.option("-e", "--examine-only", help="Print the summary of the offer file but do not take it", is_flag=True)
 @click.option(
-    "-m", "--fee", help="The fee to use when pushing the completed offer, in XCH", default="0", show_default=True
+    "-m", "--fee", help="The fee to use when pushing the completed offer, in XCK", default="0", show_default=True
 )
 @click.option(
     "-r",
@@ -550,7 +550,7 @@ def take_offer_cmd(
 @click.option("-id", "--id", help="The offer ID that you wish to cancel", required=True)
 @click.option("--insecure", help="Don't make an on-chain transaction, simply mark the offer as cancelled", is_flag=True)
 @click.option(
-    "-m", "--fee", help="The fee to use when cancelling the offer securely, in XCH", default="0", show_default=True
+    "-m", "--fee", help="The fee to use when cancelling the offer securely, in XCK", default="0", show_default=True
 )
 def cancel_offer_cmd(wallet_rpc_port: Optional[int], fingerprint: int, id: str, insecure: bool, fee: str) -> None:
     extra_params = {"id": id, "insecure": insecure, "fee": fee}
@@ -568,7 +568,7 @@ def cancel_offer_cmd(wallet_rpc_port: Optional[int], fingerprint: int, id: str, 
 # TODO: accept multiple dbs on commandline
 # TODO: Convert to Path earlier
 def check_wallet_cmd(ctx: click.Context, db_path: str, verbose: bool) -> None:
-    """check, scan, diagnose, fsck Chia Wallet DBs"""
+    """check, scan, diagnose, fsck Chik Wallet DBs"""
     import asyncio
 
     from chik.cmds.check_wallet_db import scan
@@ -602,7 +602,7 @@ def did_cmd():
 @click.option(
     "-m",
     "--fee",
-    help="Set the fees per transaction, in XCH.",
+    help="Set the fees per transaction, in XCK.",
     type=str,
     default="0",
     show_default=True,
@@ -749,7 +749,7 @@ def nft_sign_message(wallet_rpc_port: Optional[int], fingerprint: int, nft_id: s
 @click.option(
     "-m",
     "--fee",
-    help="Set the fees per transaction, in XCH.",
+    help="Set the fees per transaction, in XCK.",
     type=str,
     default="0",
     show_default=True,
@@ -840,7 +840,7 @@ def nft_mint_cmd(
 @click.option(
     "-m",
     "--fee",
-    help="Set the fees per transaction, in XCH.",
+    help="Set the fees per transaction, in XCK.",
     type=str,
     default="0",
     show_default=True,
@@ -895,7 +895,7 @@ def nft_add_uri_cmd(
 @click.option(
     "-m",
     "--fee",
-    help="Set the fees per transaction, in XCH.",
+    help="Set the fees per transaction, in XCK.",
     type=str,
     default="0",
     show_default=True,
@@ -965,7 +965,7 @@ def nft_list_cmd(wallet_rpc_port: Optional[int], fingerprint: int, id: int) -> N
 @click.option(
     "-m",
     "--fee",
-    help="Set the fees per transaction, in XCH.",
+    help="Set the fees per transaction, in XCK.",
     type=str,
     default="0",
     show_default=True,

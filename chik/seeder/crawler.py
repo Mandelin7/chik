@@ -19,8 +19,8 @@ from chik.rpc.rpc_server import StateChangedProtocol, default_get_connections
 from chik.seeder.crawl_store import CrawlStore
 from chik.seeder.peer_record import PeerRecord, PeerReliability
 from chik.server.outbound_message import NodeType
-from chik.server.server import ChiaServer
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.server import ChikServer
+from chik.server.ws_connection import WSChikConnection
 from chik.types.peer_info import PeerInfo
 from chik.util.ints import uint32, uint64
 from chik.util.network import resolve
@@ -34,7 +34,7 @@ class Crawler:
     coin_store: CoinStore
     connection: aiosqlite.Connection
     config: Dict
-    _server: Optional[ChiaServer]
+    _server: Optional[ChikServer]
     crawl_store: Optional[CrawlStore]
     log: logging.Logger
     constants: ConsensusConstants
@@ -45,7 +45,7 @@ class Crawler:
     minimum_version_count: int
 
     @property
-    def server(self) -> ChiaServer:
+    def server(self) -> ChikServer:
         # This is a stop gap until the class usage is refactored such the values of
         # integral attributes are known at creation of the instance.
         if self._server is None:
@@ -100,7 +100,7 @@ class Crawler:
         return await self.server.start_client(peer_info, on_connect)
 
     async def connect_task(self, peer):
-        async def peer_action(peer: WSChiaConnection):
+        async def peer_action(peer: WSChikConnection):
             peer_info = peer.get_peer_info()
             version = peer.get_version()
             if peer_info is not None and version is not None:
@@ -343,14 +343,14 @@ class Crawler:
         except Exception as e:
             self.log.error(f"Exception: {e}. Traceback: {traceback.format_exc()}.")
 
-    def set_server(self, server: ChiaServer):
+    def set_server(self, server: ChikServer):
         self._server = server
 
     def _state_changed(self, change: str, change_data: Optional[Dict[str, Any]] = None):
         if self.state_changed_callback is not None:
             self.state_changed_callback(change, change_data)
 
-    async def new_peak(self, request: full_node_protocol.NewPeak, peer: WSChiaConnection):
+    async def new_peak(self, request: full_node_protocol.NewPeak, peer: WSChikConnection):
         try:
             peer_info = peer.get_peer_info()
             tls_version = peer.get_tls_version()
@@ -365,7 +365,7 @@ class Crawler:
         except Exception as e:
             self.log.error(f"Exception: {e}. Traceback: {traceback.format_exc()}.")
 
-    async def on_connect(self, connection: WSChiaConnection):
+    async def on_connect(self, connection: WSChikConnection):
         pass
 
     def _close(self):

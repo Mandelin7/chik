@@ -9,7 +9,7 @@ from typing import Dict, List, Optional
 import pytest
 from click.testing import CliRunner, Result
 
-from chik.cmds.chia import cli
+from chik.cmds.chik import cli
 from chik.cmds.keys import delete_all_cmd, generate_and_print_cmd, sign_cmd, verify_cmd
 from chik.util.config import load_config
 from chik.util.keychain import Keychain, KeyData, generate_mnemonic

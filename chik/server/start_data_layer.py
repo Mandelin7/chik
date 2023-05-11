@@ -12,7 +12,7 @@ from chik.rpc.wallet_rpc_client import WalletRpcClient
 from chik.server.outbound_message import NodeType
 from chik.server.start_service import RpcInfo, Service, async_run
 from chik.ssl.create_ssl import create_all_ssl
-from chik.util.chia_logging import initialize_logging
+from chik.util.chik_logging import initialize_logging
 from chik.util.config import load_config, load_config_cli
 from chik.util.default_root import DEFAULT_ROOT_PATH
 from chik.util.ints import uint16

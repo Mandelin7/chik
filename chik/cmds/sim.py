@@ -10,7 +10,7 @@ from chik.cmds.sim_funcs import async_config_wizard, farm_blocks, print_status, 
 from chik.util.default_root import SIMULATOR_ROOT_PATH
 
 
-@click.group("sim", help="Configure and make requests to a Chia Simulator Full Node")
+@click.group("sim", help="Configure and make requests to a Chik Simulator Full Node")
 @click.option(
     "-p",
     "--rpc-port",
@@ -39,7 +39,7 @@ def sim_cmd(ctx: click.Context, rpc_port: Optional[int], root_path: str, simulat
     ctx.obj["rpc_port"] = rpc_port
 
 
-@sim_cmd.command("create", help="Guides you through the process of setting up a Chia Simulator")
+@sim_cmd.command("create", help="Guides you through the process of setting up a Chik Simulator")
 @click.option("-f", "--fingerprint", type=int, required=False, help="Use your fingerprint to skip the key prompt")
 @click.option(
     "-r",
@@ -90,7 +90,7 @@ def create_simulator_config(
     )
 
 
-@sim_cmd.command("start", help="Start service groups while automatically using the right chia_root.")
+@sim_cmd.command("start", help="Start service groups while automatically using the right chik_root.")
 @click.option("-r", "--restart", is_flag=True, help="Restart running services")
 @click.option("-w", "--wallet", is_flag=True, help="Start wallet")
 @click.pass_context
@@ -103,7 +103,7 @@ def sim_start_cmd(ctx: click.Context, restart: bool, wallet: bool) -> None:
     ctx.invoke(start_cmd, restart=restart, group=group)
 
 
-@sim_cmd.command("stop", help="Stop running services while automatically using the right chia_root.")
+@sim_cmd.command("stop", help="Stop running services while automatically using the right chik_root.")
 @click.option("-d", "--daemon", is_flag=True, help="Stop daemon")
 @click.option("-w", "--wallet", is_flag=True, help="Stop wallet")
 @click.pass_context

@@ -1,5 +1,5 @@
 from __future__ import annotations
 
-from chik.cmds.chia import main
+from chik.cmds.chik import main
 
 main()

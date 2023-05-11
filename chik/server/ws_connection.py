@@ -15,7 +15,7 @@ from aiohttp.client import ClientWebSocketResponse
 from aiohttp.web import WebSocketResponse
 from typing_extensions import Protocol, final
 
-from chik.cmds.init_funcs import chia_full_version_str
+from chik.cmds.init_funcs import chik_full_version_str
 from chik.protocols.protocol_message_types import ProtocolMessageTypes
 from chik.protocols.protocol_state_machine import message_response_ok
 from chik.protocols.protocol_timing import API_EXCEPTION_BAN_SECONDS, INTERNAL_PROTOCOL_ERROR_BAN_SECONDS
@@ -38,7 +38,7 @@ from chik.util.streamable import Streamable
 LENGTH_BYTES: int = 4
 
 WebSocket = Union[WebSocketResponse, ClientWebSocketResponse]
-ConnectionCallback = Callable[["WSChiaConnection"], Awaitable[None]]
+ConnectionCallback = Callable[["WSChikConnection"], Awaitable[None]]
 
 
 def create_default_last_message_time_dict() -> Dict[ProtocolMessageTypes, float]:
@@ -48,7 +48,7 @@ def create_default_last_message_time_dict() -> Dict[ProtocolMessageTypes, float]
 class ConnectionClosedCallbackProtocol(Protocol):
     def __call__(
         self,
-        connection: WSChiaConnection,
+        connection: WSChikConnection,
         ban_time: int,
         closed_connection: bool = ...,
     ) -> None:
@@ -57,7 +57,7 @@ class ConnectionClosedCallbackProtocol(Protocol):
 
 @final
 @dataclass
-class WSChiaConnection:
+class WSChikConnection:
     """
     Represents a connection to another node. Local host and port are ours, while peer host and
     port are the host and port of the peer that we are connected to. Node_id and connection_type are
@@ -89,7 +89,7 @@ class WSChiaConnection:
     # Contains task ids of api tasks which should not be canceled
     execute_tasks: Set[bytes32] = field(default_factory=set, repr=False)
 
-    # ChiaConnection metrics
+    # ChikConnection metrics
     creation_time: float = field(default_factory=time.time)
     bytes_read: int = 0
     bytes_written: int = 0
@@ -109,7 +109,7 @@ class WSChiaConnection:
     connection_type: Optional[NodeType] = None
     request_nonce: uint16 = uint16(0)
     peer_capabilities: List[Capability] = field(default_factory=list)
-    # Used by the Chia Seeder.
+    # Used by the Chik Seeder.
     version: str = field(default_factory=str)
     protocol_version: str = field(default_factory=str)
 
@@ -135,7 +135,7 @@ class WSChiaConnection:
         outbound_rate_limit_percent: int,
         local_capabilities_for_handshake: List[Tuple[uint16, str]],
         session: Optional[ClientSession] = None,
-    ) -> WSChiaConnection:
+    ) -> WSChikConnection:
         assert ws._writer is not None
         peername = ws._writer.transport.get_extra_info("peername")
 
@@ -194,7 +194,7 @@ class WSChiaConnection:
             Handshake(
                 network_id,
                 protocol_version,
-                chia_full_version_str(),
+                chik_full_version_str(),
                 uint16(server_port),
                 uint8(local_type.value),
                 self.local_capabilities_for_handshake,
@@ -671,7 +671,7 @@ class WSChiaConnection:
             await asyncio.sleep(3)
         return None
 
-    # Used by the Chia Seeder.
+    # Used by the Chik Seeder.
     def get_version(self) -> str:
         return self.version
 

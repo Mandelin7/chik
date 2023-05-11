@@ -208,7 +208,7 @@ class BlockTools:
             self.ssl_nodes_certs_and_keys_wrapper: SSLTestCollateralWrapper[
                 SSLTestNodeCertsAndKeys
             ] = get_next_nodes_certs_and_keys()
-            create_default_chia_config(root_path)
+            create_default_chik_config(root_path)
             create_all_ssl(
                 root_path,
                 private_ca_crt_and_key=self.ssl_ca_cert_and_key_wrapper.collateral.cert_and_key,
@@ -423,7 +423,7 @@ class BlockTools:
                 if pool_contract_puzzle_hash is None:
                     pool_pk = self.pool_pk
                 else:
-                    pool_address = encode_puzzle_hash(pool_contract_puzzle_hash, "xch")
+                    pool_address = encode_puzzle_hash(pool_contract_puzzle_hash, "xck")
 
                 plot_keys = PlotKeys(self.farmer_pk, pool_pk, pool_address)
             # No datetime in the filename, to get deterministic filenames and not re-plot

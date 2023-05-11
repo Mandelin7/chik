@@ -8,7 +8,7 @@ import pytest
 from click.testing import CliRunner, Result
 
 from chik.cmds.beta_funcs import default_beta_root_path
-from chik.cmds.chia import cli
+from chik.cmds.chik import cli
 from chik.util.beta_metrics import metrics_log_interval_default, metrics_log_interval_max, metrics_log_interval_min
 from chik.util.config import lock_and_load_config, save_config
 

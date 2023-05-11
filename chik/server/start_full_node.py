@@ -14,7 +14,7 @@ from chik.full_node.full_node_api import FullNodeAPI
 from chik.rpc.full_node_rpc_api import FullNodeRpcApi
 from chik.server.outbound_message import NodeType
 from chik.server.start_service import RpcInfo, Service, async_run
-from chik.util.chia_logging import initialize_service_logging
+from chik.util.chik_logging import initialize_service_logging
 from chik.util.config import load_config, load_config_cli
 from chik.util.default_root import DEFAULT_ROOT_PATH
 from chik.util.ints import uint16
@@ -92,14 +92,14 @@ async def async_main(service_config: Dict[str, Any]) -> int:
 def main() -> int:
     freeze_support()
 
-    with maybe_manage_task_instrumentation(enable=os.environ.get("CHIA_INSTRUMENT_NODE") is not None):
+    with maybe_manage_task_instrumentation(enable=os.environ.get("CHIK_INSTRUMENT_NODE") is not None):
         service_config = load_config_cli(DEFAULT_ROOT_PATH, "config.yaml", SERVICE_NAME)
         target_peer_count = service_config.get("target_peer_count", 80) - service_config.get(
             "target_outbound_peer_count", 8
         )
         if target_peer_count < 0:
             target_peer_count = None
-        if not service_config.get("use_chia_loop_policy", True):
+        if not service_config.get("use_chik_loop_policy", True):
             target_peer_count = None
         return async_run(coro=async_main(service_config), connection_limit=target_peer_count)
 

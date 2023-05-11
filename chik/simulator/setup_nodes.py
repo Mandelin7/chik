@@ -12,7 +12,7 @@ from chik.full_node.full_node import FullNode
 from chik.full_node.full_node_api import FullNodeAPI
 from chik.harvester.harvester import Harvester
 from chik.protocols.shared_protocol import Capability
-from chik.server.server import ChiaServer
+from chik.server.server import ChikServer
 from chik.server.start_service import Service
 from chik.simulator.block_tools import BlockTools, create_block_tools_async, test_constants
 from chik.simulator.full_node_simulator import FullNodeSimulator
@@ -38,7 +38,7 @@ from chik.util.ints import uint16, uint32
 from chik.util.keychain import Keychain
 from chik.wallet.wallet_node import WalletNode
 
-SimulatorsAndWallets = Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools]
+SimulatorsAndWallets = Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools]
 SimulatorsAndWalletsServices = Tuple[List[Service[FullNode]], List[Service[WalletNode]], BlockTools]
 
 
@@ -64,7 +64,7 @@ async def _teardown_nodes(node_aiters: List[AsyncGenerator[Any, None]]) -> None:
 
 async def setup_two_nodes(
     consensus_constants: ConsensusConstants, db_version: int, self_hostname: str
-) -> AsyncGenerator[Tuple[FullNodeAPI, FullNodeAPI, ChiaServer, ChiaServer, BlockTools], None]:
+) -> AsyncGenerator[Tuple[FullNodeAPI, FullNodeAPI, ChikServer, ChikServer, BlockTools], None]:
     """
     Setup and teardown of two full nodes, with blockchains and separate DBs.
     """
@@ -139,14 +139,14 @@ async def setup_simulators_and_wallets(
     wallet_count: int,
     dic: Dict[str, int],
     spam_filter_after_n_txs: int = 200,
-    xch_spam_amount: int = 1000000,
+    xck_spam_amount: int = 1000000,
     *,
     key_seed: Optional[bytes32] = None,
     initial_num_public_keys: int = 5,
     db_version: int = 1,
     config_overrides: Optional[Dict[str, int]] = None,
     disable_capabilities: Optional[List[Capability]] = None,
-) -> AsyncGenerator[Tuple[List[FullNodeAPI], List[Tuple[WalletNode, ChiaServer]], BlockTools], None]:
+) -> AsyncGenerator[Tuple[List[FullNodeAPI], List[Tuple[WalletNode, ChikServer]], BlockTools], None]:
     with TempKeyring(populate=True) as keychain1, TempKeyring(populate=True) as keychain2:
         res = await setup_simulators_and_wallets_inner(
             db_version,
@@ -158,7 +158,7 @@ async def setup_simulators_and_wallets(
             simulator_count,
             spam_filter_after_n_txs,
             wallet_count,
-            xch_spam_amount,
+            xck_spam_amount,
             config_overrides,
             disable_capabilities,
         )
@@ -182,7 +182,7 @@ async def setup_simulators_and_wallets_service(
     wallet_count: int,
     dic: Dict[str, int],
     spam_filter_after_n_txs: int = 200,
-    xch_spam_amount: int = 1000000,
+    xck_spam_amount: int = 1000000,
     *,
     key_seed: Optional[bytes32] = None,
     initial_num_public_keys: int = 5,
@@ -201,7 +201,7 @@ async def setup_simulators_and_wallets_service(
             simulator_count,
             spam_filter_after_n_txs,
             wallet_count,
-            xch_spam_amount,
+            xck_spam_amount,
             config_overrides,
             disable_capabilities,
         )
@@ -222,7 +222,7 @@ async def setup_simulators_and_wallets_inner(
     simulator_count: int,
     spam_filter_after_n_txs: int,
     wallet_count: int,
-    xch_spam_amount: int,
+    xck_spam_amount: int,
     config_overrides: Optional[Dict[str, int]],
     disable_capabilities: Optional[List[Capability]],
 ) -> Tuple[
@@ -271,7 +271,7 @@ async def setup_simulators_and_wallets_inner(
             wallet_bt_tools.constants,
             wallet_bt_tools,
             spam_filter_after_n_txs,
-            xch_spam_amount,
+            xck_spam_amount,
             None,
             key_seed=seed,
             initial_num_public_keys=initial_num_public_keys,
@@ -342,7 +342,7 @@ async def setup_full_system(
     b_tools: Optional[BlockTools] = None,
     b_tools_1: Optional[BlockTools] = None,
     db_version: int = 1,
-) -> AsyncGenerator[Tuple[Any, Any, Harvester, Farmer, Any, Service[Timelord], object, object, Any, ChiaServer], None]:
+) -> AsyncGenerator[Tuple[Any, Any, Harvester, Farmer, Any, Service[Timelord], object, object, Any, ChikServer], None]:
     with TempKeyring(populate=True) as keychain1, TempKeyring(populate=True) as keychain2:
         daemon_ws, node_iters, ret = await setup_full_system_inner(
             b_tools, b_tools_1, False, consensus_constants, db_version, keychain1, keychain2, shared_b_tools
@@ -361,7 +361,7 @@ async def setup_full_system_connect_to_deamon(
     db_version: int = 1,
 ) -> AsyncGenerator[
     Tuple[
-        Any, Any, Harvester, Farmer, Any, Service[Timelord], object, object, Any, ChiaServer, Optional[WebSocketServer]
+        Any, Any, Harvester, Farmer, Any, Service[Timelord], object, object, Any, ChikServer, Optional[WebSocketServer]
     ],
     None,
 ]:
@@ -387,7 +387,7 @@ async def setup_full_system_inner(
 ) -> Tuple[
     Optional[WebSocketServer],
     List[AsyncGenerator[object, None]],
-    Tuple[Any, Any, Harvester, Farmer, Any, Service[Timelord], object, object, Any, ChiaServer],
+    Tuple[Any, Any, Harvester, Farmer, Any, Service[Timelord], object, object, Any, ChikServer],
 ]:
     if b_tools is None:
         b_tools = await create_block_tools_async(constants=test_constants, keychain=keychain1)

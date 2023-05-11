@@ -29,7 +29,7 @@ from chik.protocols.harvester_protocol import (
 )
 from chik.protocols.protocol_message_types import ProtocolMessageTypes
 from chik.server.outbound_message import make_msg
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.ws_connection import WSChikConnection
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.util.ints import int16, uint32, uint64
 from chik.util.misc import get_list_or_len
@@ -74,7 +74,7 @@ class ReceiverUpdateCallback(Protocol):
 
 
 class Receiver:
-    _connection: WSChiaConnection
+    _connection: WSChikConnection
     _current_sync: Sync
     _last_sync: Sync
     _plots: Dict[str, Plot]
@@ -86,7 +86,7 @@ class Receiver:
 
     def __init__(
         self,
-        connection: WSChiaConnection,
+        connection: WSChikConnection,
         update_callback: ReceiverUpdateCallback,
     ) -> None:
         self._connection = connection
@@ -115,7 +115,7 @@ class Receiver:
         self._duplicates.clear()
         self._total_plot_size = 0
 
-    def connection(self) -> WSChiaConnection:
+    def connection(self) -> WSChikConnection:
         return self._connection
 
     def current_sync(self) -> Sync:

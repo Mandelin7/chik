@@ -34,7 +34,7 @@ def coin_record_dict_backwards_compat(coin_record: Dict[str, Any]) -> Dict[str, 
 class FullNodeRpcApi:
     def __init__(self, service: FullNode) -> None:
         self.service = service
-        self.service_name = "chia_full_node"
+        self.service_name = "chik_full_node"
         self.cached_blockchain_state: Optional[Dict[str, Any]] = None
 
     def get_routes(self) -> Dict[str, Endpoint]:
@@ -752,7 +752,7 @@ class FullNodeRpcApi:
         """
 
         tx_cost_estimates = {
-            "send_xch_transaction": 9_401_710,
+            "send_xck_transaction": 9_401_710,
             "cat_spend": 36_382_111,
             "take_offer": 721_393_265,
             "cancel_offer": 212_443_993,

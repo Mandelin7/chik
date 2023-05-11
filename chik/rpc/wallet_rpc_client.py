@@ -28,9 +28,9 @@ def parse_result_transactions(result: Dict[str, Any]) -> Dict[str, Any]:
 
 class WalletRpcClient(RpcClient):
     """
-    Client to Chia RPC, connects to a local wallet. Uses HTTP/JSON, and converts back from
+    Client to Chik RPC, connects to a local wallet. Uses HTTP/JSON, and converts back from
     JSON into native python objects before returning. All api calls use POST requests.
-    Note that this is not the same as the peer protocol, or wallet protocol (which run Chia's
+    Note that this is not the same as the peer protocol, or wallet protocol (which run Chik's
     protocol on top of TCP), it's a separate protocol on top of HTTP that provides easy access
     to the full node.
     """
@@ -950,8 +950,8 @@ class WalletRpcClient(RpcClient):
         target_list: Optional[List[str]] = None,
         mint_number_start: Optional[int] = 1,
         mint_total: Optional[int] = None,
-        xch_coins: Optional[List[Dict]] = None,
-        xch_change_target: Optional[str] = None,
+        xck_coins: Optional[List[Dict]] = None,
+        xck_change_target: Optional[str] = None,
         new_innerpuzhash: Optional[str] = None,
         did_coin: Optional[Dict] = None,
         did_lineage_parent: Optional[str] = None,
@@ -967,8 +967,8 @@ class WalletRpcClient(RpcClient):
             "royalty_address": royalty_address,
             "mint_number_start": mint_number_start,
             "mint_total": mint_total,
-            "xch_coins": xch_coins,
-            "xch_change_target": xch_change_target,
+            "xck_coins": xck_coins,
+            "xck_change_target": xck_change_target,
             "new_innerpuzhash": new_innerpuzhash,
             "did_coin": did_coin,
             "did_lineage_parent": did_lineage_parent,

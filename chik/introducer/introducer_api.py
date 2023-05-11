@@ -7,7 +7,7 @@ from chik.protocols.introducer_protocol import RequestPeersIntroducer, RespondPe
 from chik.protocols.protocol_message_types import ProtocolMessageTypes
 from chik.rpc.rpc_server import StateChangedProtocol
 from chik.server.outbound_message import Message, make_msg
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.ws_connection import WSChikConnection
 from chik.types.peer_info import TimestampedPeerInfo
 from chik.util.api_decorators import api_request
 from chik.util.ints import uint64
@@ -26,7 +26,7 @@ class IntroducerAPI:
     async def request_peers_introducer(
         self,
         request: RequestPeersIntroducer,
-        peer: WSChiaConnection,
+        peer: WSChikConnection,
     ) -> Optional[Message]:
         max_peers = self.introducer.max_peers_to_send
         if self.introducer.server is None or self.introducer.server.introducer_peers is None:

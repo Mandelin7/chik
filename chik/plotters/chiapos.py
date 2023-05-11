@@ -19,10 +19,10 @@ log = logging.getLogger(__name__)
 
 def get_chiapos_install_info() -> Optional[Dict[str, Any]]:
     chiapos_version: str = pkg_resources.get_distribution("chiapos").version
-    return {"display_name": "Chia Proof of Space", "version": chiapos_version, "installed": True}
+    return {"display_name": "Chik Proof of Space", "version": chiapos_version, "installed": True}
 
 
-def plot_chia(args, root_path):
+def plot_chik(args, root_path):
     try:
         validate_plot_size(root_path, args.size, args.override)
     except ValueError as e:

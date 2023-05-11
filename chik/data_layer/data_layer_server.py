@@ -14,7 +14,7 @@ from aiohttp import web
 
 from chik.data_layer.download_data import is_filename_valid
 from chik.server.upnp import UPnP
-from chik.util.chia_logging import initialize_logging
+from chik.util.chik_logging import initialize_logging
 from chik.util.config import load_config
 from chik.util.default_root import DEFAULT_ROOT_PATH
 from chik.util.network import WebServer

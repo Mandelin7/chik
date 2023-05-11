@@ -36,7 +36,7 @@ from chik.pools.pool_wallet_info import (
     create_pool_state,
 )
 from chik.protocols.pool_protocol import POOL_PROTOCOL_VERSION
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.ws_connection import WSChikConnection
 from chik.types.announcement import Announcement
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program
@@ -967,7 +967,7 @@ class PoolWallet:
     async def get_max_send_amount(self, records: Optional[Set[WalletCoinRecord]] = None) -> uint128:
         return uint128(0)
 
-    async def coin_added(self, coin: Coin, height: uint32, peer: WSChiaConnection) -> None:
+    async def coin_added(self, coin: Coin, height: uint32, peer: WSChikConnection) -> None:
         pass
 
     async def select_coins(

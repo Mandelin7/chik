@@ -31,7 +31,7 @@ from chik.protocols.shared_protocol import protocol_version
 from chik.server.introducer_peers import IntroducerPeers
 from chik.server.outbound_message import Message, NodeType
 from chik.server.ssl_context import private_ssl_paths, public_ssl_paths
-from chik.server.ws_connection import ConnectionCallback, WSChiaConnection
+from chik.server.ws_connection import ConnectionCallback, WSChikConnection
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.peer_info import PeerInfo
 from chik.util.errors import Err, ProtocolError
@@ -114,7 +114,7 @@ def calculate_node_id(cert_path: Path) -> bytes32:
 
 @final
 @dataclass
-class ChiaServer:
+class ChikServer:
     _port: int
     _local_type: NodeType
     _local_capabilities_for_handshake: List[Tuple[uint16, str]]
@@ -131,7 +131,7 @@ class ChiaServer:
     ssl_client_context: ssl.SSLContext
     node_id: bytes32
     exempt_peer_networks: List[Union[IPv4Network, IPv6Network]]
-    all_connections: Dict[bytes32, WSChiaConnection] = field(default_factory=dict)
+    all_connections: Dict[bytes32, WSChikConnection] = field(default_factory=dict)
     on_connect: Optional[ConnectionCallback] = None
     shut_down_event: asyncio.Event = field(default_factory=asyncio.Event)
     introducer_peers: Optional[IntroducerPeers] = None
@@ -157,14 +157,14 @@ class ChiaServer:
         root_path: Path,
         config: Dict[str, Any],
         private_ca_crt_key: Tuple[Path, Path],
-        chia_ca_crt_key: Tuple[Path, Path],
+        chik_ca_crt_key: Tuple[Path, Path],
         name: str = __name__,
-    ) -> ChiaServer:
+    ) -> ChikServer:
         log = logging.getLogger(name)
         log.info("Service capabilities: %s", capabilities)
 
         ca_private_crt_path, ca_private_key_path = private_ca_crt_key
-        chia_ca_crt_path, chia_ca_key_path = chia_ca_crt_key
+        chik_ca_crt_path, chik_ca_key_path = chik_ca_crt_key
 
         private_cert_path, private_key_path = None, None
         public_cert_path, public_key_path = None, None
@@ -185,8 +185,8 @@ class ChiaServer:
             # Public clients
             public_cert_path, public_key_path = public_ssl_paths(root_path, config)
             ssl_client_context = ssl_context_for_client(
-                ca_cert=chia_ca_crt_path,
-                ca_key=chia_ca_key_path,
+                ca_cert=chik_ca_crt_path,
+                ca_key=chik_ca_key_path,
                 cert_path=public_cert_path,
                 key_path=public_key_path,
             )
@@ -205,8 +205,8 @@ class ChiaServer:
             # Public servers
             public_cert_path, public_key_path = public_ssl_paths(root_path, config)
             ssl_context = ssl_context_for_server(
-                ca_cert=chia_ca_crt_path,
-                ca_key=chia_ca_key_path,
+                ca_cert=chik_ca_crt_path,
+                ca_key=chik_ca_key_path,
                 cert_path=public_cert_path,
                 key_path=public_key_path,
                 log=log,
@@ -246,7 +246,7 @@ class ChiaServer:
         is_crawler = getattr(self.node, "crawl", None)
         while True:
             await asyncio.sleep(600 if is_crawler is None else 2)
-            to_remove: List[WSChiaConnection] = []
+            to_remove: List[WSChikConnection] = []
             for connection in self.all_connections.values():
                 if connection.closed:
                     to_remove.append(connection)
@@ -281,7 +281,7 @@ class ChiaServer:
         on_connect: Optional[ConnectionCallback] = None,
     ) -> None:
         if self.webserver is not None:
-            raise RuntimeError("ChiaServer already started")
+            raise RuntimeError("ChikServer already started")
         if self.gc_task is None:
             self.gc_task = asyncio.create_task(self.garbage_collect_connections_task())
 
@@ -319,9 +319,9 @@ class ChiaServer:
         peer_id = bytes32(der_cert.fingerprint(hashes.SHA256()))
         if peer_id == self.node_id:
             return ws
-        connection: Optional[WSChiaConnection] = None
+        connection: Optional[WSChikConnection] = None
         try:
-            connection = WSChiaConnection.create(
+            connection = WSChikConnection.create(
                 local_type=self._local_type,
                 ws=ws,
                 api=self.api,
@@ -377,7 +377,7 @@ class ChiaServer:
         return ws
 
     async def connection_added(
-        self, connection: WSChiaConnection, on_connect: Optional[ConnectionCallback] = None
+        self, connection: WSChikConnection, on_connect: Optional[ConnectionCallback] = None
     ) -> None:
         # If we already had a connection to this peer_id, close the old one. This is secure because peer_ids are based
         # on TLS public keys
@@ -425,7 +425,7 @@ class ChiaServer:
             return False
 
         session = None
-        connection: Optional[WSChiaConnection] = None
+        connection: Optional[WSChikConnection] = None
         try:
             # Crawler/DNS introducer usually uses a lower timeout than the default
             timeout_value = float(self.config.get("peer_connect_timeout", 30))
@@ -466,7 +466,7 @@ class ChiaServer:
                 self.log.info(f"Connected to a node with the same peer ID, disconnecting: {target_node} {peer_id}")
                 return False
 
-            connection = WSChiaConnection.create(
+            connection = WSChikConnection.create(
                 local_type=self._local_type,
                 ws=ws,
                 api=self.api,
@@ -519,7 +519,7 @@ class ChiaServer:
 
         return False
 
-    def connection_closed(self, connection: WSChiaConnection, ban_time: int, closed_connection: bool = False) -> None:
+    def connection_closed(self, connection: WSChikConnection, ban_time: int, closed_connection: bool = False) -> None:
         # closed_connection is true if the callback is being called with a connection that was previously closed
         # in this case we still want to do the banning logic and remove the conection from the list
         # but the other cleanup should already have been done so we skip that
@@ -558,7 +558,7 @@ class ChiaServer:
         self,
         messages: List[Message],
         node_type: NodeType,
-        origin_peer: WSChiaConnection,
+        origin_peer: WSChikConnection,
     ) -> None:
         for node_id, connection in self.all_connections.items():
             if node_id == origin_peer.peer_node_id:
@@ -601,7 +601,7 @@ class ChiaServer:
 
     def get_connections(
         self, node_type: Optional[NodeType] = None, *, outbound: Optional[bool] = None
-    ) -> List[WSChiaConnection]:
+    ) -> List[WSChikConnection]:
         result = []
         for _, connection in self.all_connections.items():
             node_type_match = node_type is None or connection.connection_type == node_type
@@ -644,7 +644,7 @@ class ChiaServer:
         try:
             timeout = ClientTimeout(total=15)
             async with ClientSession(timeout=timeout) as session:
-                async with session.get("https://ip.chia.net/") as resp:
+                async with session.get("https://ip.chiknetwork.org/") as resp:
                     if resp.status == 200:
                         ip = str(await resp.text())
                         ip = ip.rstrip()
@@ -688,7 +688,7 @@ class ChiaServer:
             return inbound_count < cast(int, self.config["max_inbound_timelord"])
         return True
 
-    def is_trusted_peer(self, peer: WSChiaConnection, trusted_peers: Dict[str, Any]) -> bool:
+    def is_trusted_peer(self, peer: WSChikConnection, trusted_peers: Dict[str, Any]) -> bool:
         return is_trusted_peer(
             host=peer.peer_info.host,
             node_id=peer.peer_node_id,

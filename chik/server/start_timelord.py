@@ -13,7 +13,7 @@ from chik.server.start_service import RpcInfo, Service, async_run
 from chik.timelord.timelord import Timelord
 from chik.timelord.timelord_api import TimelordAPI
 from chik.types.peer_info import UnresolvedPeerInfo
-from chik.util.chia_logging import initialize_service_logging
+from chik.util.chik_logging import initialize_service_logging
 from chik.util.config import load_config, load_config_cli
 from chik.util.default_root import DEFAULT_ROOT_PATH
 

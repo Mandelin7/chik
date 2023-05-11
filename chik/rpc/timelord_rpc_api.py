@@ -10,7 +10,7 @@ from chik.util.ws_message import WsRpcMessage, create_payload_dict
 class TimelordRpcApi:
     def __init__(self, timelord: Timelord):
         self.service = timelord
-        self.service_name = "chia_timelord"
+        self.service_name = "chik_timelord"
 
     def get_routes(self) -> Dict[str, Endpoint]:
         return {}

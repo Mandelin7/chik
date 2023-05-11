@@ -50,12 +50,12 @@ def print_transaction(tx: TransactionRecord, verbose: bool, name, address_prefix
     if verbose:
         print(tx)
     else:
-        chia_amount = Decimal(int(tx.amount)) / mojo_per_unit
+        chik_amount = Decimal(int(tx.amount)) / mojo_per_unit
         to_address = encode_puzzle_hash(tx.to_puzzle_hash, address_prefix)
         print(f"Transaction {tx.name}")
         print(f"Status: {'Confirmed' if tx.confirmed else ('In mempool' if tx.is_in_mempool() else 'Pending')}")
         description = transaction_description_from_type(tx)
-        print(f"Amount {description}: {chia_amount} {name}")
+        print(f"Amount {description}: {chik_amount} {name}")
         print(f"To address: {to_address}")
         print("Created at:", datetime.fromtimestamp(tx.created_at_time).strftime("%Y-%m-%d %H:%M:%S"))
         print("")
@@ -381,7 +381,7 @@ async def make_offer(args: dict, wallet_client: WalletRpcClient, fingerprint: in
                                     },
                                 }
                                 royalty_asset_dict[name] = (
-                                    encode_puzzle_hash(info.royalty_puzzle_hash, AddressType.XCH.hrp(config)),
+                                    encode_puzzle_hash(info.royalty_puzzle_hash, AddressType.XCK.hrp(config)),
                                     info.royalty_percentage,
                                 )
                     else:
@@ -391,7 +391,7 @@ async def make_offer(args: dict, wallet_client: WalletRpcClient, fingerprint: in
                 except ValueError:
                     id = uint32(int(name))
                     if id == 1:
-                        name = "XCH"
+                        name = "XCK"
                         unit = units["chik"]
                     else:
                         name = await wallet_client.get_cat_name(id)
@@ -422,7 +422,7 @@ async def make_offer(args: dict, wallet_client: WalletRpcClient, fingerprint: in
 
             if fee > 0:
                 print()
-                print(f"Including Fees: {Decimal(fee) / units['chik']} XCH, {fee} mojos")
+                print(f"Including Fees: {Decimal(fee) / units['chik']} XCK, {fee} mojos")
 
             if royalty_asset_dict != {}:
                 royalty_summary: Dict[Any, List[Dict[str, Any]]] = await wallet_client.nft_calculate_royalties(
@@ -434,7 +434,7 @@ async def make_offer(args: dict, wallet_client: WalletRpcClient, fingerprint: in
                 for nft_id, summaries in royalty_summary.items():
                     print(f"  - For {nft_id}:")
                     for summary in summaries:
-                        divisor = units["chik"] if summary["asset"] == "XCH" else units["cat"]
+                        divisor = units["chik"] if summary["asset"] == "XCK" else units["cat"]
                         converted_amount = Decimal(summary["amount"]) / divisor
                         total_amounts_requested.setdefault(summary["asset"], fungible_asset_dict[summary["asset"]])
                         total_amounts_requested[summary["asset"]] += summary["amount"]
@@ -445,7 +445,7 @@ async def make_offer(args: dict, wallet_client: WalletRpcClient, fingerprint: in
                 print()
                 print("Total Amounts Offered:")
                 for asset, requested_amount in total_amounts_requested.items():
-                    divisor = units["chik"] if asset == "XCH" else units["cat"]
+                    divisor = units["chik"] if asset == "XCK" else units["cat"]
                     converted_amount = Decimal(requested_amount) / divisor
                     print(f"  - {converted_amount} {asset} ({requested_amount} mojos)")
 
@@ -484,10 +484,10 @@ async def print_offer_summary(cat_name_resolver: CATNameResolver, sum_dict: Dict
     for asset_id, amount in sum_dict.items():
         description: str = ""
         unit: int = units["chik"]
-        wid: str = "1" if asset_id == "xch" else ""
+        wid: str = "1" if asset_id == "xck" else ""
         mojo_amount: int = int(Decimal(amount))
-        name: str = "XCH"
-        if asset_id != "xch":
+        name: str = "XCK"
+        if asset_id != "xck":
             name = asset_id
             if asset_id == "unknown":
                 name = "Unknown"
@@ -534,7 +534,7 @@ async def print_trade_record(record, wallet_client: WalletRpcClient, summaries: 
         await print_offer_summary(cat_name_resolver, requested)
         print("Pending Outbound Balances:")
         await print_offer_summary(cat_name_resolver, outbound_balances, has_fee=(fees > 0))
-        print(f"Included Fees: {fees / units['chik']} XCH, {fees} mojos")
+        print(f"Included Fees: {fees / units['chik']} XCK, {fees} mojos")
     print("---------------")
 
 
@@ -642,18 +642,18 @@ async def take_offer(args: dict, wallet_client: WalletRpcClient, fingerprint: in
         if royalty_asset_id.hex() in offered:
             percentage, address = await get_nft_royalty_percentage_and_address(royalty_asset_id, wallet_client)
             royalty_asset_dict[encode_puzzle_hash(royalty_asset_id, AddressType.NFT.hrp(config))] = (
-                encode_puzzle_hash(address, AddressType.XCH.hrp(config)),
+                encode_puzzle_hash(address, AddressType.XCK.hrp(config)),
                 percentage,
             )
 
     if royalty_asset_dict != {}:
         fungible_asset_dict: Dict[Any, uint64] = {}
         for fungible_asset_id in fungible_assets_from_offer(offer):
-            fungible_asset_id_str = fungible_asset_id.hex() if fungible_asset_id is not None else "xch"
+            fungible_asset_id_str = fungible_asset_id.hex() if fungible_asset_id is not None else "xck"
             if fungible_asset_id_str in requested:
                 nft_royalty_currency: str = "Unknown CAT"
                 if fungible_asset_id is None:
-                    nft_royalty_currency = "XCH"
+                    nft_royalty_currency = "XCK"
                 else:
                     result = await wallet_client.cat_asset_id_to_name(fungible_asset_id)
                     if result is not None:
@@ -669,7 +669,7 @@ async def take_offer(args: dict, wallet_client: WalletRpcClient, fingerprint: in
             for nft_id, summaries in royalty_summary.items():
                 print(f"  - For {nft_id}:")
                 for summary in summaries:
-                    divisor = units["chik"] if summary["asset"] == "XCH" else units["cat"]
+                    divisor = units["chik"] if summary["asset"] == "XCK" else units["cat"]
                     converted_amount = Decimal(summary["amount"]) / divisor
                     total_amounts_requested.setdefault(summary["asset"], fungible_asset_dict[summary["asset"]])
                     total_amounts_requested[summary["asset"]] += summary["amount"]
@@ -680,11 +680,11 @@ async def take_offer(args: dict, wallet_client: WalletRpcClient, fingerprint: in
             print()
             print("Total Amounts Requested:")
             for asset, amount in total_amounts_requested.items():
-                divisor = units["chik"] if asset == "XCH" else units["cat"]
+                divisor = units["chik"] if asset == "XCK" else units["cat"]
                 converted_amount = Decimal(amount) / divisor
                 print(f"  - {converted_amount} {asset} ({amount} mojos)")
 
-    print(f"Included Fees: {Decimal(offer.fees()) / units['chik']} XCH, {offer.fees()} mojos")
+    print(f"Included Fees: {Decimal(offer.fees()) / units['chik']} XCK, {offer.fees()} mojos")
 
     if not examine_only:
         print()
@@ -847,12 +847,12 @@ async def mint_nft(args: Dict, wallet_client: WalletRpcClient, fingerprint: int)
     royalty_address = (
         None
         if not args["royalty_address"]
-        else ensure_valid_address(args["royalty_address"], allowed_types={AddressType.XCH}, config=config)
+        else ensure_valid_address(args["royalty_address"], allowed_types={AddressType.XCK}, config=config)
     )
     target_address = (
         None
         if not args["target_address"]
-        else ensure_valid_address(args["target_address"], allowed_types={AddressType.XCH}, config=config)
+        else ensure_valid_address(args["target_address"], allowed_types={AddressType.XCK}, config=config)
     )
     no_did_ownership = args["no_did_ownership"]
     hash = args["hash"]
@@ -938,7 +938,7 @@ async def transfer_nft(args: Dict, wallet_client: WalletRpcClient, fingerprint: 
         wallet_id = args["wallet_id"]
         nft_coin_id = args["nft_coin_id"]
         config = load_config(DEFAULT_ROOT_PATH, "config.yaml")
-        target_address = ensure_valid_address(args["target_address"], allowed_types={AddressType.XCH}, config=config)
+        target_address = ensure_valid_address(args["target_address"], allowed_types={AddressType.XCK}, config=config)
         fee: int = int(Decimal(args["fee"]) * units["chik"])
         response = await wallet_client.transfer_nft(
             wallet_id, nft_coin_id, target_address, fee, reuse_puzhash=args["reuse_puzhash"]
@@ -1120,7 +1120,7 @@ async def delete_notifications(args: Dict, wallet_client: WalletRpcClient, finge
 
 
 async def sign_message(args: Dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
-    if args["type"] == AddressType.XCH:
+    if args["type"] == AddressType.XCK:
         pubkey, signature, signing_mode = await wallet_client.sign_message_by_address(args["address"], args["message"])
     elif args["type"] == AddressType.DID:
         pubkey, signature, signing_mode = await wallet_client.sign_message_by_id(args["did_id"], args["message"])

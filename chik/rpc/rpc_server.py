@@ -14,8 +14,8 @@ from typing_extensions import Protocol, final
 
 from chik.rpc.util import wrap_http_handler
 from chik.server.outbound_message import NodeType
-from chik.server.server import ChiaServer, ssl_context_for_client, ssl_context_for_server
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.server import ChikServer, ssl_context_for_client, ssl_context_for_server
+from chik.server.ws_connection import WSChikConnection
 from chik.types.peer_info import PeerInfo
 from chik.util.byte_types import hexstr_to_bytes
 from chik.util.config import str2bool
@@ -46,10 +46,10 @@ class RpcServiceProtocol(Protocol):
     """
 
     @property
-    def server(self) -> ChiaServer:
+    def server(self) -> ChikServer:
         """The server object that handles the common server behavior for the RPC."""
-        # a property so as to be read only which allows ChiaServer to satisfy
-        # Optional[ChiaServer]
+        # a property so as to be read only which allows ChikServer to satisfy
+        # Optional[ChikServer]
         ...
 
     def get_connections(self, request_node_type: Optional[NodeType]) -> List[Dict[str, Any]]:
@@ -60,7 +60,7 @@ class RpcServiceProtocol(Protocol):
         """
         ...
 
-    async def on_connect(self, peer: WSChiaConnection) -> None:
+    async def on_connect(self, peer: WSChikConnection) -> None:
         """Called when a new connection is established to the server."""
         ...
 
@@ -114,7 +114,7 @@ class RpcApiProtocol(Protocol):
         ...
 
 
-def default_get_connections(server: ChiaServer, request_node_type: Optional[NodeType]) -> List[Dict[str, Any]]:
+def default_get_connections(server: ChikServer, request_node_type: Optional[NodeType]) -> List[Dict[str, Any]]:
     connections = server.get_connections(request_node_type)
     con_info = [
         {

@@ -11,15 +11,15 @@ from pathlib import Path
 from types import FrameType
 from typing import Any, Awaitable, Callable, Coroutine, Dict, Generic, List, Optional, Set, Tuple, Type, TypeVar
 
-from chik.cmds.init_funcs import chia_full_version_str
+from chik.cmds.init_funcs import chik_full_version_str
 from chik.daemon.server import service_launch_lock_path
 from chik.rpc.rpc_server import RpcApiProtocol, RpcServer, RpcServiceProtocol, start_rpc_server
-from chik.server.chia_policy import set_chia_policy
+from chik.server.chik_policy import set_chik_policy
 from chik.server.outbound_message import NodeType
-from chik.server.server import ChiaServer
-from chik.server.ssl_context import chia_ssl_ca_paths, private_ssl_ca_paths
+from chik.server.server import ChikServer
+from chik.server.ssl_context import chik_ssl_ca_paths, private_ssl_ca_paths
 from chik.server.upnp import UPnP
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.ws_connection import WSChikConnection
 from chik.types.peer_info import PeerInfo, UnresolvedPeerInfo
 from chik.util.ints import uint16
 from chik.util.lock import Lockfile, LockfileError
@@ -56,7 +56,7 @@ class Service(Generic[_T_RpcServiceProtocol]):
         config: Dict[str, Any],
         upnp_ports: List[int] = [],
         connect_peers: Set[UnresolvedPeerInfo] = set(),
-        on_connect_callback: Optional[Callable[[WSChiaConnection], Awaitable[None]]] = None,
+        on_connect_callback: Optional[Callable[[WSChikConnection], Awaitable[None]]] = None,
         rpc_info: Optional[RpcInfo] = None,
         connect_to_daemon: bool = True,
         max_request_body_size: Optional[int] = None,
@@ -81,13 +81,13 @@ class Service(Generic[_T_RpcServiceProtocol]):
 
         self._log = logging.getLogger(service_name)
         self._log.info(f"Starting service {self._service_name} ...")
-        self._log.info(f"chia-blockchain version: {chia_full_version_str()}")
+        self._log.info(f"chik-blockchain version: {chik_full_version_str()}")
 
         self.service_config = self.config[service_name]
 
         self._rpc_info = rpc_info
         private_ca_crt, private_ca_key = private_ssl_ca_paths(root_path, self.config)
-        chia_ca_crt, chia_ca_key = chia_ssl_ca_paths(root_path, self.config)
+        chik_ca_crt, chik_ca_key = chik_ssl_ca_paths(root_path, self.config)
         inbound_rlp = self.config.get("inbound_rate_limit_percent")
         outbound_rlp = self.config.get("outbound_rate_limit_percent")
         if node_type == NodeType.WALLET:
@@ -98,7 +98,7 @@ class Service(Generic[_T_RpcServiceProtocol]):
             capabilities_to_use = override_capabilities
 
         assert inbound_rlp and outbound_rlp
-        self._server = ChiaServer.create(
+        self._server = ChikServer.create(
             advertised_port,
             node,
             peer_api,
@@ -111,7 +111,7 @@ class Service(Generic[_T_RpcServiceProtocol]):
             root_path,
             self.service_config,
             (private_ca_crt, private_ca_key),
-            (chia_ca_crt, chia_ca_key),
+            (chik_ca_crt, chik_ca_key),
             name=f"{service_name}_server",
         )
         f = getattr(node, "set_server", None)
@@ -231,7 +231,7 @@ class Service(Generic[_T_RpcServiceProtocol]):
     async def setup_process_global_state(self) -> None:
         # Being async forces this to be run from within an active event loop as is
         # needed for the signal handler setup.
-        proctitle_name = f"chia_{self._service_name}"
+        proctitle_name = f"chik_{self._service_name}"
         setproctitle(proctitle_name)
 
         global main_pid
@@ -292,7 +292,7 @@ class Service(Generic[_T_RpcServiceProtocol]):
 
         self._log.info("Waiting for socket to be closed (if opened)")
 
-        self._log.info("Waiting for ChiaServer to be closed")
+        self._log.info("Waiting for ChikServer to be closed")
         await self._server.await_closed()
 
         if self.rpc_server:
@@ -313,5 +313,5 @@ class Service(Generic[_T_RpcServiceProtocol]):
 
 def async_run(coro: Coroutine[object, object, T], connection_limit: Optional[int] = None) -> T:
     if connection_limit is not None:
-        set_chia_policy(connection_limit)
+        set_chik_policy(connection_limit)
     return asyncio.run(coro)

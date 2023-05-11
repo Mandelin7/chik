@@ -39,8 +39,8 @@ def get_ph_from_fingerprint(fingerprint: int, key_id: int = 1) -> bytes32:
     return puzzle_hash
 
 
-def create_chia_directory(
-    chia_root: Path,
+def create_chik_directory(
+    chik_root: Path,
     fingerprint: int,
     farming_address: Optional[str],
     plot_directory: Optional[str],
@@ -51,12 +51,12 @@ def create_chia_directory(
     This function creates a new chik directory and returns a heavily modified config,
     suitable for use in the simulator.
     """
-    from chik.cmds.init_funcs import chia_init
+    from chik.cmds.init_funcs import chik_init
 
-    if not chia_root.is_dir() or not Path(chia_root / "config" / "config.yaml").exists():
+    if not chik_root.is_dir() or not Path(chik_root / "config" / "config.yaml").exists():
         # create chik directories & load config
-        chia_init(chia_root, testnet=True, fix_ssl_permissions=True)
-        config: Dict[str, Any] = load_config(chia_root, "config.yaml")
+        chik_init(chik_root, testnet=True, fix_ssl_permissions=True)
+        config: Dict[str, Any] = load_config(chik_root, "config.yaml")
         # apply standard block-tools config.
         config["full_node"]["send_uncompact_interval"] = 0
         config["full_node"]["target_uncompact_proofs"] = 30
@@ -99,7 +99,7 @@ def create_chia_directory(
             config["self_hostname"] = "0.0.0.0"  # Bind to all interfaces.
             config["logging"]["log_stdout"] = True  # Log to console.
     else:
-        config = load_config(chia_root, "config.yaml")
+        config = load_config(chik_root, "config.yaml")
     # simulator overrides
     config["simulator"]["key_fingerprint"] = fingerprint
     if farming_address is None:
@@ -120,7 +120,7 @@ def create_chia_directory(
     simulator_consts["GENESIS_PRE_FARM_FARMER_PUZZLE_HASH"] = farming_ph.hex()
     simulator_consts["GENESIS_PRE_FARM_POOL_PUZZLE_HASH"] = farming_ph.hex()
     # save config and return the config
-    save_config(chia_root, "config.yaml", config)
+    save_config(chik_root, "config.yaml", config)
     return config
 
 
@@ -236,7 +236,7 @@ async def generate_plots(config: Dict[str, Any], root_path: Path, fingerprint: i
     from chik.simulator.start_simulator import PLOT_SIZE, PLOTS
 
     farming_puzzle_hash = decode_puzzle_hash(config["simulator"]["farming_address"])
-    os.environ["CHIA_ROOT"] = str(root_path)  # change env variable, to make it match what the daemon would set it to
+    os.environ["CHIK_ROOT"] = str(root_path)  # change env variable, to make it match what the daemon would set it to
 
     # create block tools and use local keychain
     bt = BlockTools(
@@ -281,7 +281,7 @@ async def async_config_wizard(
         return
     # create chik directory & get config.
     print("Creating chik directory & config...")
-    config = create_chia_directory(root_path, fingerprint, farming_address, plot_directory, auto_farm, docker_mode)
+    config = create_chik_directory(root_path, fingerprint, farming_address, plot_directory, auto_farm, docker_mode)
     # Pre-generate plots by running block_tools init functions.
     print("Please Wait, Generating plots...")
     print("This may take up to a minute if you are on a slow machine")
@@ -310,7 +310,7 @@ async def async_config_wizard(
             else:
                 print("Genesis block already exists, exiting.")
             break
-    print(f"\nMake sure your CHIA_ROOT Environment Variable is set to: {root_path}")
+    print(f"\nMake sure your CHIK_ROOT Environment Variable is set to: {root_path}")
 
 
 def print_coin_record(

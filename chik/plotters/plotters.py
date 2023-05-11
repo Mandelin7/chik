@@ -51,7 +51,7 @@ class Options(Enum):
     BLADEBIT_NO_T2_DIRECT = 36
 
 
-chia_plotter_options = [
+chik_plotter_options = [
     Options.TMP_DIR,
     Options.TMP_DIR2,
     Options.K,
@@ -419,8 +419,8 @@ def build_parser(subparsers, root_path, option_list, name, plotter_desc):
 
 
 def call_plotters(root_path: Path, args):
-    # Add `plotters` section in CHIA_ROOT.
-    chia_root_path = root_path
+    # Add `plotters` section in CHIK_ROOT.
+    chik_root_path = root_path
     root_path = get_plotters_root_path(root_path)
     if not root_path.is_dir():
         if os.path.exists(root_path):
@@ -430,7 +430,7 @@ def call_plotters(root_path: Path, args):
                 print(f"Exception deleting old root path: {type(e)} {e}.")
 
     if not os.path.exists(root_path):
-        print(f"Creating plotters folder within CHIA_ROOT: {root_path}")
+        print(f"Creating plotters folder within CHIK_ROOT: {root_path}")
         try:
             os.mkdir(root_path)
         except Exception as e:
@@ -439,7 +439,7 @@ def call_plotters(root_path: Path, args):
     plotters = argparse.ArgumentParser("chik plotters", description="Available options.")
     subparsers = plotters.add_subparsers(help="Available options", dest="plotter")
 
-    build_parser(subparsers, root_path, chia_plotter_options, "chiapos", "Create a plot with the default chik plotter")
+    build_parser(subparsers, root_path, chik_plotter_options, "chiapos", "Create a plot with the default chik plotter")
     build_parser(subparsers, root_path, madmax_plotter_options, "madmax", "Create a plot with madMAx")
 
     bladebit_parser = subparsers.add_parser("bladebit", help="Create a plot with bladebit")
@@ -471,13 +471,13 @@ def call_plotters(root_path: Path, args):
     if args.plotter is None:
         plotters.print_help()
     elif args.plotter == "chiapos":
-        plot_chia(args, chia_root_path)
+        plot_chik(args, chik_root_path)
     elif args.plotter == "madmax":
-        plot_madmax(args, chia_root_path, root_path)
+        plot_madmax(args, chik_root_path, root_path)
     elif args.plotter == "bladebit":
-        plot_bladebit(args, chia_root_path, root_path)
+        plot_bladebit(args, chik_root_path, root_path)
     elif args.plotter == "version":
-        show_plotters_version(chia_root_path)
+        show_plotters_version(chik_root_path)
 
 
 def get_available_plotters(root_path) -> Dict[str, Any]:

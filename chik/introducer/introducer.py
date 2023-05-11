@@ -8,14 +8,14 @@ from typing import Any, Dict, List, Optional
 from chik.rpc.rpc_server import StateChangedProtocol, default_get_connections
 from chik.server.introducer_peers import VettedPeer
 from chik.server.outbound_message import NodeType
-from chik.server.server import ChiaServer
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.server import ChikServer
+from chik.server.ws_connection import WSChikConnection
 from chik.util.ints import uint64
 
 
 class Introducer:
     @property
-    def server(self) -> ChiaServer:
+    def server(self) -> ChikServer:
         # This is a stop gap until the class usage is refactored such the values of
         # integral attributes are known at creation of the instance.
         if self._server is None:
@@ -27,7 +27,7 @@ class Introducer:
         self.max_peers_to_send = max_peers_to_send
         self.recent_peer_threshold = recent_peer_threshold
         self._shut_down = False
-        self._server: Optional[ChiaServer] = None
+        self._server: Optional[ChikServer] = None
         self.log = logging.getLogger(__name__)
 
     async def _start(self):
@@ -41,7 +41,7 @@ class Introducer:
         pass
         # await self._vetting_task
 
-    async def on_connect(self, peer: WSChiaConnection) -> None:
+    async def on_connect(self, peer: WSChikConnection) -> None:
         pass
 
     def _set_state_changed_callback(self, callback: StateChangedProtocol) -> None:
@@ -51,7 +51,7 @@ class Introducer:
     def get_connections(self, request_node_type: Optional[NodeType]) -> List[Dict[str, Any]]:
         return default_get_connections(server=self.server, request_node_type=request_node_type)
 
-    def set_server(self, server: ChiaServer):
+    def set_server(self, server: ChikServer):
         self._server = server
 
     async def _vetting_loop(self):

@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from chik.data_layer.data_layer import DataLayer
-from chik.server.server import ChiaServer
+from chik.server.server import ChikServer
 
 
 class DataLayerAPI:
@@ -16,7 +16,7 @@ class DataLayerAPI:
     #     self.full_node.state_changed_callback = callback
 
     @property
-    def server(self) -> ChiaServer:
+    def server(self) -> ChikServer:
         return self.data_layer.server
 
     @property

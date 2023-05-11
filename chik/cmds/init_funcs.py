@@ -14,7 +14,7 @@ from chik.consensus.coinbase import create_puzzlehash_for_pk
 from chik.ssl.create_ssl import create_all_ssl
 from chik.util.bech32m import encode_puzzle_hash
 from chik.util.config import (
-    create_default_chia_config,
+    create_default_chik_config,
     initial_config_file,
     load_config,
     lock_and_load_config,
@@ -73,8 +73,8 @@ def check_keys(new_root: Path, keychain: Optional[Keychain] = None) -> None:
     with lock_and_load_config(new_root, "config.yaml") as config:
         pool_child_pubkeys = [master_sk_to_pool_sk(sk).get_g1() for sk, _ in all_sks]
         all_targets = []
-        stop_searching_for_farmer = "xch_target_address" not in config["farmer"]
-        stop_searching_for_pool = "xch_target_address" not in config["pool"]
+        stop_searching_for_farmer = "xck_target_address" not in config["farmer"]
+        stop_searching_for_pool = "xck_target_address" not in config["pool"]
         number_of_ph_to_search = 50
         selected = config["selected_network"]
         prefix = config["network_overrides"]["config"][selected]["address_prefix"]
@@ -101,46 +101,46 @@ def check_keys(new_root: Path, keychain: Optional[Keychain] = None) -> None:
                 all_targets.append(
                     encode_puzzle_hash(create_puzzlehash_for_pk(_derive_path(intermediate_n, [i]).get_g1()), prefix)
                 )
-                if all_targets[-1] == config["farmer"].get("xch_target_address") or all_targets[-2] == config[
+                if all_targets[-1] == config["farmer"].get("xck_target_address") or all_targets[-2] == config[
                     "farmer"
-                ].get("xch_target_address"):
+                ].get("xck_target_address"):
                     stop_searching_for_farmer = True
-                if all_targets[-1] == config["pool"].get("xch_target_address") or all_targets[-2] == config["pool"].get(
-                    "xch_target_address"
+                if all_targets[-1] == config["pool"].get("xck_target_address") or all_targets[-2] == config["pool"].get(
+                    "xck_target_address"
                 ):
                     stop_searching_for_pool = True
 
         # Set the destinations, if necessary
         updated_target: bool = False
-        if "xch_target_address" not in config["farmer"]:
+        if "xck_target_address" not in config["farmer"]:
             print(
-                f"Setting the xch destination for the farmer reward (1/8 plus fees, solo and pooling)"
+                f"Setting the xck destination for the farmer reward (1/8 plus fees, solo and pooling)"
                 f" to {all_targets[0]}"
             )
-            config["farmer"]["xch_target_address"] = all_targets[0]
+            config["farmer"]["xck_target_address"] = all_targets[0]
             updated_target = True
-        elif config["farmer"]["xch_target_address"] not in all_targets:
+        elif config["farmer"]["xck_target_address"] not in all_targets:
             print(
                 f"WARNING: using a farmer address which we might not have the private"
                 f" keys for. We searched the first {number_of_ph_to_search} addresses. Consider overriding "
-                f"{config['farmer']['xch_target_address']} with {all_targets[0]}"
+                f"{config['farmer']['xck_target_address']} with {all_targets[0]}"
             )
 
         if "pool" not in config:
             config["pool"] = {}
-        if "xch_target_address" not in config["pool"]:
-            print(f"Setting the xch destination address for pool reward (7/8 for solo only) to {all_targets[0]}")
-            config["pool"]["xch_target_address"] = all_targets[0]
+        if "xck_target_address" not in config["pool"]:
+            print(f"Setting the xck destination address for pool reward (7/8 for solo only) to {all_targets[0]}")
+            config["pool"]["xck_target_address"] = all_targets[0]
             updated_target = True
-        elif config["pool"]["xch_target_address"] not in all_targets:
+        elif config["pool"]["xck_target_address"] not in all_targets:
             print(
                 f"WARNING: using a pool address which we might not have the private"
                 f" keys for. We searched the first {number_of_ph_to_search} addresses. Consider overriding "
-                f"{config['pool']['xch_target_address']} with {all_targets[0]}"
+                f"{config['pool']['xck_target_address']} with {all_targets[0]}"
             )
         if updated_target:
             print(
-                f"To change the XCH destination addresses, edit the `xch_target_address` entries in"
+                f"To change the XCK destination addresses, edit the `xck_target_address` entries in"
                 f" {(new_root / 'config' / 'config.yaml').absolute()}."
             )
 
@@ -239,7 +239,7 @@ def init(
             print(f"** {root_path} does not exist. Executing core init **")
             # sanity check here to prevent infinite recursion
             if (
-                chia_init(
+                chik_init(
                     root_path,
                     fix_ssl_permissions=fix_ssl_permissions,
                     testnet=testnet,
@@ -253,12 +253,12 @@ def init(
             print(f"** {root_path} was not created. Exiting **")
             return -1
     else:
-        return chia_init(root_path, fix_ssl_permissions=fix_ssl_permissions, testnet=testnet, v1_db=v1_db)
+        return chik_init(root_path, fix_ssl_permissions=fix_ssl_permissions, testnet=testnet, v1_db=v1_db)
 
     return None
 
 
-def chia_version_number() -> Tuple[str, str, str, str]:
+def chik_version_number() -> Tuple[str, str, str, str]:
     scm_full_version = __version__
     left_full_version = scm_full_version.split("+")
 
@@ -306,12 +306,12 @@ def chia_version_number() -> Tuple[str, str, str, str]:
     return major_release_number, minor_release_number, patch_release_number, dev_release_number
 
 
-def chia_full_version_str() -> str:
-    major, minor, patch, dev = chia_version_number()
+def chik_full_version_str() -> str:
+    major, minor, patch, dev = chik_version_number()
     return f"{major}.{minor}.{patch}{dev}"
 
 
-def chia_init(
+def chik_init(
     root_path: Path,
     *,
     should_check_keys: bool = True,
@@ -327,13 +327,13 @@ def chia_init(
     protected Keychain. When launching the daemon from the GUI, we want the GUI to
     handle unlocking the keychain.
     """
-    chia_root = os.environ.get("CHIA_ROOT", None)
-    if chia_root is not None:
-        print(f"CHIA_ROOT is set to {chia_root}")
+    chik_root = os.environ.get("CHIK_ROOT", None)
+    if chik_root is not None:
+        print(f"CHIK_ROOT is set to {chik_root}")
 
-    print(f"Chia directory {root_path}")
+    print(f"Chik directory {root_path}")
     if root_path.is_dir() and Path(root_path / "config" / "config.yaml").exists():
-        # This is reached if CHIA_ROOT is set, or if user has run chik init twice
+        # This is reached if CHIK_ROOT is set, or if user has run chik init twice
         # before a new update.
         if testnet:
             configure(
@@ -360,7 +360,7 @@ def chia_init(
         print(f"{root_path} already exists, no migration action taken")
         return -1
 
-    create_default_chia_config(root_path)
+    create_default_chik_config(root_path)
     if testnet:
         configure(
             root_path,

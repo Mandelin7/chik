@@ -4,7 +4,7 @@ from shutil import rmtree
 
 from click.testing import CliRunner, Result
 
-from chik.cmds.chia import cli
+from chik.cmds.chik import cli
 from chik.util.default_root import SIMULATOR_ROOT_PATH
 
 mnemonic = (  # ignore any secret warnings

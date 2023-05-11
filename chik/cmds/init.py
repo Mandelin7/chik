@@ -41,8 +41,8 @@ def init_cmd(
     - Shut down all chik daemon processes with `chik stop all -d`
     - Run `chik init -c [directory]` on your remote harvester,
       where [directory] is the the copy of your Farming Machine CA directory
-    - Get more details on remote harvester on Chia wiki:
-      https://github.com/Chia-Network/chia-blockchain/wiki/Farming-on-many-machines
+    - Get more details on remote harvester on Chik wiki:
+      https://github.com/Chik-Network/chik-blockchain/wiki/Farming-on-many-machines
     """
     from pathlib import Path
 
@@ -65,6 +65,6 @@ def init_cmd(
 if __name__ == "__main__":
     from chik.util.default_root import DEFAULT_ROOT_PATH
 
-    from .init_funcs import chia_init
+    from .init_funcs import chik_init
 
-    chia_init(DEFAULT_ROOT_PATH)
+    chik_init(DEFAULT_ROOT_PATH)

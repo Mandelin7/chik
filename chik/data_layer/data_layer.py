@@ -39,8 +39,8 @@ from chik.data_layer.download_data import insert_from_delta_file, write_files_fo
 from chik.rpc.rpc_server import StateChangedProtocol, default_get_connections
 from chik.rpc.wallet_rpc_client import WalletRpcClient
 from chik.server.outbound_message import NodeType
-from chik.server.server import ChiaServer
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.server import ChikServer
+from chik.server.ws_connection import WSChikConnection
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.util.ints import uint32, uint64
 from chik.util.path import path_from_root
@@ -72,12 +72,12 @@ class DataLayer:
     initialized: bool
     none_bytes: bytes32
     lock: asyncio.Lock
-    _server: Optional[ChiaServer]
+    _server: Optional[ChikServer]
     downloaders: List[str]
     uploaders: List[str]
 
     @property
-    def server(self) -> ChiaServer:
+    def server(self) -> ChikServer:
         # This is a stop gap until the class usage is refactored such the values of
         # integral attributes are known at creation of the instance.
         if self._server is None:
@@ -121,13 +121,13 @@ class DataLayer:
     def _set_state_changed_callback(self, callback: StateChangedProtocol) -> None:
         self.state_changed_callback = callback
 
-    async def on_connect(self, connection: WSChiaConnection) -> None:
+    async def on_connect(self, connection: WSChikConnection) -> None:
         pass
 
     def get_connections(self, request_node_type: Optional[NodeType]) -> List[Dict[str, Any]]:
         return default_get_connections(server=self.server, request_node_type=request_node_type)
 
-    def set_server(self, server: ChiaServer) -> None:
+    def set_server(self, server: ChikServer) -> None:
         self._server = server
 
     async def _start(self) -> None:

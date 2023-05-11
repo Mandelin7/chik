@@ -31,8 +31,8 @@ from chik.protocols.pool_protocol import (
 from chik.protocols.protocol_message_types import ProtocolMessageTypes
 from chik.rpc.rpc_server import StateChangedProtocol, default_get_connections
 from chik.server.outbound_message import NodeType, make_msg
-from chik.server.server import ChiaServer, ssl_context_for_root
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.server import ChikServer, ssl_context_for_root
+from chik.server.ws_connection import WSChikConnection
 from chik.ssl.create_ssl import get_mozilla_ca_crt
 from chik.types.blockchain_format.proof_of_space import ProofOfSpace
 from chik.types.blockchain_format.sized_bytes import bytes32
@@ -155,22 +155,22 @@ class Farmer:
             return False
 
         config = load_config(self._root_path, "config.yaml")
-        if "xch_target_address" not in self.config:
+        if "xck_target_address" not in self.config:
             self.config = config["farmer"]
-        if "xch_target_address" not in self.pool_config:
+        if "xck_target_address" not in self.pool_config:
             self.pool_config = config["pool"]
-        if "xch_target_address" not in self.config or "xch_target_address" not in self.pool_config:
-            log.debug("xch_target_address missing in the config")
+        if "xck_target_address" not in self.config or "xck_target_address" not in self.pool_config:
+            log.debug("xck_target_address missing in the config")
             return False
 
         # This is the farmer configuration
-        self.farmer_target_encoded = self.config["xch_target_address"]
+        self.farmer_target_encoded = self.config["xck_target_address"]
         self.farmer_target = decode_puzzle_hash(self.farmer_target_encoded)
 
         self.pool_public_keys = [G1Element.from_bytes(bytes.fromhex(pk)) for pk in self.config["pool_public_keys"]]
 
         # This is the self pooling configuration, which is only used for original self-pooled plots
-        self.pool_target_encoded = self.pool_config["xch_target_address"]
+        self.pool_target_encoded = self.pool_config["xck_target_address"]
         self.pool_target = decode_puzzle_hash(self.pool_target_encoded)
         self.pool_sks_map = {bytes(key.get_g1()): key for key in self.get_private_keys()}
 
@@ -215,7 +215,7 @@ class Farmer:
     def _set_state_changed_callback(self, callback: StateChangedProtocol) -> None:
         self.state_changed_callback = callback
 
-    async def on_connect(self, peer: WSChiaConnection) -> None:
+    async def on_connect(self, peer: WSChikConnection) -> None:
         self.state_changed("add_connection", {})
 
         async def handshake_task() -> None:
@@ -247,7 +247,7 @@ class Farmer:
             self.plot_sync_receivers[peer.peer_node_id] = Receiver(peer, self.plot_sync_callback)
             self.harvester_handshake_task = asyncio.create_task(handshake_task())
 
-    def set_server(self, server: ChiaServer) -> None:
+    def set_server(self, server: ChikServer) -> None:
         self.server = server
 
     def state_changed(self, change: str, data: Dict[str, Any]) -> None:
@@ -260,7 +260,7 @@ class Farmer:
             ErrorResponse(uint16(PoolErrorCode.REQUEST_FAILED.value), error_message).to_json_dict()
         )
 
-    def on_disconnect(self, connection: WSChiaConnection) -> None:
+    def on_disconnect(self, connection: WSChikConnection) -> None:
         self.log.info(f"peer disconnected {connection.get_peer_logging()}")
         self.state_changed("close_connection", {})
         if connection.connection_type is NodeType.HARVESTER:
@@ -592,11 +592,11 @@ class Farmer:
             if farmer_target_encoded is not None:
                 self.farmer_target_encoded = farmer_target_encoded
                 self.farmer_target = decode_puzzle_hash(farmer_target_encoded)
-                config["farmer"]["xch_target_address"] = farmer_target_encoded
+                config["farmer"]["xck_target_address"] = farmer_target_encoded
             if pool_target_encoded is not None:
                 self.pool_target_encoded = pool_target_encoded
                 self.pool_target = decode_puzzle_hash(pool_target_encoded)
-                config["pool"]["xch_target_address"] = pool_target_encoded
+                config["pool"]["xck_target_address"] = pool_target_encoded
             save_config(self._root_path, "config.yaml", config)
 
     async def set_payout_instructions(self, launcher_id: bytes32, payout_instructions: str) -> None:

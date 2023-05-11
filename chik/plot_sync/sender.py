@@ -25,7 +25,7 @@ from chik.protocols.harvester_protocol import (
 )
 from chik.protocols.protocol_message_types import ProtocolMessageTypes
 from chik.server.outbound_message import NodeType, make_msg
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.ws_connection import WSChikConnection
 from chik.util.generator_tools import list_to_batches
 from chik.util.ints import int16, uint32, uint64
 
@@ -90,7 +90,7 @@ class ExpectedResponse:
 
 class Sender:
     _plot_manager: PlotManager
-    _connection: Optional[WSChiaConnection]
+    _connection: Optional[WSChikConnection]
     _sync_id: uint64
     _next_message_id: uint64
     _messages: List[MessageGenerator[PayloadType]]
@@ -133,7 +133,7 @@ class Sender:
         self._reset()
         self._stop_requested = False
 
-    def set_connection(self, connection: WSChiaConnection) -> None:
+    def set_connection(self, connection: WSChikConnection) -> None:
         assert connection.connection_type is not None
         if connection.connection_type != NodeType.FARMER:
             raise InvalidConnectionTypeError(connection.connection_type, NodeType.HARVESTER)

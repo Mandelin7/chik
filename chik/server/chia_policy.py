@@ -54,7 +54,7 @@ if TYPE_CHECKING:
     # https://github.com/python/typeshed/blob/d084079fc3d89a7b51b89095ad67762944e0ace3/stdlib/asyncio/base_events.pyi#L27
     class BaseEventsServer(asyncio.base_events.Server):
         if sys.platform == "win32" and sys.version_info >= (3, 8):
-            _loop: ChiaProactorEventLoop
+            _loop: ChikProactorEventLoop
         else:
             _loop: EventsAbstractEventLoop
         _sockets: Iterable[socket.socket]
@@ -144,7 +144,7 @@ class PausableServer(BaseEventsServer):
         super()._attach()
         logging.getLogger(__name__).debug(f"New connection. Total connections: {self._active_count}")
         if not self._paused and self._active_count >= self.max_concurrent_connections:
-            self._chia_pause()
+            self._chik_pause()
 
     def _detach(self) -> None:
         super()._detach()
@@ -155,9 +155,9 @@ class PausableServer(BaseEventsServer):
             and self._paused
             and self._active_count < self.max_concurrent_connections
         ):
-            self._chia_resume()
+            self._chik_resume()
 
-    def _chia_pause(self) -> None:
+    def _chik_pause(self) -> None:
         """Pause future calls to accept()."""
         self._paused = True
         if sys.platform == "win32" and sys.version_info >= (3, 8):
@@ -169,7 +169,7 @@ class PausableServer(BaseEventsServer):
                 self._loop.remove_reader(sock.fileno())
         logging.getLogger(__name__).debug("Maximum number of connections reached, paused accepting connections.")
 
-    def _chia_resume(self) -> None:
+    def _chik_resume(self) -> None:
         """Resume use of accept() on listening socket(s)."""
         self._paused = False
         if sys.platform == "win32" and sys.version_info >= (3, 8):
@@ -189,7 +189,7 @@ class PausableServer(BaseEventsServer):
         logging.getLogger(__name__).debug("Resumed accepting connections.")
 
 
-async def _chia_create_server(
+async def _chik_create_server(
     cls: Any,
     protocol_factory: _ProtocolFactory,
     host: Any,
@@ -237,17 +237,17 @@ async def _chia_create_server(
     return pausable_server
 
 
-class ChiaSelectorEventLoop(asyncio.SelectorEventLoop):
+class ChikSelectorEventLoop(asyncio.SelectorEventLoop):
     # Ignoring lack of typing since we are passing through and also never call this
     # ourselves. There may be a good solution if needed in the future.  We should
     # generally get a warning about calling an untyped function in case we do.
     async def create_server(self, *args, **kwargs) -> PausableServer:  # type: ignore[no-untyped-def]
-        return await _chia_create_server(super(), *args, **kwargs)
+        return await _chik_create_server(super(), *args, **kwargs)
 
 
 if sys.platform == "win32":
 
-    class ChiaProactor(IocpProactor):
+    class ChikProactor(IocpProactor):
         allow_connections: bool
 
         def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -260,19 +260,19 @@ if sys.platform == "win32":
         def disable_connections(self) -> None:
             self.allow_connections = False
 
-        async def _chia_accept_loop(self, listener: socket.socket) -> Tuple[socket.socket, Tuple[object, ...]]:
+        async def _chik_accept_loop(self, listener: socket.socket) -> Tuple[socket.socket, Tuple[object, ...]]:
             while True:
                 # TODO: switch to Event code.
                 while not self.allow_connections:
                     await asyncio.sleep(0.01)
 
                 try:
-                    return await self._chia_accept(listener)
+                    return await self._chik_accept(listener)
                 except WindowsError as exc:  # pylint: disable=E0602
                     if exc.winerror not in (_winapi.ERROR_NETNAME_DELETED, _winapi.ERROR_OPERATION_ABORTED):
                         raise
 
-        def _chia_accept(self, listener: socket.socket) -> asyncio.Future[Tuple[socket.socket, Tuple[object, ...]]]:
+        def _chik_accept(self, listener: socket.socket) -> asyncio.Future[Tuple[socket.socket, Tuple[object, ...]]]:
             self._register_with_iocp(listener)
             conn = self._get_accept_socket(listener.family)  # pylint: disable=assignment-from-no-return
             ov = _overlapped.Overlapped(_winapi.NULL)
@@ -288,7 +288,7 @@ if sys.platform == "win32":
                 conn.settimeout(listener.gettimeout())
                 return conn, conn.getpeername()
 
-            async def accept_coro(self: ChiaProactor, future: asyncio.Future[object], conn: socket.socket) -> None:
+            async def accept_coro(self: ChikProactor, future: asyncio.Future[object], conn: socket.socket) -> None:
                 # Coroutine closing the accept socket if the future is cancelled
                 try:
                     await future
@@ -306,10 +306,10 @@ if sys.platform == "win32":
             return future
 
         def accept(self, listener: socket.socket) -> asyncio.Future[Tuple[socket.socket, Tuple[object, ...]]]:
-            coro = self._chia_accept_loop(listener)
+            coro = self._chik_accept_loop(listener)
             return asyncio.ensure_future(coro)
 
-    class ChiaProactorEventLoop(ProactorEventLoop):
+    class ChikProactorEventLoop(ProactorEventLoop):
         # Ignoring lack of typing (via Any) since we are passing through and also never
         # call this ourselves.  There may be a good solution if needed in the future.
         # It would be better to use a real ignore since then we would get a complaint
@@ -317,10 +317,10 @@ if sys.platform == "win32":
         # platform dependent code and running mypy on other platforms will complain
         # about the ignore being unused.
         async def create_server(self, *args: Any, **kwargs: Any) -> PausableServer:
-            return await _chia_create_server(super(), *args, **kwargs)
+            return await _chik_create_server(super(), *args, **kwargs)
 
         def __init__(self) -> None:
-            proactor = ChiaProactor()
+            proactor = ChikProactor()
             super().__init__(proactor=proactor)
 
         def enable_connections(self) -> None:
@@ -330,25 +330,25 @@ if sys.platform == "win32":
             self._proactor.disable_connections()
 
 
-class ChiaPolicy(asyncio.DefaultEventLoopPolicy):
+class ChikPolicy(asyncio.DefaultEventLoopPolicy):
     def new_event_loop(self) -> asyncio.AbstractEventLoop:
         # overriding https://github.com/python/cpython/blob/v3.11.0/Lib/asyncio/events.py#L689-L695
         if sys.platform == "win32":
             if sys.version_info >= (3, 8):
                 # https://docs.python.org/3.11/library/asyncio-policy.html#asyncio.DefaultEventLoopPolicy
                 # Changed in version 3.8: On Windows, ProactorEventLoop is now used by default.
-                loop_factory = ChiaProactorEventLoop
+                loop_factory = ChikProactorEventLoop
             else:
                 # separate condition so coverage can report when this is no longer used
-                loop_factory = ChiaSelectorEventLoop
+                loop_factory = ChikSelectorEventLoop
         else:
-            loop_factory = ChiaSelectorEventLoop
+            loop_factory = ChikSelectorEventLoop
 
         return loop_factory()
 
 
-def set_chia_policy(connection_limit: int) -> None:
+def set_chik_policy(connection_limit: int) -> None:
     global global_max_concurrent_connections
     # Add "+100" to the desired peer count as a safety margin.
     global_max_concurrent_connections = connection_limit + 100
-    asyncio.set_event_loop_policy(ChiaPolicy())
+    asyncio.set_event_loop_policy(ChikPolicy())
