@@ -40,10 +40,10 @@ def generate(shell: str) -> None:
     You can source it directly (performs slower) by running:
         \033[3;33meval "$(chik complete generate)"\033[0m
     or you can save the output to a file:
-        \033[3;33mchia complete generate > ~/.chik-complete-bash\033[0m
+        \033[3;33mchik complete generate > ~/.chik-complete-bash\033[0m
     and source that file with:
         \033[3;33m. ~/.chik-complete-bash\033[0m
     """
     # Could consider calling directly in the future.
     # https://github.com/pallets/click/blob/ef11be6e49e19a055fe7e5a89f0f1f4062c68dba/src/click/shell_completion.py#L17
-    subprocess.run(["chik"], check=True, env={**os.environ, "_CHIA_COMPLETE": f"{shell}_source"})
+    subprocess.run(["chik"], check=True, env={**os.environ, "_CHIK_COMPLETE": f"{shell}_source"})

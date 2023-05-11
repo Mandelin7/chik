@@ -9,7 +9,7 @@ import click
 
 from chik.cmds.beta_funcs import (
     default_beta_root_path,
-    prepare_chia_blockchain_log,
+    prepare_chik_blockchain_log,
     prepare_logs,
     prepare_plotting_log,
     prompt_beta_warning,
@@ -142,9 +142,9 @@ def prepare_submission_cmd(ctx: click.Context) -> None:
     except IndexError:
         raise click.ClickException(f"Invalid choice: {user_input}")
     plotting_path = Path(prepare_result / "plotting")
-    chia_blockchain_path = Path(prepare_result / "chik-blockchain")
-    chia_logs = prepare_logs(plotting_path, prepare_chia_blockchain_log)
-    plotting_logs = prepare_logs(chia_blockchain_path, prepare_plotting_log)
+    chik_blockchain_path = Path(prepare_result / "chik-blockchain")
+    chik_logs = prepare_logs(plotting_path, prepare_chik_blockchain_log)
+    plotting_logs = prepare_logs(chik_blockchain_path, prepare_plotting_log)
 
     submission_file_path = (
         prepare_result / f"submission_{prepare_result.name}__{datetime.now().strftime('%m_%d_%Y__%H_%M_%S')}.zip"
@@ -160,11 +160,11 @@ def prepare_submission_cmd(ctx: click.Context) -> None:
         return added
 
     with zipfile.ZipFile(submission_file_path, "w", zipfile.ZIP_DEFLATED) as zip_file:
-        files_added = add_files(chia_logs) + add_files(plotting_logs)
+        files_added = add_files(chik_logs) + add_files(plotting_logs)
 
     if files_added == 0:
         submission_file_path.unlink()
-        message = f"No logs files found in {str(plotting_path)!r} and {str(chia_blockchain_path)!r}."
+        message = f"No logs files found in {str(plotting_path)!r} and {str(chik_blockchain_path)!r}."
         raise click.ClickException(message)
 
     print(f"\nDone. You can find the prepared submission data in {submission_file_path}.")

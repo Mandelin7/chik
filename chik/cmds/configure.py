@@ -100,11 +100,11 @@ def configure(
         if testnet:
             if testnet == "true" or testnet == "t":
                 print("Setting Testnet")
-                testnet_port = "58444"
-                testnet_introducer = "introducer-testnet10.chik.net"
-                testnet_dns_introducer = "dns-introducer-testnet10.chik.net"
-                bootstrap_peers = ["testnet10-node.chik.net"]
-                testnet = "testnet10"
+                testnet_port = "59678"
+                testnet_introducer = "introducer-testnet.chiknetwork.org"
+                testnet_dns_introducer = "dns-introducer-testnet.chiknetwork.org"
+                bootstrap_peers = ["node-testnet.chiknetwork.org"]
+                testnet = "testnet"
                 config["full_node"]["port"] = int(testnet_port)
                 if config["full_node"]["introducer_peer"] is None:
                     config["full_node"]["introducer_peer"] = {}
@@ -144,10 +144,10 @@ def configure(
 
             elif testnet == "false" or testnet == "f":
                 print("Setting Mainnet")
-                mainnet_port = "8444"
-                mainnet_introducer = "introducer.chik.net"
-                mainnet_dns_introducer = "dns-introducer.chik.net"
-                bootstrap_peers = ["node.chik.net"]
+                mainnet_port = "9678"
+                mainnet_introducer = "introducer.chiknetwork.org"
+                mainnet_dns_introducer = "dns-introducer.chiknetwork.org"
+                bootstrap_peers = ["node.chiknetwork.org"]
                 net = "mainnet"
                 config["full_node"]["port"] = int(mainnet_port)
                 config["full_node"]["introducer_peer"]["port"] = int(mainnet_port)

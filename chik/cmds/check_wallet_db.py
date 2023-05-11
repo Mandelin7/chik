@@ -18,7 +18,7 @@ from chik.wallet.util.wallet_types import WalletType
 
 help_text = """
 \b
-    The purpose of this command is find potential issues in Chia wallet databases.
+    The purpose of this command is find potential issues in Chik wallet databases.
     The core chik client currently uses sqlite to store the wallet databases, one database per key.
 \b
     Guide to warning diagnostics:

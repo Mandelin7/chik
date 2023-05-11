@@ -92,8 +92,8 @@ You can install Chik by building from source, or by using the latest binaries fo
 
 If the client does not find any connections automatically, you can add any of the following:
 
-- introducer.chiknetwork.org / Port: 28555
-- dns-introducer.chiknetwork.org / Port: 28555
+- introducer.chiknetwork.org / Port: 9678
+- dns-introducer.chiknetwork.org / Port: 9678
 
 ***********************************************
 # UPDATE/UPGRADE INSTRUCTIONS:
