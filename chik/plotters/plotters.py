@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from chik.plotters.bladebit import get_bladebit_install_info, plot_bladebit
-from chik.plotters.chiapos import get_chiapos_install_info, plot_chia
+from chik.plotters.chiapos import get_chiapos_install_info, plot_chik
 from chik.plotters.madmax import get_madmax_install_info, plot_madmax
 
 

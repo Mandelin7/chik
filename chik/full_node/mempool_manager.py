@@ -45,7 +45,7 @@ from chik.util.setproctitle import getproctitle, setproctitle
 log = logging.getLogger(__name__)
 
 # mempool items replacing existing ones must increase the total fee at least by
-# this amount. 0.00001 XCH
+# this amount. 0.00001 XCK
 MEMPOOL_MIN_FEE_INCREASE = uint64(10000000)
 
 

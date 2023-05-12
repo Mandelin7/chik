@@ -411,7 +411,7 @@ async def fetch_header_blocks_in_range(
     return blocks
 
 
-async def fetch_coin_spend(height: uint32, coin: Coin, peer: WSChiaConnection) -> CoinSpend:
+async def fetch_coin_spend(height: uint32, coin: Coin, peer: WSChikConnection) -> CoinSpend:
     solution_response = await peer.call_api(
         FullNodeAPI.request_puzzle_solution, wallet_protocol.RequestPuzzleSolution(coin.name(), height)
     )
@@ -427,7 +427,7 @@ async def fetch_coin_spend(height: uint32, coin: Coin, peer: WSChiaConnection) -
     )
 
 
-async def fetch_coin_spend_for_coin_state(coin_state: CoinState, peer: WSChiaConnection) -> CoinSpend:
+async def fetch_coin_spend_for_coin_state(coin_state: CoinState, peer: WSChikConnection) -> CoinSpend:
     if coin_state.spent_height is None:
         raise ValueError("coin_state.coin must be spent coin")
     return await fetch_coin_spend(uint32(coin_state.spent_height), coin_state.coin, peer)

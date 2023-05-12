@@ -507,7 +507,7 @@ class TradeManager:
                         wallet = await self.wallet_state_manager.get_wallet_for_asset_id(asset_id.hex())
                     if not callable(getattr(wallet, "get_coins_to_offer", None)):  # ATTENTION: new wallets
                         raise ValueError(f"Cannot offer coins from wallet id {wallet.id()}")
-                    # For the XCH wallet also include the fee amount to the coins we use to pay this offer
+                    # For the XCK wallet also include the fee amount to the coins we use to pay this offer
                     amount_to_select = abs(amount)
                     if wallet.type() == WalletType.STANDARD_WALLET:
                         amount_to_select += fee
@@ -552,7 +552,7 @@ class TradeManager:
             all_transactions: List[TransactionRecord] = []
             fee_left_to_pay: uint64 = fee
             # The access of the sorted keys here makes sure we create the XCK transaction first to make sure we pay fee
-            # with the XCH side of the offer and don't create an extra fee transaction in other wallets.
+            # with the XCK side of the offer and don't create an extra fee transaction in other wallets.
             for id in sorted(coins_to_offer.keys()):
                 selected_coins = coins_to_offer[id]
                 if isinstance(id, int):

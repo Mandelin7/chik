@@ -50,7 +50,7 @@ from chik.wallet.wallet_info import WalletInfo
 if TYPE_CHECKING:
     from chik.server.ws_connection import WSChikConnection
 
-# https://github.com/Chia-Network/chips/blob/80e4611fe52b174bf1a0382b9dff73805b18b8c6/CHIPs/chip-0002.md#signmessage
+# https://github.com/Chik-Network/chips/blob/80e4611fe52b174bf1a0382b9dff73805b18b8c6/CHIPs/chip-0002.md#signmessage
 CHIP_0002_SIGN_MESSAGE_PREFIX = "Chik Signed Message"
 
 
