@@ -14,7 +14,7 @@ from typing import AsyncIterator, List, Optional
 import anyio
 import pytest
 
-from chik.server import chia_policy
+from chik.server import chik_policy
 from tests.core.server import serve
 
 here = pathlib.Path(__file__).parent

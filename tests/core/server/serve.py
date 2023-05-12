@@ -8,7 +8,7 @@ import sys
 import threading
 from typing import List, Optional
 
-from chik.server.chia_policy import ChiaPolicy
+from chik.server.chik_policy import ChiaPolicy
 from chik.server.start_service import async_run
 
 if sys.platform == "win32":

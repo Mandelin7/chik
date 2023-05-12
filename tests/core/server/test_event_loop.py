@@ -5,7 +5,7 @@ import inspect
 import sys
 import threading
 
-from chik.server.chia_policy import ChiaSelectorEventLoop, PausableServer, _chia_create_server, set_chia_policy
+from chik.server.chik_policy import ChiaSelectorEventLoop, PausableServer, _chia_create_server, set_chia_policy
 
 
 def test_base_event_loop_has_methods() -> None:
