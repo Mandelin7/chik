@@ -101,7 +101,7 @@ from chik.util.bech32m import encode_puzzle_hash
 from chik.util.block_cache import BlockCache
 from chik.util.config import (
     config_path_for_filename,
-    create_default_chia_config,
+    create_default_chik_config,
     load_config,
     lock_config,
     override_config,

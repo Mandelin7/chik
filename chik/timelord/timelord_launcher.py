@@ -10,7 +10,7 @@ from typing import Dict, List
 
 import pkg_resources
 
-from chik.util.chia_logging import initialize_logging
+from chik.util.chik_logging import initialize_logging
 from chik.util.config import load_config
 from chik.util.default_root import DEFAULT_ROOT_PATH
 from chik.util.network import resolve
