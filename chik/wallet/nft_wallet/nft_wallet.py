@@ -12,7 +12,7 @@ from clvm.casts import int_from_bytes, int_to_bytes
 
 import chik.wallet.singleton
 from chik.protocols.wallet_protocol import CoinState
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.ws_connection import WSChikConnection
 from chik.types.announcement import Announcement
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program
@@ -157,7 +157,7 @@ class NFTWallet:
             raise KeyError(f"Couldn't find coin with id: {nft_coin_id}")
         return nft_coin
 
-    async def coin_added(self, coin: Coin, height: uint32, peer: WSChiaConnection) -> None:
+    async def coin_added(self, coin: Coin, height: uint32, peer: WSChikConnection) -> None:
         """Notification from wallet state manager that wallet has been received."""
         self.log.info(f"NFT wallet %s has been notified that {coin} was added", self.get_name())
         if await self.nft_store.exists(coin.name()):
@@ -175,7 +175,7 @@ class NFTWallet:
         assert cs is not None
         await self.puzzle_solution_received(cs, peer)
 
-    async def puzzle_solution_received(self, coin_spend: CoinSpend, peer: WSChiaConnection) -> None:
+    async def puzzle_solution_received(self, coin_spend: CoinSpend, peer: WSChikConnection) -> None:
         self.log.debug("Puzzle solution received to wallet: %s", self.wallet_info)
         coin_name = coin_spend.coin.name()
         puzzle: Program = Program.from_bytes(bytes(coin_spend.puzzle_reveal))
@@ -641,7 +641,7 @@ class NFTWallet:
             payments.append(Payment(puzhash, amount, memos_with_hint))
 
         payment_sum = sum([p.amount for p in payments])
-        unsigned_spend_bundle, chia_tx = await self.generate_unsigned_spendbundle(
+        unsigned_spend_bundle, chik_tx = await self.generate_unsigned_spendbundle(
             payments,
             fee,
             coins=coins,
@@ -656,9 +656,9 @@ class NFTWallet:
         )
         spend_bundle = await self.sign(unsigned_spend_bundle)
         spend_bundle = SpendBundle.aggregate([spend_bundle] + additional_bundles)
-        if chia_tx is not None and chia_tx.spend_bundle is not None:
-            spend_bundle = SpendBundle.aggregate([spend_bundle, chia_tx.spend_bundle])
-            chia_tx = dataclasses.replace(chia_tx, spend_bundle=None)
+        if chik_tx is not None and chik_tx.spend_bundle is not None:
+            spend_bundle = SpendBundle.aggregate([spend_bundle, chik_tx.spend_bundle])
+            chik_tx = dataclasses.replace(chik_tx, spend_bundle=None)
 
         tx_list = [
             TransactionRecord(
@@ -681,8 +681,8 @@ class NFTWallet:
             ),
         ]
 
-        if chia_tx is not None:
-            tx_list.append(chia_tx)
+        if chik_tx is not None:
+            tx_list.append(chik_tx)
 
         return tx_list
 
@@ -725,12 +725,12 @@ class NFTWallet:
 
         if fee > 0:
             announcement_to_make = nft_coin.coin.name()
-            chia_tx = await self.standard_wallet.create_tandem_xch_tx(
+            chik_tx = await self.standard_wallet.create_tandem_xch_tx(
                 fee, Announcement(nft_coin.coin.name(), announcement_to_make), reuse_puzhash=reuse_puzhash
             )
         else:
             announcement_to_make = None
-            chia_tx = None
+            chik_tx = None
 
         innersol: Program = self.standard_wallet.make_solution(
             primaries=primaries,
@@ -769,7 +769,7 @@ class NFTWallet:
 
         nft_spend_bundle = SpendBundle([coin_spend], G2Element())
 
-        return nft_spend_bundle, chia_tx
+        return nft_spend_bundle, chik_tx
 
     @staticmethod
     def royalty_calculation(

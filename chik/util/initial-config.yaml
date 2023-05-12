@@ -4,7 +4,7 @@ min_mainnet_k_size: 32
 ping_interval: 120
 self_hostname: &self_hostname "localhost"
 prefer_ipv6: False
-daemon_port: 55400
+daemon_port: 56634
 daemon_max_message_size: 50000000 # maximum size of RPC message in bytes
 daemon_heartbeat: 300 # sets the heartbeat for ping/ping interval and timeouts
 inbound_rate_limit_percent: 100
@@ -75,29 +75,29 @@ network_overrides: &network_overrides
       SOFT_FORK2_HEIGHT: 2855377
   config:
     mainnet:
-      address_prefix: "xch"
-      default_full_node_port: 8444
+      address_prefix: "xck"
+      default_full_node_port: 9678
     testnet0:
-      address_prefix: "txch"
-      default_full_node_port: 58444
+      address_prefix: "txck"
+      default_full_node_port: 59678
     testnet1:
-      address_prefix: "txch"
+      address_prefix: "txck"
     testnet2:
-      address_prefix: "txch"
+      address_prefix: "txck"
     testnet3:
-      address_prefix: "txch"
+      address_prefix: "txck"
     testnet4:
-      address_prefix: "txch"
+      address_prefix: "txck"
     testnet7:
-      address_prefix: "txch"
-      default_full_node_port: 58444
+      address_prefix: "txck"
+      default_full_node_port: 59678
     testnet10:
-      address_prefix: "txch"
-      default_full_node_port: 58444
+      address_prefix: "txck"
+      default_full_node_port: 59678
 
 selected_network: &selected_network "mainnet"
-ALERTS_URL: https://download.chia.net/notify/mainnet_alert.txt
-CHIA_ALERTS_PUBKEY: 89b7fd87cb56e926ecefb879a29aae308be01f31980569f6a75a69d2a9a69daefd71fb778d865f7c50d6c967e3025937
+ALERTS_URL: https://download.chiknetwork.org/notify/mainnet_alert.txt
+CHIK_ALERTS_PUBKEY: 89b7fd87cb56e926ecefb879a29aae308be01f31980569f6a75a69d2a9a69daefd71fb778d865f7c50d6c967e3025937
 
 # public ssl ca is included in source code
 # Private ssl ca is used for trusted connections between machines user owns
@@ -105,7 +105,7 @@ private_ssl_ca:
   crt: "config/ssl/ca/private_ca.crt"
   key: "config/ssl/ca/private_ca.key"
 
-chia_ssl_ca:
+chik_ssl_ca:
   crt: "config/ssl/ca/chik_ca.crt"
   key: "config/ssl/ca/chik_ca.key"
 
@@ -127,16 +127,16 @@ logging: &logging
 
 seeder:
   # The fake full node used for crawling will run on this port.
-  port: 8444
+  port: 9678
   # Most full nodes on the network run on this port. (i.e. 8444 for mainnet, 58444 for testnet).
-  other_peers_port: 8444
+  other_peers_port: 9678
   # This will override the default full_node.peer_connect_timeout for the crawler full node
   peer_connect_timeout: 2
-  # Path to crawler DB. Defaults to $CHIA_ROOT/crawler.db
+  # Path to crawler DB. Defaults to $CHIK_ROOT/crawler.db
   crawler_db_path: "crawler.db"
   # Peers used for the initial run.
   bootstrap_peers:
-    - "node.chik.net"
+    - "node.chiknetwork.org"
   # Only consider nodes synced at least to this height.
   minimum_height: 240000
   # How many of a particular version we need to see before reporting it in the logs
@@ -157,21 +157,21 @@ seeder:
   # Crawler is its own standalone service within the seeder component
   crawler:
     start_rpc_server: True
-    rpc_port: 8561
+    rpc_port: 9795
     ssl:
       private_crt: "config/ssl/crawler/private_crawler.crt"
       private_key: "config/ssl/crawler/private_crawler.key"
 
 harvester:
   # The harvester server (if run) will run on this port
-  port: 8448
+  port: 9682
   farmer_peer:
     host: *self_hostname
-    port: 8447
+    port: 9681
 
   # If True, starts an RPC server at the following port
   start_rpc_server: True
-  rpc_port: 8560
+  rpc_port: 9794
   num_threads: 30
   plots_refresh_parameter:
     interval_seconds: 120 # The interval in seconds to refresh the plot file manager
@@ -198,36 +198,36 @@ harvester:
     crt: "config/ssl/ca/private_ca.crt"
     key: "config/ssl/ca/private_ca.key"
 
-  chia_ssl_ca:
+  chik_ssl_ca:
     crt: "config/ssl/ca/chik_ca.crt"
     key: "config/ssl/ca/chik_ca.key"
 
 pool:
   # Replace this with a real receive address
-  # xch_target_address: txch102gkhhzs60grx7cfnpng5n6rjecr89r86l5s8xux2za8k820cxsq64ssdg
+  # xck_target_address: txck102gkhhzs60grx7cfnpng5n6rjecr89r86l5s8xux2za8k820cxsq64ssdg
   logging: *logging
   network_overrides: *network_overrides
   selected_network: *selected_network
 
 farmer:
   # The farmer server (if run) will run on this port
-  port: 8447
+  port: 9681
   # The farmer will attempt to connect to this full node and harvester
   full_node_peer:
     host: *self_hostname
-    port: 8444
+    port: 9678
   harvester_peer:
     host: *self_hostname
-    port: 8448
+    port: 9682
 
   pool_public_keys: []
 
   # Replace this with a real receive address
-  # xch_target_address: txch102gkhhzs60grx7cfnpng5n6rjecr89r86l5s8xux2za8k820cxsq64ssdg
+  # xck_target_address: txck102gkhhzs60grx7cfnpng5n6rjecr89r86l5s8xux2za8k820cxsq64ssdg
 
   # If True, starts an RPC server at the following port
   start_rpc_server: True
-  rpc_port: 8559
+  rpc_port: 9793
 
   # To send a share to a pool, a proof of space must have required_iters less than this number
   pool_share_threshold: 1000
@@ -245,14 +245,14 @@ farmer:
 timelord_launcher:
   # The server where the VDF clients will connect to.
   host: *self_hostname
-  port: 8000
+  port: 9234
   # Number of VDF client processes to keep alive in the local machine.
   process_count: 3
   logging: *logging
 
 timelord:
   # The timelord server (if run) will run on this port
-  port: 8446
+  port: 9680
   # Provides a list of VDF clients expected to connect to this timelord.
   # For each client, an IP is provided, together with the estimated iterations per second.
   vdf_clients:
@@ -264,13 +264,13 @@ timelord:
       - 150000
   full_node_peer:
     host: *self_hostname
-    port: 8444
+    port: 9678
   # Maximum number of seconds allowed for a client to reconnect to the server.
   max_connection_time: 60
   # The ip and port where the TCP clients will connect.
   vdf_server:
     host: *self_hostname
-    port: 8000
+    port: 9234
   logging: *logging
   network_overrides: *network_overrides
   selected_network: *selected_network
@@ -300,7 +300,7 @@ timelord:
   multiprocessing_start_method: default
 
   start_rpc_server: True
-  rpc_port: 8557
+  rpc_port: 9791
 
   ssl:
     private_crt: "config/ssl/timelord/private_timelord.crt"
@@ -310,7 +310,7 @@ timelord:
 
 full_node:
   # The full node server (if run) will run on this port
-  port: 8444
+  port: 9678
 
   # controls the sync-to-disk behavior of the database connection. Can be one of:
   # "on"    enables syncing to disk, minimizes risk of corrupting the DB in
@@ -339,7 +339,7 @@ full_node:
 
   # If True, starts an RPC server at the following port
   start_rpc_server: True
-  rpc_port: 8555
+  rpc_port: 9789
 
   # Use UPnP to attempt to allow other full nodes to reach your node behind a gateway
   enable_upnp: True
@@ -415,7 +415,7 @@ full_node:
   # List of trusted DNS seeders to bootstrap from.
   # If you modify this, please change the hardcode as well from FullNode.set_server()
   dns_servers: &dns_servers
-    - "dns-introducer.chik.net"
+    - "dns-introducer.chiknetwork.org"
     - "chik.ctrlaltdel.ch"
     - "seeder.dexie.space"
     - "chik-seeder.h9.com"
@@ -423,16 +423,16 @@ full_node:
     - "seeder.xchpool.org"
   farmer_peer:
     host: *self_hostname
-    port: 8447
+    port: 9681
   timelord_peer:
     host: *self_hostname
-    port: 8446
+    port: 9680
   introducer_peer:
-    host: introducer.chik.net # Chia AWS introducer IPv4/IPv6
-    port: 8444
+    host: introducer.chiknetwork.org # Chik AWS introducer IPv4/IPv6
+    port: 9678
   wallet_peer:
     host: *self_hostname
-    port: 8449
+    port: 9683
   logging: *logging
   network_overrides: *network_overrides
   selected_network: *selected_network
@@ -450,10 +450,10 @@ full_node:
 
 ui:
   # The ui node server (if run) will run on this port
-  port: 8222
+  port: 9456
 
   # Which port to use to communicate with the full node
-  rpc_port: 8555
+  rpc_port: 9789
 
   # This SSH key is for the ui SSH server
   ssh_filename: config/ssh_host_key
@@ -464,14 +464,14 @@ ui:
   # this is where the electron UI will find its daemon
   # defaults to the one running locally with its private keys
   daemon_host: *self_hostname
-  daemon_port: 55400
+  daemon_port: 56634
   daemon_ssl:
     private_crt: config/ssl/daemon/private_daemon.crt
     private_key: config/ssl/daemon/private_daemon.key
 
 introducer:
   host: *self_hostname
-  port: 8445
+  port: 9679
   max_peers_to_send: 20
   # The introducer will only return peers it has seen in the last
   # recent_peer_threshold seconds
@@ -485,8 +485,8 @@ introducer:
     public_key: "config/ssl/full_node/public_full_node.key"
 
 wallet:
-  port: 8449
-  rpc_port: 9256
+  port: 9683
+  rpc_port: 10490
 
   enable_profiler: False
 
@@ -511,7 +511,7 @@ wallet:
 
   full_node_peer:
     host: *self_hostname
-    port: 8444
+    port: 9678
   # The path of NFT off-chain metadata cache
   nft_metadata_cache_path: "nft_cache"
   # The length of NFT ID prefix will be used as hash index
@@ -540,8 +540,8 @@ wallet:
   recent_peer_threshold: 6000
 
   introducer_peer:
-    host: introducer.chik.net # Chia AWS introducer IPv4/IPv6
-    port: 8444
+    host: introducer.chiknetwork.org # Chik AWS introducer IPv4/IPv6
+    port: 9678
 
   ssl:
     private_crt: "config/ssl/wallet/private_wallet.crt"
@@ -573,9 +573,9 @@ wallet:
   reset_sync_for_fingerprint: null
 
   # After n received unspent transactions, the spam filter will be enabled, which will filter out received
-  # coins with very small value. Any standard TX under xch_spam_amount is filtered
+  # coins with very small value. Any standard TX under xck_spam_amount is filtered
   spam_filter_after_n_txs: 200
-  xch_spam_amount: 1000000
+  xck_spam_amount: 1000000
   # Enable notifications from parties on chain
   enable_notifications: True
   # The amount someone has to pay you in mojos for you to see their notification
@@ -586,10 +586,10 @@ data_layer:
   # TODO: organize consistently with other sections
 
   # TODO: shouldn't we not need this since we have no actual public interface (yet)?
-  port: 8561
+  port: 9795
   wallet_peer:
     host: localhost
-    port: 9256
+    port: 10490
 
   database_path: "data_layer/db/data_layer_CHALLENGE.sqlite"
   # The location where the server files will be stored.
@@ -601,14 +601,14 @@ data_layer:
 
   # Data for running a data layer server.
   host_ip: 0.0.0.0
-  host_port: 8575
+  host_port: 9809
   # Data for running a data layer client.
   manage_data_interval: 60
   selected_network: *selected_network
   # If True, starts an RPC server at the following port
   start_rpc_server: True
   # TODO: what considerations are there in choosing this?
-  rpc_port: 8562
+  rpc_port: 9796
   rpc_server_max_request_body_size: 26214400
   fee: 1000000000
   logging: *logging
@@ -638,5 +638,5 @@ simulator:
   plot_directory: simulator/plots
 
   # Should we use real time in the simulated chain?
-  # most tests don't need this, however it is pretty important when writing ChiaLisp
+  # most tests don't need this, however it is pretty important when writing ChikLisp
   use_current_time: True

@@ -12,7 +12,7 @@ from blspy import AugSchemeMPL, G1Element, G2Element
 from chik.consensus.cost_calculator import NPCResult
 from chik.full_node.bundle_tools import simple_solution_generator
 from chik.full_node.mempool_check_conditions import get_name_puzzle_conditions
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.ws_connection import WSChikConnection
 from chik.types.announcement import Announcement
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program
@@ -111,7 +111,7 @@ class CATWallet:
         self.wallet_info = await wallet_state_manager.user_store.create_wallet(name, WalletType.CAT, info_as_string)
 
         try:
-            chia_tx, spend_bundle = await ALL_LIMITATIONS_PROGRAMS[
+            chik_tx, spend_bundle = await ALL_LIMITATIONS_PROGRAMS[
                 cat_tail_info["identifier"]
             ].generate_issuance_bundle(
                 self,
@@ -168,8 +168,8 @@ class CATWallet:
             name=bytes32(token_bytes()),
             memos=[],
         )
-        chia_tx = dataclasses.replace(chia_tx, spend_bundle=spend_bundle)
-        await self.standard_wallet.push_transaction(chia_tx)
+        chik_tx = dataclasses.replace(chik_tx, spend_bundle=spend_bundle)
+        await self.standard_wallet.push_transaction(chik_tx)
         await self.standard_wallet.push_transaction(cat_record)
         return self
 
@@ -332,7 +332,7 @@ class CATWallet:
             )
         )
 
-    async def coin_added(self, coin: Coin, height: uint32, peer: WSChiaConnection) -> None:
+    async def coin_added(self, coin: Coin, height: uint32, peer: WSChikConnection) -> None:
         """Notification from wallet state manager that wallet has been received."""
         self.log.info(f"CAT wallet has been notified that {coin.name().hex()} was added")
 
@@ -544,7 +544,7 @@ class CATWallet:
     async def get_lineage_proof_for_coin(self, coin: Coin) -> Optional[LineageProof]:
         return await self.lineage_store.get_lineage_proof(coin.parent_coin_info)
 
-    async def create_tandem_xch_tx(
+    async def create_tandem_xck_tx(
         self,
         fee: uint64,
         amount_to_claim: uint64,
@@ -569,27 +569,27 @@ class CATWallet:
                     str(self.wallet_state_manager.wallet_node.logged_in_fingerprint), False
                 )
         if fee > amount_to_claim:
-            chia_coins = await self.standard_wallet.select_coins(
+            chik_coins = await self.standard_wallet.select_coins(
                 fee,
                 min_coin_amount=min_coin_amount,
                 max_coin_amount=max_coin_amount,
                 excluded_coin_amounts=exclude_coin_amounts,
             )
-            origin_id = list(chia_coins)[0].name()
-            chia_tx = await self.standard_wallet.generate_signed_transaction(
+            origin_id = list(chik_coins)[0].name()
+            chik_tx = await self.standard_wallet.generate_signed_transaction(
                 uint64(0),
                 (await self.standard_wallet.get_puzzle_hash(not reuse_puzhash)),
                 fee=uint64(fee - amount_to_claim),
-                coins=chia_coins,
+                coins=chik_coins,
                 origin_id=origin_id,  # We specify this so that we know the coin that is making the announcement
                 negative_change_allowed=False,
                 coin_announcements_to_consume={announcement_to_assert} if announcement_to_assert is not None else None,
                 reuse_puzhash=reuse_puzhash,
             )
-            assert chia_tx.spend_bundle is not None
+            assert chik_tx.spend_bundle is not None
 
             message = None
-            for spend in chia_tx.spend_bundle.coin_spends:
+            for spend in chik_tx.spend_bundle.coin_spends:
                 if spend.coin.name() == origin_id:
                     conditions = spend.puzzle_reveal.to_program().run(spend.solution.to_program()).as_python()
                     for condition in conditions:
@@ -599,24 +599,24 @@ class CATWallet:
             assert message is not None
             announcement = Announcement(origin_id, message)
         else:
-            chia_coins = await self.standard_wallet.select_coins(
+            chik_coins = await self.standard_wallet.select_coins(
                 fee,
                 min_coin_amount=min_coin_amount,
                 max_coin_amount=max_coin_amount,
                 excluded_coin_amounts=exclude_coin_amounts,
             )
-            selected_amount = sum([c.amount for c in chia_coins])
-            chia_tx = await self.standard_wallet.generate_signed_transaction(
+            selected_amount = sum([c.amount for c in chik_coins])
+            chik_tx = await self.standard_wallet.generate_signed_transaction(
                 uint64(selected_amount + amount_to_claim - fee),
                 (await self.standard_wallet.get_puzzle_hash(not reuse_puzhash)),
-                coins=chia_coins,
+                coins=chik_coins,
                 negative_change_allowed=True,
                 coin_announcements_to_consume={announcement_to_assert} if announcement_to_assert is not None else None,
                 reuse_puzhash=reuse_puzhash,
             )
-            assert chia_tx.spend_bundle is not None
+            assert chik_tx.spend_bundle is not None
 
-        return chia_tx, announcement
+        return chik_tx, announcement
 
     async def generate_unsigned_spendbundle(
         self,
@@ -674,14 +674,14 @@ class CATWallet:
         selected_cat_amount = sum([c.amount for c in cat_coins])
         assert selected_cat_amount >= starting_amount
 
-        # Figure out if we need to absorb/melt some XCH as part of this
-        regular_chia_to_claim: int = 0
+        # Figure out if we need to absorb/melt some XCK as part of this
+        regular_chik_to_claim: int = 0
         if payment_amount > starting_amount:
             fee = uint64(fee + payment_amount - starting_amount)
         elif payment_amount < starting_amount:
-            regular_chia_to_claim = payment_amount
+            regular_chik_to_claim = payment_amount
 
-        need_chia_transaction = (fee > 0 or regular_chia_to_claim > 0) and (fee - regular_chia_to_claim != 0)
+        need_chik_transaction = (fee > 0 or regular_chik_to_claim > 0) and (fee - regular_chik_to_claim != 0)
 
         # Calculate standard puzzle solutions
         change = selected_cat_amount - starting_amount
@@ -706,18 +706,18 @@ class CATWallet:
 
         # Loop through the coins we've selected and gather the information we need to spend them
         spendable_cat_list = []
-        chia_tx = None
+        chik_tx = None
         first = True
         announcement: Announcement
         for coin in cat_coins:
             if first:
                 first = False
                 announcement = Announcement(coin.name(), std_hash(b"".join([c.name() for c in cat_coins])))
-                if need_chia_transaction:
-                    if fee > regular_chia_to_claim:
-                        chia_tx, _ = await self.create_tandem_xch_tx(
+                if need_chik_transaction:
+                    if fee > regular_chik_to_claim:
+                        chik_tx, _ = await self.create_tandem_xck_tx(
                             fee,
-                            uint64(regular_chia_to_claim),
+                            uint64(regular_chik_to_claim),
                             announcement_to_assert=announcement,
                             min_coin_amount=min_coin_amount,
                             max_coin_amount=max_coin_amount,
@@ -730,10 +730,10 @@ class CATWallet:
                             coin_announcements_to_assert=coin_announcements_bytes,
                             puzzle_announcements_to_assert=puzzle_announcements_bytes,
                         )
-                    elif regular_chia_to_claim > fee:
-                        chia_tx, _ = await self.create_tandem_xch_tx(
+                    elif regular_chik_to_claim > fee:
+                        chik_tx, _ = await self.create_tandem_xck_tx(
                             fee,
-                            uint64(regular_chia_to_claim),
+                            uint64(regular_chik_to_claim),
                             min_coin_amount=min_coin_amount,
                             max_coin_amount=max_coin_amount,
                             exclude_coin_amounts=exclude_coin_amounts,
@@ -777,18 +777,18 @@ class CATWallet:
             spendable_cat_list.append(new_spendable_cat)
 
         cat_spend_bundle = unsigned_spend_bundle_for_spendable_cats(CAT_MOD, spendable_cat_list)
-        chia_spend_bundle = SpendBundle([], G2Element())
-        if chia_tx is not None and chia_tx.spend_bundle is not None:
-            chia_spend_bundle = chia_tx.spend_bundle
+        chik_spend_bundle = SpendBundle([], G2Element())
+        if chik_tx is not None and chik_tx.spend_bundle is not None:
+            chik_spend_bundle = chik_tx.spend_bundle
 
         return (
             SpendBundle.aggregate(
                 [
                     cat_spend_bundle,
-                    chia_spend_bundle,
+                    chik_spend_bundle,
                 ]
             ),
-            chia_tx,
+            chik_tx,
         )
 
     async def generate_signed_transaction(
@@ -825,7 +825,7 @@ class CATWallet:
             max_send = await self.get_max_send_amount()
             if payment_sum > max_send:
                 raise ValueError(f"Can't send more than {max_send} mojos in a single transaction")
-        unsigned_spend_bundle, chia_tx = await self.generate_unsigned_spendbundle(
+        unsigned_spend_bundle, chik_tx = await self.generate_unsigned_spendbundle(
             payments,
             fee,
             cat_discrepancy=cat_discrepancy,  # (extra_delta, tail_reveal, tail_solution)
@@ -861,24 +861,24 @@ class CATWallet:
             )
         ]
 
-        if chia_tx is not None:
+        if chik_tx is not None:
             tx_list.append(
                 TransactionRecord(
-                    confirmed_at_height=chia_tx.confirmed_at_height,
-                    created_at_time=chia_tx.created_at_time,
-                    to_puzzle_hash=chia_tx.to_puzzle_hash,
-                    amount=chia_tx.amount,
-                    fee_amount=chia_tx.fee_amount,
-                    confirmed=chia_tx.confirmed,
-                    sent=chia_tx.sent,
+                    confirmed_at_height=chik_tx.confirmed_at_height,
+                    created_at_time=chik_tx.created_at_time,
+                    to_puzzle_hash=chik_tx.to_puzzle_hash,
+                    amount=chik_tx.amount,
+                    fee_amount=chik_tx.fee_amount,
+                    confirmed=chik_tx.confirmed,
+                    sent=chik_tx.sent,
                     spend_bundle=None,
-                    additions=chia_tx.additions,
-                    removals=chia_tx.removals,
-                    wallet_id=chia_tx.wallet_id,
-                    sent_to=chia_tx.sent_to,
-                    trade_id=chia_tx.trade_id,
-                    type=chia_tx.type,
-                    name=chia_tx.name,
+                    additions=chik_tx.additions,
+                    removals=chik_tx.removals,
+                    wallet_id=chik_tx.wallet_id,
+                    sent_to=chik_tx.sent_to,
+                    trade_id=chik_tx.trade_id,
+                    type=chik_tx.type,
+                    name=chik_tx.name,
                     memos=[],
                 )
             )

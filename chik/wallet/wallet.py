@@ -48,10 +48,10 @@ from chik.wallet.wallet_coin_record import WalletCoinRecord
 from chik.wallet.wallet_info import WalletInfo
 
 if TYPE_CHECKING:
-    from chik.server.ws_connection import WSChiaConnection
+    from chik.server.ws_connection import WSChikConnection
 
 # https://github.com/Chia-Network/chips/blob/80e4611fe52b174bf1a0382b9dff73805b18b8c6/CHIPs/chip-0002.md#signmessage
-CHIP_0002_SIGN_MESSAGE_PREFIX = "Chia Signed Message"
+CHIP_0002_SIGN_MESSAGE_PREFIX = "Chik Signed Message"
 
 
 class Wallet:
@@ -475,7 +475,7 @@ class Wallet:
         self, message: str, puzzle_hash: bytes32, is_hex: bool = False
     ) -> Tuple[G1Element, G2Element]:
         # CHIP-0002 message signing as documented at:
-        # https://github.com/Chia-Network/chips/blob/80e4611fe52b174bf1a0382b9dff73805b18b8c6/CHIPs/chip-0002.md#signmessage
+        # https://github.com/Chik-Network/chips/blob/80e4611fe52b174bf1a0382b9dff73805b18b8c6/CHIPs/chip-0002.md#signmessage
         pubkey, private = await self.wallet_state_manager.get_keys(puzzle_hash)
         synthetic_secret_key = calculate_synthetic_secret_key(private, DEFAULT_HIDDEN_PUZZLE_HASH)
         synthetic_pk = synthetic_secret_key.get_g1()
@@ -573,13 +573,13 @@ class Wallet:
             memos=list(compute_memos(spend_bundle).items()),
         )
 
-    async def create_tandem_xch_tx(
+    async def create_tandem_xck_tx(
         self,
         fee: uint64,
         announcement_to_assert: Optional[Announcement] = None,
         reuse_puzhash: Optional[bool] = None,
     ) -> TransactionRecord:
-        chia_coins = await self.select_coins(fee)
+        chik_coins = await self.select_coins(fee)
         if reuse_puzhash is None:
             reuse_puzhash_config = self.wallet_state_manager.config.get("reuse_public_key_for_change", None)
             if reuse_puzhash_config is None:
@@ -588,16 +588,16 @@ class Wallet:
                 reuse_puzhash = reuse_puzhash_config.get(
                     str(self.wallet_state_manager.wallet_node.logged_in_fingerprint), False
                 )
-        chia_tx = await self.generate_signed_transaction(
+        chik_tx = await self.generate_signed_transaction(
             uint64(0),
             (await self.get_puzzle_hash(not reuse_puzhash)),
             fee=fee,
-            coins=chia_coins,
+            coins=chik_coins,
             coin_announcements_to_consume={announcement_to_assert} if announcement_to_assert is not None else None,
             reuse_puzhash=reuse_puzhash,
         )
-        assert chia_tx.spend_bundle is not None
-        return chia_tx
+        assert chik_tx.spend_bundle is not None
+        return chik_tx
 
     async def push_transaction(self, tx: TransactionRecord) -> None:
         """Use this API to send transactions."""
@@ -618,9 +618,9 @@ class Wallet:
             raise Exception(f"insufficient funds in wallet {self.id()}")
         return await self.select_coins(amount, min_coin_amount=min_coin_amount, max_coin_amount=max_coin_amount)
 
-    # WSChiaConnection is only imported for type checking
+    # WSChikConnection is only imported for type checking
     async def coin_added(
-        self, coin: Coin, height: uint32, peer: WSChiaConnection
+        self, coin: Coin, height: uint32, peer: WSChikConnection
     ) -> None:  # pylint: disable=used-before-assignment
         pass
 

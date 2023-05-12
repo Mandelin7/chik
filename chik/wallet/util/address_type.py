@@ -8,13 +8,13 @@ from chik.util.config import selected_network_address_prefix
 
 
 class AddressType(Enum):
-    XCH = "xch"
+    XCK = "xck"
     NFT = "nft"
     DID = "did:chik:"
 
     def hrp(self, config: Dict[str, Any]) -> str:
-        if self == AddressType.XCH:
-            # Special case to map XCH to the current network's address prefix
+        if self == AddressType.XCK:
+            # Special case to map XCK to the current network's address prefix
             return selected_network_address_prefix(config)
         return self.value
 

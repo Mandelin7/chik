@@ -24,8 +24,8 @@ from chik.protocols import wallet_protocol
 from chik.protocols.wallet_protocol import CoinState
 from chik.rpc.rpc_server import StateChangedProtocol
 from chik.server.outbound_message import NodeType
-from chik.server.server import ChiaServer
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.server import ChikServer
+from chik.server.ws_connection import WSChikConnection
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.sized_bytes import bytes32
@@ -126,7 +126,7 @@ class WalletStateManager:
     interested_store: WalletInterestedStore
     retry_store: WalletRetryStore
     multiprocessing_context: multiprocessing.context.BaseContext
-    server: ChiaServer
+    server: ChikServer
     root_path: Path
     wallet_node: Any
     pool_store: WalletPoolStore
@@ -141,7 +141,7 @@ class WalletStateManager:
         config: Dict,
         db_path: Path,
         constants: ConsensusConstants,
-        server: ChiaServer,
+        server: ChikServer,
         root_path: Path,
         wallet_node,
         name: str = None,
@@ -608,7 +608,7 @@ class WalletStateManager:
         return removals
 
     async def determine_coin_type(
-        self, peer: WSChiaConnection, coin_state: CoinState, fork_height: Optional[uint32]
+        self, peer: WSChikConnection, coin_state: CoinState, fork_height: Optional[uint32]
     ) -> Optional[WalletIdentifier]:
         if coin_state.created_height is not None and (
             self.is_pool_reward(uint32(coin_state.created_height), coin_state.coin)
@@ -655,14 +655,14 @@ class WalletStateManager:
         return None
 
     async def filter_spam(self, new_coin_state: List[CoinState]) -> List[CoinState]:
-        xch_spam_amount = self.config.get("xch_spam_amount", 1000000)
+        xck_spam_amount = self.config.get("xck_spam_amount", 1000000)
 
         # No need to filter anything if the filter is set to 1 or 0 mojos
-        if xch_spam_amount <= 1:
+        if xck_spam_amount <= 1:
             return new_coin_state
 
         spam_filter_after_n_txs = self.config.get("spam_filter_after_n_txs", 200)
-        small_unspent_count = await self.coin_store.count_small_unspent(xch_spam_amount)
+        small_unspent_count = await self.coin_store.count_small_unspent(xck_spam_amount)
 
         # if small_unspent_count > spam_filter_after_n_txs:
         filtered_cs: List[CoinState] = []
@@ -673,7 +673,7 @@ class WalletStateManager:
             if (
                 cs.created_height is not None
                 and cs.spent_height is None
-                and cs.coin.amount < xch_spam_amount
+                and cs.coin.amount < xck_spam_amount
                 and (cs.coin.puzzle_hash in is_standard_wallet_phs or await self.is_standard_wallet_tx(cs))
             ):
                 is_standard_wallet_phs.add(cs.coin.puzzle_hash)
@@ -745,7 +745,7 @@ class WalletStateManager:
         parent_coin_state: CoinState,
         coin_state: CoinState,
         coin_spend: CoinSpend,
-        peer: WSChiaConnection,
+        peer: WSChikConnection,
     ) -> Optional[WalletIdentifier]:
         """
         Handle the new coin when it is a DID
@@ -832,7 +832,7 @@ class WalletStateManager:
             self.state_changed("wallet_created", wallet_identifier.id, {"did_id": did_wallet.get_my_DID()})
             return wallet_identifier
 
-    async def get_minter_did(self, launcher_coin: Coin, peer: WSChiaConnection) -> Optional[bytes32]:
+    async def get_minter_did(self, launcher_coin: Coin, peer: WSChikConnection) -> Optional[bytes32]:
         # Get minter DID
         eve_coin = (await self.wallet_node.fetch_children(launcher_coin.name(), peer=peer))[0]
         eve_coin_spend = await fetch_coin_spend_for_coin_state(eve_coin, peer)
@@ -964,7 +964,7 @@ class WalletStateManager:
     async def _add_coin_states(
         self,
         coin_states: List[CoinState],
-        peer: WSChiaConnection,
+        peer: WSChikConnection,
         fork_height: Optional[uint32],
     ) -> None:
         # TODO: add comment about what this method does
@@ -1335,7 +1335,7 @@ class WalletStateManager:
     async def add_coin_states(
         self,
         coin_states: List[CoinState],
-        peer: WSChiaConnection,
+        peer: WSChikConnection,
         fork_height: Optional[uint32],
     ) -> bool:
         try:
@@ -1407,7 +1407,7 @@ class WalletStateManager:
         all_unconfirmed_transaction_records: List[TransactionRecord],
         wallet_id: uint32,
         wallet_type: WalletType,
-        peer: WSChiaConnection,
+        peer: WSChikConnection,
         coin_name: bytes32,
     ) -> None:
         """

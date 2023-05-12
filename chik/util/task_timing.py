@@ -15,8 +15,8 @@ from typing import Any, Dict, Iterator, List
 
 # to enable this instrumentation, set one of the environment variables:
 
-#   CHIA_INSTRUMENT_NODE=1
-#   CHIA_INSTRUMENT_WALLET=1
+#   CHIK_INSTRUMENT_NODE=1
+#   CHIK_INSTRUMENT_WALLET=1
 
 # Before starting the daemon.
 

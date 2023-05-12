@@ -20,7 +20,7 @@ from chik.util.ints import uint64
 
 def parse_sexp_to_condition(sexp: Program) -> ConditionWithArgs:
     """
-    Takes a ChiaLisp sexp and returns a ConditionWithArgs.
+    Takes a ChikLisp sexp and returns a ConditionWithArgs.
     Raises an ConsensusError if it fails.
     """
     first = sexp.pair
@@ -49,7 +49,7 @@ def parse_sexp_to_condition(sexp: Program) -> ConditionWithArgs:
 
 def parse_sexp_to_conditions(sexp: Program) -> List[ConditionWithArgs]:
     """
-    Takes a ChiaLisp sexp (list) and returns the list of ConditionWithArgss
+    Takes a ChikLisp sexp (list) and returns the list of ConditionWithArgss
     Raises an ConsensusError if it fails.
     """
     return [parse_sexp_to_condition(s) for s in sexp.as_iter()]

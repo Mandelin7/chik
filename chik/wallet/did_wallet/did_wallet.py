@@ -13,7 +13,7 @@ from blspy import AugSchemeMPL, G1Element, G2Element
 from chik.full_node.full_node_api import FullNodeAPI
 from chik.protocols import wallet_protocol
 from chik.protocols.wallet_protocol import CoinState
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.ws_connection import WSChikConnection
 from chik.types.announcement import Announcement
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program
@@ -373,7 +373,7 @@ class DIDWallet:
     # We can improve this interface by passing in the CoinSpend, as well
     # We need to change DID Wallet coin_added to expect p2 spends as well as recovery spends,
     # or only call it in the recovery spend case
-    async def coin_added(self, coin: Coin, _: uint32, peer: WSChiaConnection):
+    async def coin_added(self, coin: Coin, _: uint32, peer: WSChikConnection):
         """Notification from wallet state manager that wallet has been received."""
 
         parent = self.get_parent_for_coin(coin)
@@ -632,16 +632,16 @@ class DIDWallet:
         spend_bundle = await self.sign(unsigned_spend_bundle)
         if fee > 0:
             announcement_to_make = coin.name()
-            chia_tx = await self.standard_wallet.create_tandem_xch_tx(
+            chik_tx = await self.standard_wallet.create_tandem_xck_tx(
                 fee, Announcement(coin.name(), announcement_to_make), reuse_puzhash=reuse_puzhash
             )
         else:
             announcement_to_make = None
-            chia_tx = None
-        if chia_tx is not None and chia_tx.spend_bundle is not None:
-            spend_bundle = SpendBundle.aggregate([spend_bundle, chia_tx.spend_bundle])
-            chia_tx = dataclasses.replace(chia_tx, spend_bundle=None)
-            await self.wallet_state_manager.add_pending_transaction(chia_tx)
+            chik_tx = None
+        if chik_tx is not None and chik_tx.spend_bundle is not None:
+            spend_bundle = SpendBundle.aggregate([spend_bundle, chik_tx.spend_bundle])
+            chik_tx = dataclasses.replace(chik_tx, spend_bundle=None)
+            await self.wallet_state_manager.add_pending_transaction(chik_tx)
         did_record = TransactionRecord(
             confirmed_at_height=uint32(0),
             created_at_time=uint64(int(time.time())),
@@ -735,15 +735,15 @@ class DIDWallet:
         spend_bundle = await self.sign(unsigned_spend_bundle)
         if fee > 0:
             announcement_to_make = coin.name()
-            chia_tx = await self.standard_wallet.create_tandem_xch_tx(
+            chik_tx = await self.standard_wallet.create_tandem_xck_tx(
                 fee, Announcement(coin.name(), announcement_to_make), reuse_puzhash=reuse_puzhash
             )
         else:
-            chia_tx = None
-        if chia_tx is not None and chia_tx.spend_bundle is not None:
-            spend_bundle = SpendBundle.aggregate([spend_bundle, chia_tx.spend_bundle])
-            chia_tx = dataclasses.replace(chia_tx, spend_bundle=None)
-            await self.wallet_state_manager.add_pending_transaction(chia_tx)
+            chik_tx = None
+        if chik_tx is not None and chik_tx.spend_bundle is not None:
+            spend_bundle = SpendBundle.aggregate([spend_bundle, chik_tx.spend_bundle])
+            chik_tx = dataclasses.replace(chik_tx, spend_bundle=None)
+            await self.wallet_state_manager.add_pending_transaction(chik_tx)
         did_record = TransactionRecord(
             confirmed_at_height=uint32(0),
             created_at_time=uint64(int(time.time())),

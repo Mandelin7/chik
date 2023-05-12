@@ -28,7 +28,7 @@ from chik.protocols.wallet_protocol import (
     RespondToCoinUpdates,
     RespondToPhUpdates,
 )
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.ws_connection import WSChikConnection
 from chik.types.blockchain_format.coin import Coin, hash_coin_ids
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.coin_spend import CoinSpend
@@ -45,7 +45,7 @@ class PeerRequestException(Exception):
     pass
 
 
-async def fetch_last_tx_from_peer(height: uint32, peer: WSChiaConnection) -> Optional[HeaderBlock]:
+async def fetch_last_tx_from_peer(height: uint32, peer: WSChikConnection) -> Optional[HeaderBlock]:
     request_height: int = height
     while True:
         if request_height == -1:
@@ -65,7 +65,7 @@ async def fetch_last_tx_from_peer(height: uint32, peer: WSChiaConnection) -> Opt
 
 async def subscribe_to_phs(
     puzzle_hashes: List[bytes32],
-    peer: WSChiaConnection,
+    peer: WSChikConnection,
     min_height: int,
 ) -> List[CoinState]:
     """
@@ -82,7 +82,7 @@ async def subscribe_to_phs(
 
 async def subscribe_to_coin_updates(
     coin_names: List[bytes32],
-    peer: WSChiaConnection,
+    peer: WSChikConnection,
     min_height: int,
 ) -> List[CoinState]:
     """
@@ -210,7 +210,7 @@ def validate_removals(
 
 
 async def request_and_validate_removals(
-    peer: WSChiaConnection, height: uint32, header_hash: bytes32, coin_name: bytes32, removals_root: bytes32
+    peer: WSChikConnection, height: uint32, header_hash: bytes32, coin_name: bytes32, removals_root: bytes32
 ) -> bool:
     removals_request = RequestRemovals(height, header_hash, [coin_name])
 
@@ -224,7 +224,7 @@ async def request_and_validate_removals(
 
 
 async def request_and_validate_additions(
-    peer: WSChiaConnection,
+    peer: WSChikConnection,
     peer_request_cache: PeerRequestCache,
     height: uint32,
     header_hash: bytes32,
@@ -332,7 +332,7 @@ def get_block_header(block: FullBlock) -> HeaderBlock:
 
 
 async def request_header_blocks(
-    peer: WSChiaConnection, start_height: uint32, end_height: uint32
+    peer: WSChikConnection, start_height: uint32, end_height: uint32
 ) -> Optional[List[HeaderBlock]]:
     if Capability.BLOCK_HEADERS in peer.peer_capabilities:
         response = await peer.call_api(
@@ -347,7 +347,7 @@ async def request_header_blocks(
 
 
 async def _fetch_header_blocks_inner(
-    all_peers: List[Tuple[WSChiaConnection, bool]],
+    all_peers: List[Tuple[WSChikConnection, bool]],
     request_start: uint32,
     request_end: uint32,
 ) -> Optional[Union[RespondHeaderBlocks, RespondBlockHeaders]]:
@@ -383,7 +383,7 @@ async def fetch_header_blocks_in_range(
     start: uint32,
     end: uint32,
     peer_request_cache: PeerRequestCache,
-    all_peers: List[Tuple[WSChiaConnection, bool]],
+    all_peers: List[Tuple[WSChikConnection, bool]],
 ) -> Optional[List[HeaderBlock]]:
     blocks: List[HeaderBlock] = []
     for i in range(start - (start % 32), end + 1, 32):

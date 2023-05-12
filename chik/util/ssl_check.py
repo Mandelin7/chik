@@ -20,7 +20,7 @@ RESTRICT_MASK_KEY_FILE: int = (
 )  # 0o077
 
 CERT_CONFIG_KEY_PATHS = [
-    "chia_ssl_ca:crt",
+    "chik_ssl_ca:crt",
     "daemon_ssl:private_crt",
     "farmer:ssl:private_crt",
     "farmer:ssl:public_crt",
@@ -28,7 +28,7 @@ CERT_CONFIG_KEY_PATHS = [
     "full_node:ssl:public_crt",
     "data_layer:ssl:private_crt",
     "data_layer:ssl:public_crt",
-    "harvester:chia_ssl_ca:crt",
+    "harvester:chik_ssl_ca:crt",
     "harvester:private_ssl_ca:crt",
     "harvester:ssl:private_crt",
     "introducer:ssl:public_crt",
@@ -40,13 +40,13 @@ CERT_CONFIG_KEY_PATHS = [
     "wallet:ssl:public_crt",
 ]
 KEY_CONFIG_KEY_PATHS = [
-    "chia_ssl_ca:key",
+    "chik_ssl_ca:key",
     "daemon_ssl:private_key",
     "farmer:ssl:private_key",
     "farmer:ssl:public_key",
     "full_node:ssl:private_key",
     "full_node:ssl:public_key",
-    "harvester:chia_ssl_ca:key",
+    "harvester:chik_ssl_ca:key",
     "harvester:private_ssl_ca:key",
     "harvester:ssl:private_key",
     "introducer:ssl:public_key",

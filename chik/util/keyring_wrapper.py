@@ -19,8 +19,8 @@ from chik.util.file_keyring import FileKeyring
 # the new passphrase.
 DEFAULT_PASSPHRASE_IF_NO_MASTER_PASSPHRASE = "$ chik passphrase set # all the cool kids are doing it!"
 
-MASTER_PASSPHRASE_SERVICE_NAME = "Chia Passphrase"
-MASTER_PASSPHRASE_USER_NAME = "Chia Passphrase"
+MASTER_PASSPHRASE_SERVICE_NAME = "Chik Passphrase"
+MASTER_PASSPHRASE_USER_NAME = "Chik Passphrase"
 
 
 OSPassphraseStore = Union[MacKeyring, WinKeyring]

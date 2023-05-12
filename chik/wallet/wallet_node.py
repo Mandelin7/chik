@@ -27,8 +27,8 @@ from chik.rpc.rpc_server import StateChangedProtocol, default_get_connections
 from chik.server.node_discovery import WalletPeers
 from chik.server.outbound_message import Message, NodeType, make_msg
 from chik.server.peer_store_resolver import PeerStoreResolver
-from chik.server.server import ChiaServer
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.server import ChikServer
+from chik.server.ws_connection import WSChikConnection
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.header_block import HeaderBlock
@@ -109,7 +109,7 @@ class WalletNode:
     state_changed_callback: Optional[StateChangedProtocol] = None
     _wallet_state_manager: Optional[WalletStateManager] = None
     _weight_proof_handler: Optional[WalletWeightProofHandler] = None
-    _server: Optional[ChiaServer] = None
+    _server: Optional[ChikServer] = None
     sync_task: Optional[asyncio.Task[None]] = None
     logged_in_fingerprint: Optional[int] = None
     logged_in: bool = False
@@ -156,7 +156,7 @@ class WalletNode:
         return self._wallet_state_manager
 
     @property
-    def server(self) -> ChiaServer:
+    def server(self) -> ChikServer:
         # This is a stop gap until the class usage is refactored such the values of
         # integral attributes are known at creation of the instance.
         if self._server is None:
@@ -186,7 +186,7 @@ class WalletNode:
                     raise KeychainProxyConnectionFailure()
         return self._keychain_proxy
 
-    def get_cache_for_peer(self, peer: WSChiaConnection) -> PeerRequestCache:
+    def get_cache_for_peer(self, peer: WSChikConnection) -> PeerRequestCache:
         if peer.peer_node_id not in self.peer_caches:
             self.peer_caches[peer.peer_node_id] = PeerRequestCache()
         return self.peer_caches[peer.peer_node_id]
@@ -515,7 +515,7 @@ class WalletNode:
         while not self._shut_down:
             # Here we process four types of messages in the queue, where the first one has higher priority (lower
             # number in the queue), and priority decreases for each type.
-            peer: Optional[WSChiaConnection] = None
+            peer: Optional[WSChikConnection] = None
             item: Optional[NewPeakItem] = None
             try:
                 peer, item = None, None
@@ -605,7 +605,7 @@ class WalletNode:
         fingerprint_path = db_path.parent / "last_used_fingerprint"
         return fingerprint_path
 
-    def set_server(self, server: ChiaServer) -> None:
+    def set_server(self, server: ChikServer) -> None:
         self._server = server
         self.initialize_wallet_peers()
 
@@ -636,7 +636,7 @@ class WalletNode:
             )
             asyncio.create_task(self.wallet_peers.start())
 
-    def on_disconnect(self, peer: WSChiaConnection) -> None:
+    def on_disconnect(self, peer: WSChikConnection) -> None:
         if self.is_trusted(peer):
             self.local_node_synced = False
             self.initialize_wallet_peers()
@@ -650,7 +650,7 @@ class WalletNode:
 
         self.wallet_state_manager.state_changed("close_connection")
 
-    async def on_connect(self, peer: WSChiaConnection) -> None:
+    async def on_connect(self, peer: WSChikConnection) -> None:
         if self._wallet_state_manager is None:
             return None
 
@@ -705,7 +705,7 @@ class WalletNode:
     async def long_sync(
         self,
         target_height: uint32,
-        full_node: WSChiaConnection,
+        full_node: WSChikConnection,
         fork_height: int,
         *,
         rollback: bool,
@@ -790,7 +790,7 @@ class WalletNode:
     async def add_states_from_peer(
         self,
         items_input: List[CoinState],
-        peer: WSChiaConnection,
+        peer: WSChikConnection,
         fork_height: Optional[uint32] = None,
         height: Optional[uint32] = None,
         header_hash: Optional[bytes32] = None,
@@ -898,7 +898,7 @@ class WalletNode:
         await self.update_ui()
         return still_connected and self._server is not None and peer.peer_node_id in self.server.all_connections
 
-    async def is_peer_synced(self, peer: WSChiaConnection, height: uint32) -> Optional[uint64]:
+    async def is_peer_synced(self, peer: WSChikConnection, height: uint32) -> Optional[uint64]:
         # Get last timestamp
         last_tx: Optional[HeaderBlock] = await fetch_last_tx_from_peer(height, peer)
         latest_timestamp: Optional[uint64] = None
@@ -915,7 +915,7 @@ class WalletNode:
             return None
         return latest_timestamp
 
-    def is_trusted(self, peer: WSChiaConnection) -> bool:
+    def is_trusted(self, peer: WSChikConnection) -> bool:
         return self.server.is_trusted_peer(peer, self.config.get("trusted_peers", {}))
 
     def add_state_to_race_cache(self, header_hash: bytes32, height: uint32, coin_state: CoinState) -> None:
@@ -932,7 +932,7 @@ class WalletNode:
             self.race_cache[header_hash] = set()
         self.race_cache[header_hash].add(coin_state)
 
-    async def state_update_received(self, request: wallet_protocol.CoinStateUpdate, peer: WSChiaConnection) -> None:
+    async def state_update_received(self, request: wallet_protocol.CoinStateUpdate, peer: WSChikConnection) -> None:
         # This gets called every time there is a new coin or puzzle hash change in the DB
         # that is of interest to this wallet. It is not guaranteed to come for every height. This message is guaranteed
         # to come before the corresponding new_peak for each height. We handle this differently for trusted and
@@ -949,16 +949,16 @@ class WalletNode:
                 request.peak_hash,
             )
 
-    def get_full_node_peer(self) -> WSChiaConnection:
+    def get_full_node_peer(self) -> WSChikConnection:
         """
         Get a full node, preferring synced & trusted > synced & untrusted > unsynced & trusted > unsynced & untrusted
         """
-        full_nodes: List[WSChiaConnection] = self.get_full_node_peers_in_order()
+        full_nodes: List[WSChikConnection] = self.get_full_node_peers_in_order()
         if len(full_nodes) == 0:
             raise ValueError("No peer connected")
         return full_nodes[0]
 
-    def get_full_node_peers_in_order(self) -> List[WSChiaConnection]:
+    def get_full_node_peers_in_order(self) -> List[WSChikConnection]:
         """
         Get all full nodes sorted:
          preferring synced & trusted > synced & untrusted > unsynced & trusted > unsynced & untrusted
@@ -966,11 +966,11 @@ class WalletNode:
         if self._server is None:
             return []
 
-        synced_and_trusted: List[WSChiaConnection] = []
-        synced: List[WSChiaConnection] = []
-        trusted: List[WSChiaConnection] = []
-        neither: List[WSChiaConnection] = []
-        all_nodes: List[WSChiaConnection] = self.server.get_connections(NodeType.FULL_NODE)
+        synced_and_trusted: List[WSChikConnection] = []
+        synced: List[WSChikConnection] = []
+        trusted: List[WSChikConnection] = []
+        neither: List[WSChikConnection] = []
+        all_nodes: List[WSChikConnection] = self.server.get_connections(NodeType.FULL_NODE)
         random.shuffle(all_nodes)
         for node in all_nodes:
             we_synced_to_it = node.peer_node_id in self.synced_peers
@@ -1006,7 +1006,7 @@ class WalletNode:
 
         raise PeerRequestException("Error fetching timestamp from all peers")
 
-    async def new_peak_wallet(self, new_peak: wallet_protocol.NewPeakWallet, peer: WSChiaConnection) -> None:
+    async def new_peak_wallet(self, new_peak: wallet_protocol.NewPeakWallet, peer: WSChikConnection) -> None:
         if self._wallet_state_manager is None:
             # When logging out of wallet
             self.log.debug("state manager is None (shutdown)")
@@ -1061,7 +1061,7 @@ class WalletNode:
             await self.wallet_state_manager.new_peak(new_peak)
 
     async def new_peak_from_trusted(
-        self, new_peak_hb: HeaderBlock, latest_timestamp: uint64, peer: WSChiaConnection
+        self, new_peak_hb: HeaderBlock, latest_timestamp: uint64, peer: WSChikConnection
     ) -> None:
         async with self.wallet_state_manager.set_sync_mode(new_peak_hb.height) as current_height:
             await self.wallet_state_manager.blockchain.set_peak_block(new_peak_hb, latest_timestamp)
@@ -1071,7 +1071,7 @@ class WalletNode:
             if peer.peer_node_id not in self.synced_peers:
                 await self.long_sync(new_peak_hb.height, peer, uint32(max(0, current_height - 256)), rollback=True)
 
-    async def new_peak_from_untrusted(self, new_peak_hb: HeaderBlock, peer: WSChiaConnection) -> bool:
+    async def new_peak_from_untrusted(self, new_peak_hb: HeaderBlock, peer: WSChikConnection) -> bool:
         far_behind: bool = (
             new_peak_hb.height - await self.wallet_state_manager.blockchain.get_finished_sync_up_to()
             > self.LONG_SYNC_THRESHOLD
@@ -1106,7 +1106,7 @@ class WalletNode:
             return False
         return True
 
-    async def long_sync_from_untrusted(self, syncing: bool, new_peak_hb: HeaderBlock, peer: WSChiaConnection) -> None:
+    async def long_sync_from_untrusted(self, syncing: bool, new_peak_hb: HeaderBlock, peer: WSChikConnection) -> None:
         current_height: uint32 = await self.wallet_state_manager.blockchain.get_finished_sync_up_to()
         fork_point_weight_proof = await self.fetch_and_update_weight_proof(peer, new_peak_hb)
         # This usually happens the first time we start up the wallet. We roll back slightly to be
@@ -1129,7 +1129,7 @@ class WalletNode:
             self.long_sync(new_peak_hb.height, peer, 0, rollback=False)
         )
 
-    async def sync_from_untrusted_close_to_peak(self, new_peak_hb: HeaderBlock, peer: WSChiaConnection) -> bool:
+    async def sync_from_untrusted_close_to_peak(self, new_peak_hb: HeaderBlock, peer: WSChikConnection) -> bool:
         async with self.wallet_state_manager.lock:
             peak_hb = await self.wallet_state_manager.blockchain.get_peak_block()
             if peak_hb is None or new_peak_hb.weight > peak_hb.weight:
@@ -1170,7 +1170,7 @@ class WalletNode:
             self.log.info(f"Finished processing new peak of {new_peak_hb.height}")
             return True
 
-    async def wallet_short_sync_backtrack(self, header_block: HeaderBlock, peer: WSChiaConnection) -> int:
+    async def wallet_short_sync_backtrack(self, header_block: HeaderBlock, peer: WSChikConnection) -> int:
         peak: Optional[HeaderBlock] = await self.wallet_state_manager.blockchain.get_peak_block()
 
         top = header_block
@@ -1217,7 +1217,7 @@ class WalletNode:
             self.wallet_state_manager.state_changed("coin_removed", wallet_id)
             self.wallet_state_manager.state_changed("coin_added", wallet_id)
 
-    async def fetch_and_update_weight_proof(self, peer: WSChiaConnection, peak: HeaderBlock) -> int:
+    async def fetch_and_update_weight_proof(self, peer: WSChikConnection, peak: HeaderBlock) -> int:
         assert self._weight_proof_handler is not None
         weight_request = RequestProofOfWeight(peak.height, peak.header_hash)
         wp_timeout = self.config.get("weight_proof_timeout", 360)
@@ -1262,7 +1262,7 @@ class WalletNode:
     async def validate_received_state_from_peer(
         self,
         coin_state: CoinState,
-        peer: WSChiaConnection,
+        peer: WSChikConnection,
         peer_request_cache: PeerRequestCache,
         fork_height: Optional[uint32],
     ) -> bool:
@@ -1407,7 +1407,7 @@ class WalletNode:
         return True
 
     async def validate_block_inclusion(
-        self, block: HeaderBlock, peer: WSChiaConnection, peer_request_cache: PeerRequestCache
+        self, block: HeaderBlock, peer: WSChikConnection, peer_request_cache: PeerRequestCache
     ) -> bool:
         if self.wallet_state_manager.blockchain.contains_height(block.height):
             stored_hash = self.wallet_state_manager.blockchain.height_to_hash(block.height)
@@ -1557,7 +1557,7 @@ class WalletNode:
         return True
 
     async def get_coin_state(
-        self, coin_names: List[bytes32], peer: WSChiaConnection, fork_height: Optional[uint32] = None
+        self, coin_names: List[bytes32], peer: WSChikConnection, fork_height: Optional[uint32] = None
     ) -> List[CoinState]:
         msg = wallet_protocol.RegisterForCoinUpdates(coin_names, uint32(0))
         coin_state: Optional[RespondToCoinUpdates] = await peer.call_api(FullNodeAPI.register_interest_in_coin, msg)
@@ -1577,7 +1577,7 @@ class WalletNode:
         return coin_state.coin_states
 
     async def fetch_children(
-        self, coin_name: bytes32, peer: WSChiaConnection, fork_height: Optional[uint32] = None
+        self, coin_name: bytes32, peer: WSChikConnection, fork_height: Optional[uint32] = None
     ) -> List[CoinState]:
         response: Optional[wallet_protocol.RespondChildren] = await peer.call_api(
             FullNodeAPI.request_children, wallet_protocol.RequestChildren(coin_name)

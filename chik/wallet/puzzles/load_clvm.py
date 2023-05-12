@@ -17,7 +17,7 @@ from chik.util.lock import Lockfile
 
 compile_clvm_py = None
 
-recompile_requested = (os.environ.get("CHIA_DEV_COMPILE_CLVM_ON_IMPORT", "") != "") or ("pytest" in sys.modules)
+recompile_requested = (os.environ.get("CHIK_DEV_COMPILE_CLVM_ON_IMPORT", "") != "") or ("pytest" in sys.modules)
 
 
 def translate_path(p_):
@@ -91,7 +91,7 @@ def load_serialized_clvm(
     """
     hex_filename = f"{clvm_filename}.hex"
 
-    # Set the CHIA_DEV_COMPILE_CLVM_ON_IMPORT environment variable to anything except
+    # Set the CHIK_DEV_COMPILE_CLVM_ON_IMPORT environment variable to anything except
     # "" or "0" to trigger automatic recompilation of the Chialisp on load.
     if recompile:
         try:
@@ -106,7 +106,7 @@ def load_serialized_clvm(
                         chia_puzzles_path = pathlib.Path(
                             pkg_resources.resource_filename(__name__, "__init__.py")
                         ).parent
-                        search_paths.append(chia_puzzles_path)
+                        search_paths.append(chik_puzzles_path)
                     compile_clvm(full_path, output, search_paths=search_paths)
 
         except NotImplementedError:
