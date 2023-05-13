@@ -78,7 +78,7 @@ jobs:
         result-encoding: string
         script: |
           const release = await github.rest.repos.getLatestRelease({
-            owner: 'Chik-Network',
+            owner: 'Chia-Network',
             repo: 'chia-plotter-madmax',
           });
           return release.data.tag_name;
@@ -100,7 +100,7 @@ jobs:
         result-encoding: string
         script: |
           const release = await github.rest.repos.getLatestRelease({
-            owner: 'Chik-Network',
+            owner: 'Chia-Network',
             repo: 'bladebit',
           });
           return release.data.tag_name;
