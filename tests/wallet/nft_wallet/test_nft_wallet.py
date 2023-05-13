@@ -127,7 +127,7 @@ async def test_nft_wallet_creation_automatically(self_hostname: str, two_wallet_
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -220,7 +220,7 @@ async def test_nft_wallet_creation_and_transfer(self_hostname: str, two_wallet_n
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -377,7 +377,7 @@ async def test_nft_wallet_rpc_creation_and_list(self_hostname: str, two_wallet_n
             "wallet_id": nft_wallet_0_id,
             "artist_address": ph,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
         }
     )
 
@@ -508,7 +508,7 @@ async def test_nft_wallet_rpc_update_metadata(self_hostname: str, two_wallet_nod
             "wallet_id": nft_wallet_0_id,
             "artist_address": ph,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
         }
     )
 
@@ -530,7 +530,7 @@ async def test_nft_wallet_rpc_update_metadata(self_hostname: str, two_wallet_nod
     assert coin["chain_info"] == disassemble(
         Program.to(
             [
-                ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+                ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
                 ("h", hexstr_to_bytes("0xD4584AD463139FA8C0D9F68F4B59F185")),
                 ("mu", []),
                 ("lu", []),
@@ -569,7 +569,7 @@ async def test_nft_wallet_rpc_update_metadata(self_hostname: str, two_wallet_nod
     assert coin["mint_height"] > 0
     uris = coin["data_uris"]
     assert len(uris) == 1
-    assert "https://www.chik-network.net/img/branding/chik-logo.svg" in uris
+    assert "https://www.chiknetwork.org/img/branding/chik-logo.svg" in uris
     assert len(coin["metadata_uris"]) == 1
     assert "http://metadata" == coin["metadata_uris"][0]
     assert len(coin["license_uris"]) == 0
@@ -701,7 +701,7 @@ async def test_nft_with_did_wallet_creation(self_hostname: str, two_wallet_nodes
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
             "target_address": encode_puzzle_hash(nft_ph, "txck"),
         }
     )
@@ -754,7 +754,7 @@ async def test_nft_with_did_wallet_creation(self_hostname: str, two_wallet_nodes
     did_nft = coins[0].to_json_dict()
     assert did_nft["mint_height"] > 0
     assert did_nft["supports_did"]
-    assert did_nft["data_uris"][0] == "https://www.chik-network.net/img/branding/chik-logo.svg"
+    assert did_nft["data_uris"][0] == "https://www.chiknetwork.org/img/branding/chik-logo.svg"
     assert did_nft["data_hash"] == "0xD4584AD463139FA8C0D9F68F4B59F185".lower()
     assert did_nft["owner_did"][2:] == hex_did_id
     # Check unassigned NFT
@@ -852,7 +852,7 @@ async def test_nft_rpc_mint(self_hostname: str, two_wallet_nodes: Any, trusted: 
         {
             "wallet_id": nft_wallet_0_id,
             "hash": data_hash_param,
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
             "license_uris": license_uris,
             "license_hash": license_hash,
             "meta_hash": meta_hash,
@@ -968,7 +968,7 @@ async def test_nft_transfer_nft_with_did(self_hostname: str, two_wallet_nodes: A
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
             "fee": fee,
             "did_id": hmr_did_id,
         }
@@ -1124,8 +1124,8 @@ async def test_update_metadata_for_nft_did(self_hostname: str, two_wallet_nodes:
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
-            "mu": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
+            "mu": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
             "did": hex_did_id,
         }
     )
@@ -1183,7 +1183,7 @@ async def test_update_metadata_for_nft_did(self_hostname: str, two_wallet_nodes:
     assert coin["mint_height"] > 0
     uris = coin["data_uris"]
     assert len(uris) == 1
-    assert "https://www.chik-network.net/img/branding/chik-logo.svg" in uris
+    assert "https://www.chiknetwork.org/img/branding/chik-logo.svg" in uris
     assert len(coin["metadata_uris"]) == 1
     assert "http://metadata" == coin["metadata_uris"][0]
     assert len(coin["license_uris"]) == 0
@@ -1259,8 +1259,8 @@ async def test_nft_bulk_set_did(self_hostname: str, two_wallet_nodes: Any, trust
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
-            "mu": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
+            "mu": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
             "did_id": hmr_did_id,
         }
     )
@@ -1274,8 +1274,8 @@ async def test_nft_bulk_set_did(self_hostname: str, two_wallet_nodes: Any, trust
         {
             "wallet_id": nft_wallet_1_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F186",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
-            "mu": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
+            "mu": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
             "did_id": "",
         }
     )
@@ -1404,8 +1404,8 @@ async def test_nft_bulk_transfer(two_wallet_nodes: Any, trusted: Any) -> None:
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
-            "mu": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
+            "mu": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
             "did_id": hmr_did_id,
         }
     )
@@ -1419,8 +1419,8 @@ async def test_nft_bulk_transfer(two_wallet_nodes: Any, trusted: Any) -> None:
         {
             "wallet_id": nft_wallet_1_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F186",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
-            "mu": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
+            "mu": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
             "did_id": "",
         }
     )
@@ -1533,8 +1533,8 @@ async def test_nft_set_did(self_hostname: str, two_wallet_nodes: Any, trusted: A
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
-            "mu": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
+            "mu": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
             "did_id": "",
         }
     )
@@ -1686,8 +1686,8 @@ async def test_set_nft_status(self_hostname: str, two_wallet_nodes: Any, trusted
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
-            "mu": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
+            "mu": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
         }
     )
     assert resp.get("success")
@@ -1772,8 +1772,8 @@ async def test_nft_sign_message(self_hostname: str, two_wallet_nodes: Any, trust
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
-            "mu": ["https://www.chik-network.net/img/branding/chik-logo.svg"],
+            "uris": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
+            "mu": ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
         }
     )
     assert resp.get("success")

@@ -129,7 +129,7 @@ async def test_nft_offer_sell_nft(
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -300,7 +300,7 @@ async def test_nft_offer_request_nft(
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -471,7 +471,7 @@ async def test_nft_offer_sell_did_to_did(
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -667,7 +667,7 @@ async def test_nft_offer_sell_nft_for_cat(
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -874,7 +874,7 @@ async def test_nft_offer_request_nft_for_cat(
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -1079,7 +1079,7 @@ async def test_nft_offer_sell_cancel(self_hostname: str, two_wallet_nodes: Any, 
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -1196,7 +1196,7 @@ async def test_nft_offer_sell_cancel_in_batch(self_hostname: str, two_wallet_nod
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -1408,7 +1408,7 @@ async def test_complex_nft_offer(
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )

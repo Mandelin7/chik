@@ -491,7 +491,7 @@ class FullNode:
             dns_servers = self.config["dns_servers"]
         elif network_name == "mainnet":
             # If `dns_servers` is missing from the `config`, hardcode it if we're running mainnet.
-            dns_servers.append("dns-introducer.chik-network.net")
+            dns_servers.append("dns-introducer.chiknetwork.org")
         try:
             self.full_node_peers = FullNodePeers(
                 self.server,

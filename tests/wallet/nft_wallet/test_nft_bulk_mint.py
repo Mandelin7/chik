@@ -99,7 +99,7 @@ async def test_nft_mint_from_did(self_hostname: str, two_wallet_nodes: Any, trus
     metadata_list = [
         {
             "program": Program.to(
-                [("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]), ("h", token_bytes(32).hex())]
+                [("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]), ("h", token_bytes(32).hex())]
             ),
             "royalty_pc": royalty_pc,
             "royalty_ph": royalty_addr,
@@ -559,7 +559,7 @@ async def test_nft_mint_from_did_multiple_xck(self_hostname: str, two_wallet_nod
     # construct sample metadata
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -671,7 +671,7 @@ async def test_nft_mint_from_xck(self_hostname: str, two_wallet_nodes: Any, trus
     metadata_list = [
         {
             "program": Program.to(
-                [("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]), ("h", token_bytes(32).hex())]
+                [("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]), ("h", token_bytes(32).hex())]
             ),
             "royalty_pc": royalty_pc,
             "royalty_ph": royalty_addr,
@@ -957,7 +957,7 @@ async def test_nft_mint_from_xck_multiple_xck(self_hostname: str, two_wallet_nod
     # construct sample metadata
     metadata = Program.to(
         [
-            ("u", ["https://www.chik-network.net/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
