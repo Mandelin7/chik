@@ -214,7 +214,7 @@ for setuptools_scm/PEP 440 reasons.
 - Upped the number of file handles for madmax
 - Catch exceptions raised when resolving plot directories (fix #13723)
 - Call close callback for already closed connections (fix #9172)
-- Set GUI binary name to `chia-blockchain` in the Fedora rpm and Ubuntu deb (fix #13847)
+- Set GUI binary name to `chik-blockchain` in the Fedora rpm and Ubuntu deb (fix #13847)
 - Add simple fix to set farmer response timer for `SP: 0` (fix #11869, #10900) (thanks @neurosis69)
 - Preserve correct `MempoolItem` block height when rebuilding mempool
 - Windows: start daemon without a window and detached from current console (fix #13175) (thanks @jcteng)
@@ -391,7 +391,7 @@ for setuptools_scm/PEP 440 reasons.
 
 - Fixed missing wallet `state_changed` events for GUI
 - Fixed several bugs related to wallet sync status
-- Fixed GUI issue for CAT offers where the CAT Tail would not show in the tooltip for `Unknown CAT`s (https://github.com/Chia-Network/chia-blockchain-gui/issues/950)
+- Fixed GUI issue for CAT offers where the CAT Tail would not show in the tooltip for `Unknown CAT`s (https://github.com/Chik-Network/chik-blockchain-gui/issues/950)
 
 ### Known Issues
 
@@ -857,7 +857,7 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 - Fixed issues with CLI option –passhrase-file (Issue 9032) (thanks @moonlitbugs).
 - Fixed issues with displaying IPv6 address in CLI with chia show -c.
 - Thanks to @chuwt for fix to looping logic during node synching.
-- Fixed the chia-blockchain RPM to set the permission of chrome-sandbox properly.
+- Fixed the chik-blockchain RPM to set the permission of chrome-sandbox properly.
 - Fixed issues where the wallet code would not generate enough addresses when looking for coins, which can result in missed coins due to the address not being checked. Deprecated the config setting initial_num_public_keys_new_wallet. The config setting initial_num_public_keys is now used in all cases.
 - Thanks to @risner for fixes related to using colorlog.
 - Fixed issues in reading the pool_list from config if set to null.
@@ -892,9 +892,9 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 
 ### Added
 
-- Farmers rejoice: today's release integrates two plotters in broad use in the Chia community: Bladebit, created by @harold-b, and Madmax, created by @madMAx43v3r. Both of these plotters bring significant improvements in plotting time. More plotting info [here](https://github.com/Chia-Network/chia-blockchain/wiki/Alternative--Plotters).
+- Farmers rejoice: today's release integrates two plotters in broad use in the Chia community: Bladebit, created by @harold-b, and Madmax, created by @madMAx43v3r. Both of these plotters bring significant improvements in plotting time. More plotting info [here](https://github.com/Chik-Network/chik-blockchain/wiki/Alternative--Plotters).
 - This release also includes several important performance improvements as a result of last weekends "Dust Storm", with two goals in mind: make sure everyone can farm at all times, and improve how many transactions per second each node can accept, especially for low-end hardware. Please know that these optimizations are only the first wave in a series of many over the next few releases to help address this going forward. While the changes we have implemented in this update may not necessarily solve for *every* possible congestion scenario, they should go a long way towards helping low-end systems perform closer to expectations if this happens again.
-- Performance improvements for nodes to support higher transaction volumes, especially for low powered devices like RaspBerry Pi. Full details at [#9050](https://github.com/Chia-Network/chia-blockchain/pull/9050).
+- Performance improvements for nodes to support higher transaction volumes, especially for low powered devices like RaspBerry Pi. Full details at [#9050](https://github.com/Chik-Network/chik-blockchain/pull/9050).
   - Improved multi-core usage through process pools.
   - Prioritized block validation.
   - Added transaction queues for more efficient handling of incoming transactions.
@@ -923,12 +923,12 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 
 ## 1.2.10 Chia blockchain 2021-10-25
 
-We have some great improvements in this release: We launched our migration of keys to a common encrypted keyring.yaml file, and we secure this with an optional passphrase in both GUI and CLI. We've added a passphrase hint in case you forget your passphrase. More info on our [wiki](https://github.com/Chia-Network/chia-blockchain/wiki/Passphrase-Protected-Chia-Keys-and-Key-Storage-Migration). We also launched a new Chialisp compiler in clvm_tools_rs which substantially improves compile time for Chialisp developers. We also addressed a widely reported issue in which a system failure, such as a power outage, would require some farmers to sync their full node from zero. This release also includes several other improvements and fixes.
+We have some great improvements in this release: We launched our migration of keys to a common encrypted keyring.yaml file, and we secure this with an optional passphrase in both GUI and CLI. We've added a passphrase hint in case you forget your passphrase. More info on our [wiki](https://github.com/Chik-Network/chik-blockchain/wiki/Passphrase-Protected-Chia-Keys-and-Key-Storage-Migration). We also launched a new Chialisp compiler in clvm_tools_rs which substantially improves compile time for Chialisp developers. We also addressed a widely reported issue in which a system failure, such as a power outage, would require some farmers to sync their full node from zero. This release also includes several other improvements and fixes.
 
 ### Added
 
-- Added support for keyring migration from keychain, and the addition of passphrase support. Learn more at our [wiki](https://github.com/Chia-Network/chia-blockchain/wiki/Passphrase-Protected-Chia-Keys-and-Key-Storage-Migration).
-- Enabled experimental use of a new Chialisp compiler in clvm_tools_rs in chia-blockchain, which is off by default, and substantially improves compile time.
+- Added support for keyring migration from keychain, and the addition of passphrase support. Learn more at our [wiki](https://github.com/Chik-Network/chik-blockchain/wiki/Passphrase-Protected-Chia-Keys-and-Key-Storage-Migration).
+- Enabled experimental use of a new Chialisp compiler in clvm_tools_rs in chik-blockchain, which is off by default, and substantially improves compile time.
 - Added Windows PowerShell scripts to support installation from source.
 - Added a test to check that we don't reorg subslots unless there is a new peak.
 - Added harvester info to farmer logging.
@@ -1053,7 +1053,7 @@ Today we’re releasing version 1.2.6 to address a resource bug with nodes, and 
 - Improvements to sync full nodes faster by improving the concurrency for downloading and validating blocks.
 - Added new call for logging peer_host: get_peer_logging that will use the peer_host value, typically an IP address, when the peername cannot be retrieved.
 - Added documentation for treehash params.
-- Added a py.typed file that allows other projects that pip install chia-blockchain to type check using our functions with mypy.
+- Added a py.typed file that allows other projects that pip install chik-blockchain to type check using our functions with mypy.
 - Added an RPC for coin records by multiple coin names.
 - Enabled querying AAAA records for DNS Introducer.
 - We now set the version for the GUI when doing a manual install using the install-gui.sh script. Uses a python helper to get the version of the chia install and then converts it into proper npm format and puts that into package.json.
@@ -1139,7 +1139,7 @@ submissions. Thanks to @RuiZhe for Chinese, Traditional; @HansCZ for Czech;
 ### Fixed
 
 - Converted test_rom.py to use pytest and fixed test_singleton.
-- Thanks to @yshklarov for help fixing [#7273](https://github.com/Chia-Network/chia-blockchain/issues/7273), which bundled CA store to support pools for some farming systems, including M1 Apple computers. This enables those machines to properly connect to pools, and fixes the issue.
+- Thanks to @yshklarov for help fixing [#7273](https://github.com/Chik-Network/chik-blockchain/issues/7273), which bundled CA store to support pools for some farming systems, including M1 Apple computers. This enables those machines to properly connect to pools, and fixes the issue.
 
 ## 1.2.1 Chia blockchain 2021-07-12
 
@@ -1159,7 +1159,7 @@ submissions. Thanks to @RuiZhe for Chinese, Traditional; @HansCZ for Czech;
 ### Added
 
 - Portable pooled plots are now available using our new plot NFT. These allow you to plot new plots to an NFT that can either self farm or join and leave pools. During development there were changes to the plot NFT so portable pool plots (those made with `-c` option to `chia plots create`) using code from before June 25th are invalid on mainnet.
-OG plots made before this release can continue to be farmed side by side with the new portable pool plots but can not join pools using the official pooling protocol. You can learn more as a farmer by checking out the [pool user guide](https://github.com/Chia-Network/chia-blockchain/wiki/Pooling-User-Guide). Pool operators and those wanting to understand how the official pooling protocol operates should check out our [pooling implementation reference repository](https://github.com/Chia-Network/pool-reference). If you plan to use plot NFT, all your farmers and harvesters must be on 1.2.0 to function properly for portable pool plots.
+OG plots made before this release can continue to be farmed side by side with the new portable pool plots but can not join pools using the official pooling protocol. You can learn more as a farmer by checking out the [pool user guide](https://github.com/Chik-Network/chik-blockchain/wiki/Pooling-User-Guide). Pool operators and those wanting to understand how the official pooling protocol operates should check out our [pooling implementation reference repository](https://github.com/Chik-Network/pool-reference). If you plan to use plot NFT, all your farmers and harvesters must be on 1.2.0 to function properly for portable pool plots.
 - The exact commit after which Plot NFTs should be valid is the 89f7a4b3d6329493cd2b4bc5f346a819c99d3e7b commit (in which `pools.testnet9` branch was merged to main) or 5d62b3d1481c1e225d8354a012727ab263342c0a within the `pools.testnet9` branch.
 - `chia farm summary` and the GUI now use a new RPC endpoint to properly show plots for local and remote harvesters. This should address issues #6563, #5881, #3875, #1461.
 - `chia configure` now supports command line updates to peer count and target peer count.
@@ -1418,7 +1418,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 ### Changed
 
 - The plotter in bitfield mode is much improved in plotting speed (~15% faster than in 1.0.3), now requires 28% less temporary space (238.3 GiB/256 GB), and now uses its maximum memory in phase 1 and only needs 3389MiB for optimal sorting of a k32. Total writes should also be down by about 20%. On almost all machines we expect bitfield to be as fast or faster. For CPUs that predate the [Nehalem architecture](https://en.wikipedia.org/wiki/Nehalem_(microarchitecture)), bitfield plotting will not work and you will need to use no bitfield. Those CPUs were generally designed before 2010.
-- The `src` directory in chia-blockchain has been changed to `chia` to avoid namespace collisions.
+- The `src` directory in chik-blockchain has been changed to `chia` to avoid namespace collisions.
 - GUI install builds have been simplified to rely on one `.spec` file in `chia/`
 - The weight proof timeout can now be configured in config.yaml.
 - Peer discovery is now retried more often after you receive initial peers.
@@ -1437,7 +1437,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 ### Added
 
 - This is a minor bug fix release for version 1.0.2
-- You should review the [release notes for v1.0.2](https://github.com/Chia-Network/chia-blockchain/releases/tag/1.0.2) but we especially want to point out that wallet sync is much faster than in 1.0.1 and earlier versions.
+- You should review the [release notes for v1.0.2](https://github.com/Chik-Network/chik-blockchain/releases/tag/1.0.2) but we especially want to point out that wallet sync is much faster than in 1.0.1 and earlier versions.
 
 ### Fixed
 
@@ -1448,10 +1448,10 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 ### Added
 
-- We have released version 1.0.0 of [chiapos](https://github.com/Chia-Network/chiapos). This includes a 20% speed increase for bitfield plotting compared to the previous version on the same machine. In many cases this will mean that bitfield plotting is as fast or faster than non bitfield plotting.
+- We have released version 1.0.0 of [chiapos](https://github.com/Chik-Network/chiapos). This includes a 20% speed increase for bitfield plotting compared to the previous version on the same machine. In many cases this will mean that bitfield plotting is as fast or faster than non bitfield plotting.
 - @xorinox improved our support for RedHat related distributions in `install.sh`.
 - @ayaseen improved our support for RedHat related distributions in `install-timelord.sh`.
-- We have added Dutch and Polish to supported translations. Thanks @psydafke, @WesleyVH, @pieterhauwaerts, @bartlomiej.tokarzewski, @abstruso, @feel.the.code, and @Axadiw for contributions to [translations on Crowdin](https://crowdin.com/project/chia-blockchain).
+- We have added Dutch and Polish to supported translations. Thanks @psydafke, @WesleyVH, @pieterhauwaerts, @bartlomiej.tokarzewski, @abstruso, @feel.the.code, and @Axadiw for contributions to [translations on Crowdin](https://crowdin.com/project/chik-blockchain).
 - The GUI now supports "Exclude final directory" when plotting. This is found in the Advanced Options for step 2 on the plot creation page.
 
 ### Changed
@@ -1482,7 +1482,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - There is now a simple progress bar on the GUI Plot page and when you view the log from the three dots on the right.
 - Users must now explicitly set the `--show-mnemonic-seed` flag to see their private keys when running `chia keys show`.
 - We are now building Linux GUI installers. These should be considered beta quality for now.
-- Translations now available for German, Traditional Chinese, and Danish. Thanks to @Dravenex, @MaestroOnICe, @loudsyncro, @loppefaaret, @thirteenthd, @wong8888, @N418, and @swjz for all the translation help. You to can translate at our [Crowdin project](https://crowdin.com/project/chia-blockchain/).
+- Translations now available for German, Traditional Chinese, and Danish. Thanks to @Dravenex, @MaestroOnICe, @loudsyncro, @loppefaaret, @thirteenthd, @wong8888, @N418, and @swjz for all the translation help. You to can translate at our [Crowdin project](https://crowdin.com/project/chik-blockchain/).
 
 ### Changed
 
@@ -1493,7 +1493,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 ### Fixed
 
 - Weight proofs, especially wallet weight proofs were failing when some Blueboxed proofs of time were encountered.
-- Users can now pip install e.g. chia-blockchain==1.0.1 on most platforms.
+- Users can now pip install e.g. chik-blockchain==1.0.1 on most platforms.
 - Sometimes the GUI had an error regarding MainWindow.
 
 ## 1.0.0 First Release of Chia Blockchain 2021-03-17
@@ -1505,7 +1505,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - Transactions are not enabled in the 1.0.0 version and will be soft forked in during the six week period via a 1.1.0 release.
 - There will also be a 1.0.1 release after the green flag process is complete to simplify install for new users by removing the green flag alert. In the interim there will be new testnet releases using the 1.1bx version scheme.
 - Starting with release 1.0.0 you usually no longer need to upgrade and 1.0.1 will be fully optional. However you will have to upgrade to 1.1 after it is out and before the six week period ends. We plan to give plenty of time between those two events up to and including pushing back the transaction start date by a short period of time.
-- Thank you to @L3Sota for adding a Japanese translation via our [Crowdin project](https://crowdin.com/project/chia-blockchain).
+- Thank you to @L3Sota for adding a Japanese translation via our [Crowdin project](https://crowdin.com/project/chik-blockchain).
 - The generation of CoinIDs is now unique on mainnet to avoid testnet transaction replays.
 - Validation of transactions will now fail after the expiration of the six week period.
 
@@ -1584,7 +1584,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 ### Known Issues
 
-- Some users can't plot in the GUI in MacOS Big Sur - especially on M1. See issue [1189](https://github.com/Chia-Network/chia-blockchain/issues/1189)
+- Some users can't plot in the GUI in MacOS Big Sur - especially on M1. See issue [1189](https://github.com/Chik-Network/chik-blockchain/issues/1189)
 
 ## 1.0rc6 aka Release Candidate 6 - 2021-03-11
 
@@ -1604,7 +1604,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - `chia keys add` takes secret words a prompt on the command line or stdin instead of command line arguments for security.
 - Version 1.0.1 of chiavdf was added. This brought MPIR on Windows to the most recent release. Additionally we removed inefficient ConvertIntegerToBytes() and ConvertBytesToInt() functions, use GMP library's mpz_export/mpz_import for big integers and simple helper functions for built-in integer types. The latter are taken from chiavdf. We now require compressed forms to be encoded canonically when deserializing. This should prevent potential grinding attacks where some non-canonical encodings of a compressed form could be used to change its hash and thus the next challenges derived from it. Canonically encoded compressed forms must be reduced and must produce the same string when deserialized and serialized again.
 - Version 1.0 of our BLS signature library is included. We brought Relic, gmp and MPIR up to their most recent releases. We again thank the Dash team for their fixes and improvements.
-- We now hand build Apple Silicon native binary wheels for all chia-blockchain dependencies and host them at [https://pypi.chia.net/simple](https://pypi.chia.net/simple). We are likely to hand build a MacOS ARM64 dmg available and certainly will for 1.0. You can install natively on M1 now with the `git clone` developer method today. Just make sure Python 3.9 is installed. `python3 --version` works.
+- We now hand build Apple Silicon native binary wheels for all chik-blockchain dependencies and host them at [https://pypi.chia.net/simple](https://pypi.chia.net/simple). We are likely to hand build a MacOS ARM64 dmg available and certainly will for 1.0. You can install natively on M1 now with the `git clone` developer method today. Just make sure Python 3.9 is installed. `python3 --version` works.
 - The GUI now shows you which network you are connected to on the Full Node page. It will also wait patiently for the green flag to drop on a network launch.
 - In the GUI you can only plot k=32 or larger with the single exception of k=25 for testing. You will have to confirm choosing k=25 however. Thanks to @jespino for help on this and limiting the cli as well.
 - The restore smart wallets from backup prompt has been improved to better get the intent across and that it can be skipped.
@@ -1624,7 +1624,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - Chia wheels not on Pypi and some dependecies not found there also are now on pypi.chia.net.
 - Additional typing has been added to the Python code with thanks to @jespino.
 - Cryptography and Keyring have been bumped to their current releases.
-- PRs and commits to the chia-blockchain-gui repository will automatically have their locales updated.
+- PRs and commits to the chik-blockchain-gui repository will automatically have their locales updated.
 
 ## Fixed
 
@@ -1646,7 +1646,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - We now support a "green flag" chain launch process. A new version of the software will poll download.chia.net/notify/ for a signed json file that will be the genesis block of the chain for that version. This will allow unattended start at mainnet.
 - Bluebox Timelords are back. These are Timelords most anyone can run. They search through the historical chain and find large proofs of times and compact them down to their smallest representation. This significantly speeds up syncing for newly started nodes. Currently this is only supported on Linux and MacOS x86_64 but we will expand that. Any desktop or server of any age will be fast enough to be a useful Bluebox Timelord.
 - Thanks to @jespino there is now `chia farm summary`. You can now get almost exactly the same farming information on the CLI as the GUI.
-- We have added Romanian to the GUI translations. Thank you to @bicilis on [Crowdin](https://crowdin.com/project/chia-blockchain). We also added a couple of additional target languages. Klingon anyone?
+- We have added Romanian to the GUI translations. Thank you to @bicilis on [Crowdin](https://crowdin.com/project/chik-blockchain). We also added a couple of additional target languages. Klingon anyone?
 - `chia wallet` now takes get_address to get a new wallet receive address from the CLI.
 - `chia plots check` will list out all the failed plot filenames at the end of the report. Thanks for the PR go to @eFishCent.
 - Chialisp and the clvm have had the standard puzzle updated and we replaced `((c P A))` with `(a P A)`.
@@ -1655,7 +1655,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 - Testnets and mainnet now set their minimum `k` size and enforce it. RC5 testnet will reject plots of size less than k=32.
 - Sub slots now require 16 blocks instead of 12.
-- Thanks to @xdustinface of Dash, the BlS Signature library has been updated to 0.9 with clean ups and some speed ups. This changed how the G2 infinity element was handled and we now manage it inside of chia-blockchain, etc., instead of in blspy.
+- Thanks to @xdustinface of Dash, the BlS Signature library has been updated to 0.9 with clean ups and some speed ups. This changed how the G2 infinity element was handled and we now manage it inside of chik-blockchain, etc., instead of in blspy.
 - We have updated the display of peer nodes and moved adding a peer to it's own pop up in the GUI.
 - Block searching in the GUI has been improved.
 - @jespino added i18n support and refactored how locales are loaded in the GUI. Additionally he moved more strings into the translation infrastructure for translators.
@@ -1664,7 +1664,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - We made two HashPrime optimizations in chiavdf. This forces numbers being tested for primality to be odd and avoids an unnecessary update of the sprout vector by stopping after the first non-zero value. This is a breaking change as it changes the prime numbers generated from a given seed. We believe this is the final breaking change for chiavdf.
 - chiabip158 was set to a gold 1.0 version.
 - Comments to Chialisp and clvm source have been updated for all of the Chialisp changes over the proceeding three weeks.
-- And thanks yet again to @jespino for a host of PRs to add more detailed typing to various components in chia-blockchain.
+- And thanks yet again to @jespino for a host of PRs to add more detailed typing to various components in chik-blockchain.
 - aiohttp was updated to 3.7.4 to address a low severity [security issue](https://github.com/advisories/GHSA-v6wp-4m6f-gcjg).
 - calccrypto/uint128_t was updated in the Windows chiapos implementation. Chiapos required some changes its build process to support MacOS ARM64.
 
@@ -1697,7 +1697,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - We have lowered the transaction lock to the first 5000 blocks to facilitate testing. We also started this chain at a lower difficulty.
 - A new RPC api: /push_tx. Using this RPC, you can spend custom chialisp programs. You need to make a SpendBundle, which includes the puzzle reveal (chialisp), a solution (chialisp) and a signature.
 - You can now use the RPC apis to query the mempool.
-- There are now Swedish, Spanish, and Slovak translations. Huge thanks to @ordtrogen (Swedish), @jespino and @dvd101x (Spanish), and our own @seeden (Slovak). Also thanks were due to @f00b4r (Finnish), @A-Caccese (Italian), and @Bibop182 and @LeonidShamis (Russian). Quite a few more are almost complete and ready for inclusion. You can help translate and review translations at our [crowdin project](https://crowdin.com/project/chia-blockchain).
+- There are now Swedish, Spanish, and Slovak translations. Huge thanks to @ordtrogen (Swedish), @jespino and @dvd101x (Spanish), and our own @seeden (Slovak). Also thanks were due to @f00b4r (Finnish), @A-Caccese (Italian), and @Bibop182 and @LeonidShamis (Russian). Quite a few more are almost complete and ready for inclusion. You can help translate and review translations at our [crowdin project](https://crowdin.com/project/chik-blockchain).
 - You can obtain a new wallet receive address on the command line with `chia wallet new_address`. Thanks to @jespino for this and a lot more in the next section below.
 - You will now see Your Harvester Network in the GUI even if you have no plots.
 
@@ -1705,7 +1705,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 - All chialisp opcodes have been renumbered. This should be the last major breaking change for chialisp and the clvm. There are a couple minor enhancements still needed for mainnet launch, but they may or may not require minor breaking changes. We will be restarting testnet chains on a mostly weekly basis either way.
 - Node batch syncing performance was increased, and it now avoids re-validating blocks that node had already validated.
-- The entire CLI has been ported to [Click](https://click.palletsprojects.com/en/7.x/). Huge thanks to @jespino for the big assist and @unparalleled-js for the [recommendation and the initial start](https://github.com/Chia-Network/chia-blockchain/issues/464). This will make building out the CLI much easier. There are some subtle changes and some shortcuts are not there anymore. `chia -h` and `chia SUBCOMMAND -h` can be your guide.
+- The entire CLI has been ported to [Click](https://click.palletsprojects.com/en/7.x/). Huge thanks to @jespino for the big assist and @unparalleled-js for the [recommendation and the initial start](https://github.com/Chik-Network/chik-blockchain/issues/464). This will make building out the CLI much easier. There are some subtle changes and some shortcuts are not there anymore. `chia -h` and `chia SUBCOMMAND -h` can be your guide.
 - We have upgraded Electron to 11.3 to support Apple Silicon. There are still one or two issues in our build chain for Apple Silicon but we should have an M1 native build shortly.
 - The websocket address is no longer displayed in the GUI unless it is running as a remote GUI. Thanks @dkackman !
 - `chia plots check` now will continue checking after it finds an error in a plot to the total number of checks you specified.
@@ -1736,7 +1736,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 ### Fixed
 
-- This is an errata release for Release Candidate 1. There were a couple of things that did not smoothly migrate from the Beta versions. Please make sure you also consult the [release notes for RC-1](https://github.com/Chia-Network/chia-blockchain/releases/tag/1.0rc1) was well.
+- This is an errata release for Release Candidate 1. There were a couple of things that did not smoothly migrate from the Beta versions. Please make sure you also consult the [release notes for RC-1](https://github.com/Chik-Network/chik-blockchain/releases/tag/1.0rc1) was well.
 - Incorrect older spend to addresses were being migrated from Beta 27. This would send farming rewards to un-spendable coins.
 - Netspace was not calculating properly in RC-1.
 - The Windows installer was building with the wrong version number.
@@ -1752,9 +1752,9 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - 'chia wallet show' now shows your wallet's height.
 - Last Attempted Proof is now above Latest Block Challenge on the Farm page of the GUI.
 - The GUI now detects duplicate plots and also only counts unique plots and unique plot size.
-- We have integrated with crowdin to make it easier to translate the GUI. Check out [Chia Blockchain GUI](https://crowdin.com/project/chia-blockchain) there.
+- We have integrated with crowdin to make it easier to translate the GUI. Check out [Chia Blockchain GUI](https://crowdin.com/project/chik-blockchain) there.
 - We have added Italian, Russian, and Finnish. More to come soon.
-- There is now remote UI support. [Documents](https://github.com/Chia-Network/chia-blockchain-gui/blob/main/remote.md) will temporarily live in the repository but have moved to the [wiki](https://github.com/Chia-Network/chia-blockchain/wiki/Connecting-the-UI-to-a-remote-daemon). Thanks to @dkackman for this excellent addition!
+- There is now remote UI support. [Documents](https://github.com/Chik-Network/chik-blockchain-gui/blob/main/remote.md) will temporarily live in the repository but have moved to the [wiki](https://github.com/Chik-Network/chik-blockchain/wiki/Connecting-the-UI-to-a-remote-daemon). Thanks to @dkackman for this excellent addition!
 - Added the ability to specify an address for the pool when making plots (-c flag), as opposed to a public key. The block
 validation was changed to allow blocks like these to be made. This will enable changing pools in the future, by specifying a smart transaction for your pool rewards.
 - Added `chia plots check --challenge-start [start]` that begins at a different `[start]` for `-n [challenges]`. Useful when you want to do more detailed checks on plots without restarting from lower challenge values you already have done. Huge thanks to @eFishCent for this and all of the debugging work behind the scenes confirming that plot failures were machine errors and not bugs!
@@ -1784,7 +1784,7 @@ all fields that referred to sub blocks are changed to blocks.
 - We have moved to compressed quadratic forms for VDFs. Using compressed representation of quadratic forms reduces their serialized size from 130 to 100 bytes (for forms with 1024-bit discriminant). This shrinks the size of VDF outputs and VDF proofs, and it's a breaking change as the compressed representation is not compatible with the older uncompressed (a, b) representation. Compressed forms are also used in calls to chiavdf and in timelord's communication with VDF clients. The form compression algorithm is based on ["Trustless Groups of Unknown Order with Hyperelliptic Curves"](https://eprint.iacr.org/2020/196) by Samuel Dobson, Steven D. Galbraith and Benjamin Smith.
 - Last Attempted Proof on the Farm tab of the GUI now shows hours:minutes:seconds instead of just hours:minutes. This makes it much easier to see that your farmer is responding to recent challenges at a glance.
 - You can now send and receive transactions with the command line. Try `chia wallet -h` to learn more. Also, `chia wallet` now requires a third argument of `show`, therefor you will use `chia wallet show` to see your wallet balance.
-- We have added the [Crowdin](https://crowdin.com/) translation platform to [chia blockchain gui](https://crowdin.com/project/chia-blockchain). We are still getting it fully set up, but helping to translate the GUI is going to be much easier.
+- We have added the [Crowdin](https://crowdin.com/) translation platform to [chia blockchain gui](https://crowdin.com/project/chik-blockchain). We are still getting it fully set up, but helping to translate the GUI is going to be much easier.
 - Full Node > Connections in the GUI now shows the peak sub block height your connected peers believe they are at. A node syncing from you will not be at the true peak sub block height until it gets into sync.
 - `chia init -c [directory]` will create new TLS certificates signed by your CA located in `[directory]`. Use this feature to configure a new remote harvester. Type `chia init -h` to get instructions. Huge thanks to a very efficient @eFishCent for this quick and thorough pull request.
 - We build both MacOS x86_64 and MacOS universal wheels for chiapos, chiavdf, blpsy, and chiabip158 in Python 3.9. The universal build allows M1 Macs to run these dependencies in ARM64 native mode.
@@ -1795,7 +1795,7 @@ all fields that referred to sub blocks are changed to blocks.
 - We are moving away from the terms sub blocks and blocks in our new consensus. What used to be called sub blocks will now just be blocks. Some blocks are now also transaction blocks. This is simpler both in the code and to reason about. Not all the code or UI may have caught up yet.
 - This release has the final mainnet rewards schedule. During the first three years, each block winner will win 2 TXCH/XCH per block for a total of 9216 TXCH per day from 4608 challenges per day.
 - Smart transactions now use an announcement instead of 'coin consumed' or lock methods.
-- The GUI is now in a separate submodule repository from chia-blockchain, [chia-blockchain-gui](https://github.com/Chia-Network/chia-blockchain-gui). The installers and install scripts have been updated and it continues to follow the same install steps. Note that the GUI directory will now be `chia-blockchain-gui`. The workflow for this may be "touch and go" for people who use the git install methods over the short term.
+- The GUI is now in a separate submodule repository from chik-blockchain, [chik-blockchain-gui](https://github.com/Chik-Network/chik-blockchain-gui). The installers and install scripts have been updated and it continues to follow the same install steps. Note that the GUI directory will now be `chik-blockchain-gui`. The workflow for this may be "touch and go" for people who use the git install methods over the short term.
 - Very large coin counts are now supported.
 - Various RPC endpoints have been renamed to follow our switch to "just blocks" from sub blocks.
 - We've made changes to the protocol handshake and the blockchain genesis process to support mainnet launch and running/farming more than one chain at a time. That also means we can't as easily determine when an old version of the peer tries to connect so we will put warnings in the logs for now.
@@ -1826,22 +1826,22 @@ all fields that referred to sub blocks are changed to blocks.
 
 ### Changed
 
-- Significant improvements have been made to how the full node handles the mempool. This generally cuts CPU usage of node by 2x or more. Part of this increase is that we have temporarily limited the size of transactions. If you want to test sending a transaction you should keep the value of your transaction below 20 TXCH as new consensus will cause you to use a lot of inputs. This will be returned to the expected level as soon as the integration of [clvm rust](https://github.com/Chia-Network/clvm_rs) is complete.
+- Significant improvements have been made to how the full node handles the mempool. This generally cuts CPU usage of node by 2x or more. Part of this increase is that we have temporarily limited the size of transactions. If you want to test sending a transaction you should keep the value of your transaction below 20 TXCH as new consensus will cause you to use a lot of inputs. This will be returned to the expected level as soon as the integration of [clvm rust](https://github.com/Chik-Network/clvm_rs) is complete.
 - We have changed the way TLS between nodes and between chia services work. Each node now has two certificate authorities. One is a public, shared CA that signs the TLS certificates that every node uses to connect to other nodes on 8444 or 58444. You now also have a self generated private CA that must sign e.g. farmer and harvester's certificates. To run a remote harvester you need a new harvester key that is then signed by your private CA. We know this is not easy for remote harvester in this release but will address it quickly.
 - We have changed the way we compile the proof of space plotter and added one additional optimization. On many modern processors this will mean that using the plotter with the `-e` flag will be 2-3% faster than the Beta 17 plotter on the same CPU. We have found this to be very sensitive to different CPUs but are now confident that, at worst, the Beta 24 plotter with `-e` will be the same speed as Beta 17 if not slightly faster on the same hardware. Huge thanks to @xorinox for meticulously tracking down and testing this.
 - If a peer is not responsive during sync, node will disconnect it.
 - Peers that have not sent data in the last hour are now disconnected.
-- We have made the "Help Translate" button in the GUI open in your default web browser and added instructions for adding new translations and more phrases in existing translations at that [URL](https://github.com/Chia-Network/chia-blockchain/tree/main/electron-react/src/locales). Try the "Help Translate" option on the language selection pull down to the left of the dark/light mode selection at the top right of the GUI.
+- We have made the "Help Translate" button in the GUI open in your default web browser and added instructions for adding new translations and more phrases in existing translations at that [URL](https://github.com/Chik-Network/chik-blockchain/tree/main/electron-react/src/locales). Try the "Help Translate" option on the language selection pull down to the left of the dark/light mode selection at the top right of the GUI.
 - Sync store now tracks all connected peers and removes them as they get removed.
 - The Rate Limited Wallet has been ported to new consensus and updated Chialisp methods.
-- We are down to only one sub dependency that does not ship binary wheels for all four platforms. The only platform still impacted is ARM64 (generally Raspberry Pi) but that only means that you still need the minor build tools as outlined on the [wiki](https://github.com/Chia-Network/chia-blockchain/wiki/Raspberry-Pi).
+- We are down to only one sub dependency that does not ship binary wheels for all four platforms. The only platform still impacted is ARM64 (generally Raspberry Pi) but that only means that you still need the minor build tools as outlined on the [wiki](https://github.com/Chik-Network/chik-blockchain/wiki/Raspberry-Pi).
 - We upgraded to Electron 9.4.2 for the GUI.
 - We have upgraded to py-setproctitle 1.2.2. We now have binary wheels for setproctitle on all four platforms and make it a requirement in setup.py. It is run-time optional if you wish to disable it.
 
 ### Fixed
 
 - On the Farm page of the GUI Latest Block Challenge is now populated. This shows you the actual challenge that came from the Timelord. Index is the signage point index in the current slot. There are 64 signage points every 10 minutes on average where 32 sub blocks can be won.
-- Last Attempted Proof is now fixed. This will show you the last time one of your plots passed the [plot filter](https://github.com/Chia-Network/chia-blockchain/wiki/FAQ#what-is-the-plot-filter-and-why-didnt-my-plot-pass-it).
+- Last Attempted Proof is now fixed. This will show you the last time one of your plots passed the [plot filter](https://github.com/Chik-Network/chik-blockchain/wiki/FAQ#what-is-the-plot-filter-and-why-didnt-my-plot-pass-it).
 - Plot filename is now back in the Plots table of the GUI.
 - There was a bug in adding a sub block to weight proofs and an issue in the weight proof index.
 - Over time the node would think that there were no peers attached with peak sub block heights higher than 0.
@@ -2002,7 +2002,7 @@ all fields that referred to sub blocks are changed to blocks.
 - `chia netspace` has been refactored for new consensus.
 - aiohttp, clvm-tools, colorlog, concurrent-log-handler, keyring, cryptography, and sortedcontainers have been upgraded to their current versions.
 - Tests now place a cache of blocks and plots in the ~/.chia/ directory to speed up total testing time.
-- Changes were made to chiapos to correctly support the new bitfiled backpropogation on FreeBSD and OpenBSD. With the exception of needing to work around python cryptography as outlined on the wiki, FreeBSD and OpenBSD should be able to compile and run chia-blockchain.
+- Changes were made to chiapos to correctly support the new bitfiled backpropogation on FreeBSD and OpenBSD. With the exception of needing to work around python cryptography as outlined on the wiki, FreeBSD and OpenBSD should be able to compile and run chik-blockchain.
 - With the change to new consensus many components of the chain and local database are not yet stored optimally. Startup and sync times may be slower than usual so please be patient. This will improve next release.
 - Errata: Coinbase amount is missing from the GUI Block view.
 - Eratta: wallet Backup, and Fly-sync on the wallet are currently not working.
@@ -2020,7 +2020,7 @@ all fields that referred to sub blocks are changed to blocks.
 ### Added
 
 - F1 generation in the plotter is now fully parallel for a small speedup.
-- We have bitfield optimized phase 2 of plotting. There is only about a 1% increase in speed from this change but there is a 12% decrease in writes with a penalty of 3% more reads. More details in [PR 120](https://github.com/Chia-Network/chiapos/pull/120). Note that some sorts in phase 2 and phase 3 will now appear "out of order" and that is now expected behavior.
+- We have bitfield optimized phase 2 of plotting. There is only about a 1% increase in speed from this change but there is a 12% decrease in writes with a penalty of 3% more reads. More details in [PR 120](https://github.com/Chik-Network/chiapos/pull/120). Note that some sorts in phase 2 and phase 3 will now appear "out of order" and that is now expected behavior.
 - Partial support for Python 3.9. That includes new versions of Chia dependencies like chiabip158.
 
 ### Changed
@@ -2030,10 +2030,10 @@ all fields that referred to sub blocks are changed to blocks.
 
 ### Fixed
 
-- A segfault caused by memory leaks in bls-library has been fixed. This should end the random farmer and harvester crashes over time as outlined in [Issue 500](https://github.com/Chia-Network/chia-blockchain/issues/500).
+- A segfault caused by memory leaks in bls-library has been fixed. This should end the random farmer and harvester crashes over time as outlined in [Issue 500](https://github.com/Chik-Network/chik-blockchain/issues/500).
 - Plotting could hang up retrying in an "error 0" state due to a bug in table handling in some edge cases.
 - CPU utilization as reported in the plotter is now accurate for Windows.
-- FreeBSD and OpenBSD should be able to build and install chia-blockchain and its dependencies again.
+- FreeBSD and OpenBSD should be able to build and install chik-blockchain and its dependencies again.
 - Starting with recent setuptools fixes, we can no longer pass an empty string to the linker on Windows when building binary wheels in the sub repos. Thanks @jaraco for tracking this down.
 
 ## [1.0beta17] aka Beta 1.17 - 2020-10-22
@@ -2044,25 +2044,25 @@ all fields that referred to sub blocks are changed to blocks.
 
 ### Fixed
 
-- In the GUI there was [a regression](https://github.com/Chia-Network/chia-blockchain/issues/484) that removed the scroll bar on the Plot page. The scroll bar has returned!
+- In the GUI there was [a regression](https://github.com/Chik-Network/chik-blockchain/issues/484) that removed the scroll bar on the Plot page. The scroll bar has returned!
 - In Dark Mode you couldn't read the white on white plotting log text.
 - To fix a bug in Beta 15's plotter we introduced a fixed that slowed plotting by as much as 25%.
 - Certain NTFS root mount points couldn't be used for plotting or farming.
-- Logging had [a regression](https://github.com/Chia-Network/chia-blockchain/issues/485) where log level could no longer be set by service.
+- Logging had [a regression](https://github.com/Chik-Network/chik-blockchain/issues/485) where log level could no longer be set by service.
 
 ## [1.0beta16] aka Beta 1.16 - 2020-10-20
 
 ### Added
 
 - The Chia GUI now supports dark and light mode.
-- The GUI now supports translations and localizations. If you'd like to add your language you can see the examples in [the locales directory](https://github.com/Chia-Network/chia-blockchain/tree/dev/electron-react/src/locales) of the chia-blockchain repository.
+- The GUI now supports translations and localizations. If you'd like to add your language you can see the examples in [the locales directory](https://github.com/Chik-Network/chik-blockchain/tree/dev/electron-react/src/locales) of the chik-blockchain repository.
 - `chia check plots` now takes a `-g` option that allows you to specify a matching path string to only check a single plot file, a wild card list of plot files, or all plots in a single directory instead of the default behavior of checking every directory listed in your config.yaml. A big thank you to @eFishCent for this pull request!
 - Better documentation of the various timelord options in the default config.yaml.
 
 ### Changed
 
 - The entire GUI has been refactored for code quality and performance.
-- Updated to chiapos 0.12.32. This update significantly speeds up the F1/first table plot generation. It also now can log disk usage while plotting and generate graphs. More details in the [chiapos release notes](https://github.com/Chia-Network/chiapos/releases/tag/0.12.32).
+- Updated to chiapos 0.12.32. This update significantly speeds up the F1/first table plot generation. It also now can log disk usage while plotting and generate graphs. More details in the [chiapos release notes](https://github.com/Chik-Network/chiapos/releases/tag/0.12.32).
 - Node losing or not connecting to another peer node (which is entirely normal behaviour) is now logged at INFO and not WARNING. Your logs will be quieter.
 - Both the GUI and CLI now default to putting the second temporary directory files into the specified temporary directory.
 - SSL Certificate handling was refactored along with Consensus constants, service launching, and internal configuration management.
@@ -2273,7 +2273,7 @@ the now deprecated AES methods. This should increase plotting speed and support
 more processors.
 - Plot refreshing happens during all new challenges and only new/modified files
 are read.
-- Updated [blspy](https://github.com/Chia-Network/bls-signatures) to use the
+- Updated [blspy](https://github.com/Chik-Network/bls-signatures) to use the
 new [IETF standard for BLS signatures](https://tools.ietf.org/html/draft-irtf-cfrg-bls-signature-02).
 - Added a faster VDF process which generates n-wesolowski proofs quickly
 after the VDF result is known. This requires a high number of CPUs. To use it,
@@ -2414,7 +2414,7 @@ relic. We will make a patch available for these systems shortly.
 - We added total network storage space estimation to the node RPC at the `/get_network_space` endpoint instead of only being available in the cli. The RPC endpoint takes two block header hashes and estimates space between those header hashes.
 - Logs now autorotate. Once the debug.log reaches 20MB it is compressed and archived keeping 7 historical 20MB logs.
 - We now have a CHANGELOG.md that adheres closely to the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) standard. We merged in the version history and updated some previous release notes to capture items important to the change log. We are modifying our release process to accumulate changes at the top of the change log and then copy those to the release notes at the time of the release.
-- We added [lgtm](https://lgtm.com/) source analysis on pull request to the chia-blockchain, chiapos, chiavdf, chiabip158, and bls-library repositories to add some automated security analysis to our ci.
+- We added [lgtm](https://lgtm.com/) source analysis on pull request to the chik-blockchain, chiapos, chiavdf, chiabip158, and bls-library repositories to add some automated security analysis to our ci.
 
 ### Changed
 
@@ -2466,7 +2466,7 @@ relic. We will make a patch available for these systems shortly.
 
 ### Fixed
 
-- There was a regression in Chia Proof of Space ([chiapos](https://github.com/Chia-Network/chiapos)) that came from our efforts to speed up plotting on Windows native. Now k>=32 plots work correctly. We made additional bug fixes and corrected limiting small k size generation.
+- There was a regression in Chia Proof of Space ([chiapos](https://github.com/Chik-Network/chiapos)) that came from our efforts to speed up plotting on Windows native. Now k>=32 plots work correctly. We made additional bug fixes and corrected limiting small k size generation.
 - There was a bug in Timelord handling that could stop all VDF progress.
 
 ### Deprecated
@@ -2490,7 +2490,7 @@ relic. We will make a patch available for these systems shortly.
 - We’ve added TLS authentication for incoming farmer connections. TLS certs and keys are generated during chia init and only full nodes with your keys will be able to connect to your Farmer. Also, Harvester, Timelord, and Wallet will now not accept incoming connections which reduces the application attack surface.
 - The node RPC has a new endpoint get_header_by_height which allows you to retrieve the block header from a block height. Try `chia show -bh 1000` to see the block header hash of block 1000. You can then look up the block details with `chia show -b f655e1a9f7f8c89a703e40d9ce82ae33508badaf7b37fa1a56cad27926b5e936` which will look up a block by it's header hash.
 - Our Windows binaries check the processor they are about to run on at runtime and choose the best processor optimizations for our [MPIR](http://mpir.org/) VDF dependency on Windows.
-- Most of the content of README.md and INSTALL.md have been moved to the [repository wiki](https://github.com/Chia-Network/chia-blockchain/wiki) and placed in [INSTALL](https://github.com/Chia-Network/chia-blockchain/wiki/INSTALL) and [Quick Start Guide](https://github.com/Chia-Network/chia-blockchain/wiki/Quick-Start-Guide)
+- Most of the content of README.md and INSTALL.md have been moved to the [repository wiki](https://github.com/Chik-Network/chik-blockchain/wiki) and placed in [INSTALL](https://github.com/Chik-Network/chik-blockchain/wiki/INSTALL) and [Quick Start Guide](https://github.com/Chik-Network/chik-blockchain/wiki/Quick-Start-Guide)
 - Harvester is now asynchronous and will better be able to look up more plots spread across more physical drives.
 - Full node startup time has been sped up significantly by optimizing the loading of the blockchain from disk.
 
@@ -2498,7 +2498,7 @@ relic. We will make a patch available for these systems shortly.
 
 - Most scripts have been removed in favor of chia action commands. You can run `chia version` or `chia start node` for example. Just running `chia` will show you more options. However `chia-create-plots` continues to use the hyphenated form. Also it's now `chia generate keys` as another example.
 - Chia start commands like `chia start farmer` and `chia stop node` now keep track of process IDs in a run/ directory in your configuration directory. `chia stop` is unlikely to work on Windows native for now. If `chia start -r node` doesn't work you can force the run/ directory to be reset with `chia start -f node`.
-- We suggest you take a look at our [Upgrading documentation](https://github.com/Chia-Network/chia-blockchain/wiki/Updating-beta-software) if you aren't performing a new install.
+- We suggest you take a look at our [Upgrading documentation](https://github.com/Chik-Network/chik-blockchain/wiki/Updating-beta-software) if you aren't performing a new install.
 - blspy now has libsodium included in the MacOS and Linux binary wheels.
 - miniupnpc and setprotitle were dynamically checked for an installed at runtime. Removed those checks and we rely upon the install tools installing them before first run.
 - Windows wheels that the Windows Installer packages are also available in the ci Artifacts in a .zip file.
@@ -2510,7 +2510,7 @@ relic. We will make a patch available for these systems shortly.
 
 ### Known issues
 
-- Plots of k>=32 are not working for farming, and some broken plots can cause a memory leak. A [workaround is available](https://github.com/Chia-Network/chia-blockchain/wiki/Beta-1.4-k=32-or-larger-work-around).
+- Plots of k>=32 are not working for farming, and some broken plots can cause a memory leak. A [workaround is available](https://github.com/Chik-Network/chik-blockchain/wiki/Beta-1.4-k=32-or-larger-work-around).
 - If you are running a simulation, blockchain tips are not saved in the database and this is a regression. If you stop a node it can go back in time and cause an odd state. This doesn't practically effect testnet participation as, on restart, node will just sync up a few blocks to the then current tips.
 - uPnP support on Windows may be broken. However, Windows nodes will be able to connect to other nodes and, once connected, participate fully in the network.
 - Coins are not currently reserved as part of trade offers and thus could potentially be spent before the offer is accepted resulting in a failed offer transaction.
@@ -2524,7 +2524,7 @@ relic. We will make a patch available for these systems shortly.
 - Windows, WSL 2, Linux and MacOS installation is significantly streamlined. There is a new Windows installer for the Wallet GUI (huge thanks to @dkackman).
 - All installs can now be from the source repository or just the binary dependencies on WSL 2, most modern Linuxes, and MacOS Catalina. Binary support is for both Python 3.7 and 3.8.
 - There is a new migration tool to move from Beta1 (or 2) to Beta3. It should move everything except your plots.
-- There is a new command `chia init` that will migrate files and generate your initial configuration. If you want to use the Wallet or farm, you will also have to `chia-generate-keys`. You can read step by step instructions for [upgrading from a previous beta release](https://github.com/Chia-Network/chia-blockchain/wiki/Updating-beta-software). If you've set `$CHIA_ROOT` you will have to make sure your existing configuration remains compatible manually.
+- There is a new command `chia init` that will migrate files and generate your initial configuration. If you want to use the Wallet or farm, you will also have to `chia-generate-keys`. You can read step by step instructions for [upgrading from a previous beta release](https://github.com/Chik-Network/chik-blockchain/wiki/Updating-beta-software). If you've set `$CHIA_ROOT` you will have to make sure your existing configuration remains compatible manually.
 - Wallet has improved paper wallet recovery support.
 - We now also support restoring old wallets with only the wallet_sk and wallet_target. Beta3's Wallet will re-sync from scratch.
 - We've made lots of little improvements that should speed up node syncing
@@ -2561,7 +2561,7 @@ relic. We will make a patch available for these systems shortly.
 
 ### Added
 
-- There is now full transaction support on the Chia blockchain. In this initial Beta 1.0 release, all transaction types are supported though the wallets and UIs currently only directly support basic transactions like coinbase rewards and sending coins while paying fees. UI support for our [smart transactions](https://github.com/Chia-Network/wallets/blob/main/README.md) will be available in the UIs shortly.
+- There is now full transaction support on the Chia blockchain. In this initial Beta 1.0 release, all transaction types are supported though the wallets and UIs currently only directly support basic transactions like coinbase rewards and sending coins while paying fees. UI support for our [smart transactions](https://github.com/Chik-Network/wallets/blob/main/README.md) will be available in the UIs shortly.
 - Wallet and Node GUI’s are available on Windows, Mac, and desktop Linux platforms. We now use an Electron UI that is a full light client wallet that can also serve as a node UI. Our Windows Electron Wallet can run standalone by connecting to other nodes on the network or another node you run. WSL 2 on Windows can run everything except the Wallet but you can run the Wallet on the native Windows side of the same machine. Also the WSL 2 install process is 3 times faster and *much* easier. Windows native node/farmer/plotting functionality are coming soon.
 - Install is significantly easier with less dependencies on all supported platforms.
 - If you’re a farmer you can use the Wallet to keep track of your earnings. Either use the same keys.yaml on the same machine or copy the keys.yaml to another machine where you want to track of and spend your coins.
@@ -2569,10 +2569,10 @@ relic. We will make a patch available for these systems shortly.
 
 ### Changed
 
-- We have revamped the chia management command line. To start a farmer all you have to do is start the venv with `. ./activate` and then type `chia-start-farmer &`. The [README.md](https://github.com/Chia-Network/chia-blockchain/blob/main/README.md) has been updated to reflect the new commands.
+- We have revamped the chia management command line. To start a farmer all you have to do is start the venv with `. ./activate` and then type `chia-start-farmer &`. The [README.md](https://github.com/Chik-Network/chik-blockchain/blob/main/README.md) has been updated to reflect the new commands.
 - We have moved all node to node communication to TLS 1.3 by default. For now, all TLS is unauthenticated but certain types of over the wire node to node communications will have the ability to authenticate both by certificate and by inter protocol signature. Encrypting over the wire by default stops casual snooping of transaction origination, light wallet to trusted node communication, and harvester-farmer-node communication for example. This leaves only the mempool and the chain itself open to casual observation by the public and the various entities around the world.
 - Configuration directories have been moved to a default location of HomeDirectory/.chia/release/config, plots/ db/, wallet/ etc. This can be overridden by `export CHIA_ROOT=~/.chia` for example which would then put the plots directory in `HomeDirectory/.chia/plots`.
-- The libraries chia-pos, chia-fast-vdf, and chia-bip-158 have been moved to their own repositories: [chiapos](https://github.com/Chia-Network/chiapos), [chiavdf](https://github.com/Chia-Network/chiavdf), and [chaibip158](https://github.com/Chia-Network/chiabip158). They are brought in by chia-blockchain at install time. Our BLS signature library remains at [bls-signatures](https://github.com/Chia-Network/bls-signatures).
+- The libraries chia-pos, chia-fast-vdf, and chia-bip-158 have been moved to their own repositories: [chiapos](https://github.com/Chik-Network/chiapos), [chiavdf](https://github.com/Chik-Network/chiavdf), and [chaibip158](https://github.com/Chik-Network/chiabip158). They are brought in by chik-blockchain at install time. Our BLS signature library remains at [bls-signatures](https://github.com/Chik-Network/bls-signatures).
 - The install process now brings in chiapos, chiavdf, etc from Pypi where they are auto published via GitHub Actions ci using cibuildwheel. Check out `.github/workflows/build.yml` for build methods in each of the sub repositories.
 - `chia-regenerate-keys` has been renamed `chia-generate-keys`.
 - setproctitle is now an optional install dependency that we will continue to install in the default install methods.
@@ -2582,7 +2582,7 @@ relic. We will make a patch available for these systems shortly.
 
 ### Removed
 
-- The Beta release is not compatible with the history of the Alpha blockchain and we will be ceasing support of the Alpha chain approximately two weeks after the release of this Beta. However, your plots and keys are fully compatible with the Beta chain. Please save your plot keys! Examples of how to save your keys and upgrade to the Beta are available on the [repo wiki](https://github.com/Chia-Network/chia-blockchain/wiki).
+- The Beta release is not compatible with the history of the Alpha blockchain and we will be ceasing support of the Alpha chain approximately two weeks after the release of this Beta. However, your plots and keys are fully compatible with the Beta chain. Please save your plot keys! Examples of how to save your keys and upgrade to the Beta are available on the [repo wiki](https://github.com/Chik-Network/chik-blockchain/wiki).
 - The ssh ui and web ui are removed in favor of the cli ui and the Electron GUI. To mimic the ssh ui try `chia show -s -c` and try `chia show --help` for usage instructions.
 - We have removed the inkfish vdf implementation and replaced it with the pybind11 C++ version.
 
@@ -2641,7 +2641,7 @@ relic. We will make a patch available for these systems shortly.
 - Due to changes to the sqlite database that are not backwards compatible, re-synch will be required.
 - Loading the blockchain only loads headers into memory instead of header blocks (header + proofs), speeds up the startup, and reduces normal operation memory usage by 80%.
 - Memory access is now synchronous to reduce use of locks and speed up block processing.
-- Chia fullnode, farmer and harvester now default to logging to chia.log in the chia-blockchain directory. This is configured in config.yaml and due to config.yaml changes it is recommended to edit the new template config instead of using older config.yaml’s from previous versions.
+- Chia fullnode, farmer and harvester now default to logging to chia.log in the chik-blockchain directory. This is configured in config.yaml and due to config.yaml changes it is recommended to edit the new template config instead of using older config.yaml’s from previous versions.
 - uvloop is now an optional add on.
 - Harvester/farmer will not try to farm plots that they don’t have the key for.
 
@@ -2739,18 +2739,18 @@ relic. We will make a patch available for these systems shortly.
 - This is the first release of the Chia testnet! Blockchain consensus, proof of time, and proof of space are included.
 - More details on the release at [https://www.chia.net/developer/](https://www.chia.net/developer/)
 
-[unreleased]: https://github.com/Chia-Network/chia-blockchain/compare/1.0beta5...dev
-[1.0beta5]: https://github.com/Chia-Network/chia-blockchain/compare/1.0beta4...1.0beta5
-[1.0beta4]: https://github.com/Chia-Network/chia-blockchain/compare/1.0beta3...1.0beta4
-[1.0beta3]: https://github.com/Chia-Network/chia-blockchain/compare/1.0beta2...1.0beta3
-[1.0beta2]: https://github.com/Chia-Network/chia-blockchain/compare/1.0beta1...1.0beta2
-[1.0beta1]: https://github.com/Chia-Network/chia-blockchain/compare/alpha-1.5.1...1.0beta1
-[alpha 1.5.1]: https://github.com/Chia-Network/chia-blockchain/compare/alpha-1.5...alpha-1.5.1
-[alpha 1.5]: https://github.com/Chia-Network/chia-blockchain/compare/alpha-1.4.1...alpha-1.5
-[alpha 1.4.1]: https://github.com/Chia-Network/chia-blockchain/compare/alpha-1.4...alpha-1.4.1
-[alpha 1.4]: https://github.com/Chia-Network/chia-blockchain/compare/alpha-1.3...alpha-1.4
-[alpha 1.3]: https://github.com/Chia-Network/chia-blockchain/compare/alpha-1.2...alpha-1.3
-[alpha 1.2]: https://github.com/Chia-Network/chia-blockchain/compare/alpha-1.1.1...alpha-1.2
-[alpha 1.1.1]: https://github.com/Chia-Network/chia-blockchain/compare/alpha-1.1...alpha-1.1.1
-[alpha 1.1]: https://github.com/Chia-Network/chia-blockchain/compare/alpha-1.0...alpha-1.1
-[alpha 1.0]: https://github.com/Chia-Network/chia-blockchain/releases/tag/Alpha-1.0
+[unreleased]: https://github.com/Chik-Network/chik-blockchain/compare/1.0beta5...dev
+[1.0beta5]: https://github.com/Chik-Network/chik-blockchain/compare/1.0beta4...1.0beta5
+[1.0beta4]: https://github.com/Chik-Network/chik-blockchain/compare/1.0beta3...1.0beta4
+[1.0beta3]: https://github.com/Chik-Network/chik-blockchain/compare/1.0beta2...1.0beta3
+[1.0beta2]: https://github.com/Chik-Network/chik-blockchain/compare/1.0beta1...1.0beta2
+[1.0beta1]: https://github.com/Chik-Network/chik-blockchain/compare/alpha-1.5.1...1.0beta1
+[alpha 1.5.1]: https://github.com/Chik-Network/chik-blockchain/compare/alpha-1.5...alpha-1.5.1
+[alpha 1.5]: https://github.com/Chik-Network/chik-blockchain/compare/alpha-1.4.1...alpha-1.5
+[alpha 1.4.1]: https://github.com/Chik-Network/chik-blockchain/compare/alpha-1.4...alpha-1.4.1
+[alpha 1.4]: https://github.com/Chik-Network/chik-blockchain/compare/alpha-1.3...alpha-1.4
+[alpha 1.3]: https://github.com/Chik-Network/chik-blockchain/compare/alpha-1.2...alpha-1.3
+[alpha 1.2]: https://github.com/Chik-Network/chik-blockchain/compare/alpha-1.1.1...alpha-1.2
+[alpha 1.1.1]: https://github.com/Chik-Network/chik-blockchain/compare/alpha-1.1...alpha-1.1.1
+[alpha 1.1]: https://github.com/Chik-Network/chik-blockchain/compare/alpha-1.0...alpha-1.1
+[alpha 1.0]: https://github.com/Chik-Network/chik-blockchain/releases/tag/Alpha-1.0

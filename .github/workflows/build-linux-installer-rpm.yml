@@ -38,7 +38,7 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
-    - uses: Chia-Network/actions/git-ssh-to-https@main
+    - uses: Chik-Network/actions/git-ssh-to-https@main
 
     - name: Cleanup any leftovers that exist from previous runs
       run: bash build_scripts/clean-runner.sh || true
@@ -57,7 +57,7 @@ jobs:
           echo "FULL_RELEASE=false" >>$GITHUB_ENV
         fi
 
-    - uses: Chia-Network/actions/enforce-semver@main
+    - uses: Chik-Network/actions/enforce-semver@main
       if: env.FULL_RELEASE == 'true'
 
     # Create our own venv outside of the git directory JUST for getting the ACTUAL version so that install can't break it
@@ -78,7 +78,7 @@ jobs:
         result-encoding: string
         script: |
           const release = await github.rest.repos.getLatestRelease({
-            owner: 'Chia-Network',
+            owner: 'Chik-Network',
             repo: 'chia-plotter-madmax',
           });
           return release.data.tag_name;
@@ -86,8 +86,8 @@ jobs:
     - name: Get latest madmax plotter
       run: |
         mkdir "$GITHUB_WORKSPACE/madmax"
-        wget -O "$GITHUB_WORKSPACE/madmax/chik_plot" https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}-x86-64
-        wget -O "$GITHUB_WORKSPACE/madmax/chik_plot_k34" https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}-x86-64
+        wget -O "$GITHUB_WORKSPACE/madmax/chik_plot" https://github.com/Chik-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}-x86-64
+        wget -O "$GITHUB_WORKSPACE/madmax/chik_plot_k34" https://github.com/Chik-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}-x86-64
         chmod +x "$GITHUB_WORKSPACE/madmax/chik_plot"
         chmod +x "$GITHUB_WORKSPACE/madmax/chik_plot_k34"
 
@@ -100,7 +100,7 @@ jobs:
         result-encoding: string
         script: |
           const release = await github.rest.repos.getLatestRelease({
-            owner: 'Chia-Network',
+            owner: 'Chik-Network',
             repo: 'bladebit',
           });
           return release.data.tag_name;
@@ -109,14 +109,14 @@ jobs:
       if: '!github.event.release.prerelease'
       run: |
         mkdir "$GITHUB_WORKSPACE/bladebit"
-        wget -O /tmp/bladebit.tar.gz https://github.com/Chia-Network/bladebit/releases/download/${{ steps.latest-bladebit.outputs.result }}/bladebit-${{ steps.latest-bladebit.outputs.result }}-centos-x86-64.tar.gz
+        wget -O /tmp/bladebit.tar.gz https://github.com/Chik-Network/bladebit/releases/download/${{ steps.latest-bladebit.outputs.result }}/bladebit-${{ steps.latest-bladebit.outputs.result }}-centos-x86-64.tar.gz
         tar -xvzf /tmp/bladebit.tar.gz -C $GITHUB_WORKSPACE/bladebit
         chmod +x "$GITHUB_WORKSPACE/bladebit/bladebit"
 
     - name: Get latest prerelease bladebit plotter
       if: env.PRE_RELEASE == 'true'
       run: |
-        PRERELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chia-Network/bladebit/releases" | jq -r 'map(select(.prerelease)) | first.assets[] | select(.browser_download_url | endswith("centos-x86-64.tar.gz")).browser_download_url')
+        PRERELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chik-Network/bladebit/releases" | jq -r 'map(select(.prerelease)) | first.assets[] | select(.browser_download_url | endswith("centos-x86-64.tar.gz")).browser_download_url')
         mkdir "$GITHUB_WORKSPACE/bladebit"
         wget -O /tmp/bladebit.tar.gz $PRERELEASE_URL
         tar -xvzf /tmp/bladebit.tar.gz -C $GITHUB_WORKSPACE/bladebit

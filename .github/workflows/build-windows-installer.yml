@@ -77,7 +77,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
-    - uses: Chia-Network/actions/setup-python@main
+    - uses: Chik-Network/actions/setup-python@main
       name: Install Python ${{ matrix.python-version }}
       with:
         python-version: ${{ matrix.python-version }}
@@ -131,7 +131,7 @@ jobs:
         result-encoding: string
         script: |
           const release = await github.rest.repos.getLatestRelease({
-            owner: 'Chia-Network',
+            owner: 'Chik-Network',
             repo: 'chia-plotter-madmax',
           });
           return release.data.tag_name;
@@ -139,8 +139,8 @@ jobs:
     - name: Get latest madmax plotter
       run: |
         mkdir "$env:GITHUB_WORKSPACE\madmax"
-        Invoke-WebRequest https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}.exe -OutFile "$env:GITHUB_WORKSPACE\madmax\chik_plot.exe"
-        Invoke-WebRequest https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}.exe -OutFile "$env:GITHUB_WORKSPACE\madmax\chik_plot_k34.exe"
+        Invoke-WebRequest https://github.com/Chik-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}.exe -OutFile "$env:GITHUB_WORKSPACE\madmax\chik_plot.exe"
+        Invoke-WebRequest https://github.com/Chik-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}.exe -OutFile "$env:GITHUB_WORKSPACE\madmax\chik_plot_k34.exe"
 
       # Get the most recent release from bladebit
     - uses: actions/github-script@v6
@@ -151,7 +151,7 @@ jobs:
         result-encoding: string
         script: |
           const release = await github.rest.repos.getLatestRelease({
-            owner: 'Chia-Network',
+            owner: 'Chik-Network',
             repo: 'bladebit',
           });
           return release.data.tag_name;
@@ -160,7 +160,7 @@ jobs:
       if: '!github.event.release.prerelease'
       run: |
         mkdir "$env:GITHUB_WORKSPACE\bladebit"
-        Invoke-WebRequest https://github.com/Chia-Network/bladebit/releases/download/${{ steps.latest-bladebit.outputs.result }}/bladebit-${{ steps.latest-bladebit.outputs.result }}-windows-x86-64.zip -OutFile "$env:GITHUB_WORKSPACE\bladebit\bladebit.zip"
+        Invoke-WebRequest https://github.com/Chik-Network/bladebit/releases/download/${{ steps.latest-bladebit.outputs.result }}/bladebit-${{ steps.latest-bladebit.outputs.result }}-windows-x86-64.zip -OutFile "$env:GITHUB_WORKSPACE\bladebit\bladebit.zip"
         Expand-Archive -Path "$env:GITHUB_WORKSPACE\bladebit\bladebit.zip" -DestinationPath "$env:GITHUB_WORKSPACE\bladebit\"
         rm "$env:GITHUB_WORKSPACE\bladebit\bladebit.zip"
 
@@ -168,7 +168,7 @@ jobs:
       if: env.PRE_RELEASE == 'true'
       shell: bash
       run: |
-        PRERELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chia-Network/bladebit/releases" | jq -r 'map(select(.prerelease)) | first.assets[] | select(.browser_download_url | endswith("windows-x86-64.zip")).browser_download_url')
+        PRERELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chik-Network/bladebit/releases" | jq -r 'map(select(.prerelease)) | first.assets[] | select(.browser_download_url | endswith("windows-x86-64.zip")).browser_download_url')
         mkdir $GITHUB_WORKSPACE\\bladebit
         ls
         echo $PRERELEASE_URL

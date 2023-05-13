@@ -38,7 +38,7 @@ jobs:
             #bladebit-suffix: macos-arm64.tar.gz
 
     steps:
-      - uses: Chia-Network/actions/clean-workspace@main
+      - uses: Chik-Network/actions/clean-workspace@main
 
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -46,7 +46,7 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - uses: Chia-Network/actions/git-ssh-to-https@main
+      - uses: Chik-Network/actions/git-ssh-to-https@main
 
       - name: Cleanup any leftovers that exist from previous runs
         run: bash build_scripts/clean-runner.sh || true
@@ -92,7 +92,7 @@ jobs:
           deactivate
 
       - name: Setup Python environment
-        uses: Chia-Network/actions/setup-python@main
+        uses: Chik-Network/actions/setup-python@main
         with:
           python-version: ${{ matrix.python-version }}
           force-pyenv: 'true'
@@ -118,7 +118,7 @@ jobs:
           result-encoding: string
           script: |
             const release = await github.rest.repos.getLatestRelease({
-              owner: 'Chia-Network',
+              owner: 'Chik-Network',
               repo: 'chia-plotter-madmax',
             });
             return release.data.tag_name;
@@ -126,15 +126,15 @@ jobs:
       - name: Get latest madmax plotter
         run: |
           mkdir "$GITHUB_WORKSPACE/madmax"
-          wget -O "$GITHUB_WORKSPACE/madmax/chik_plot" https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}-macos-${{ matrix.os.name }}
-          wget -O "$GITHUB_WORKSPACE/madmax/chik_plot_k34" https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}-macos-${{ matrix.os.name }}
+          wget -O "$GITHUB_WORKSPACE/madmax/chik_plot" https://github.com/Chik-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}-macos-${{ matrix.os.name }}
+          wget -O "$GITHUB_WORKSPACE/madmax/chik_plot_k34" https://github.com/Chik-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}-macos-${{ matrix.os.name }}
           chmod +x "$GITHUB_WORKSPACE/madmax/chik_plot"
           chmod +x "$GITHUB_WORKSPACE/madmax/chik_plot_k34"
 
       - name: Get latest prerelease bladebit plotter
         if: env.PRE_RELEASE == 'true'
         run: |
-          PRERELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chia-Network/bladebit/releases" | jq -r 'map(select(.prerelease)) | first.assets[] | select(.browser_download_url | endswith("${{ matrix.os.bladebit-suffix }}")).browser_download_url')
+          PRERELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chik-Network/bladebit/releases" | jq -r 'map(select(.prerelease)) | first.assets[] | select(.browser_download_url | endswith("${{ matrix.os.bladebit-suffix }}")).browser_download_url')
           mkdir "$GITHUB_WORKSPACE/bladebit"
           wget -O /tmp/bladebit.tar.gz $PRERELEASE_URL
           tar -xvzf /tmp/bladebit.tar.gz -C $GITHUB_WORKSPACE/bladebit
@@ -143,7 +143,7 @@ jobs:
       - name: Get latest full release bladebit plotter
         if: '!github.event.release.prerelease'
         run: |
-          FULLRELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chia-Network/bladebit/releases" | jq -r 'map(select(.prerelease | not)) | first.assets[] | select(.browser_download_url | endswith("${{ matrix.os.bladebit-suffix }}")).browser_download_url')
+          FULLRELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chik-Network/bladebit/releases" | jq -r 'map(select(.prerelease | not)) | first.assets[] | select(.browser_download_url | endswith("${{ matrix.os.bladebit-suffix }}")).browser_download_url')
           mkdir "$GITHUB_WORKSPACE/bladebit"
           wget -O /tmp/bladebit.tar.gz $FULLRELEASE_URL
           tar -xvzf /tmp/bladebit.tar.gz -C $GITHUB_WORKSPACE/bladebit

@@ -1,6 +1,6 @@
 # Installation
 
-Install instructions have been moved to the [INSTALL](https://github.com/Chik-Network/chik-blockchain/wiki/INSTALL) section of the repository [Wiki](https://github.com/Chia-Network/chia-blockchain/wiki).
+Install instructions have been moved to the [INSTALL](https://github.com/Chik-Network/chik-blockchain/wiki/INSTALL) section of the repository [Wiki](https://github.com/Chik-Network/chik-blockchain/wiki).
 
 After installing, follow the remaining instructions in the
 [Quick Start Guide](https://github.com/Chik-Network/chik-blockchain/wiki/Quick-Start-Guide)
