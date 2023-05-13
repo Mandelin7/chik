@@ -87,7 +87,7 @@ function get_madmax_url()
         [string]$arch
     )
 
-    $GITHUB_BASE_URL = "https://github.com/Chik-Network/chik-plotter-madmax/releases/download"
+    $GITHUB_BASE_URL = "https://github.com/Chia-Network/chia-plotter-madmax/releases/download"
     $madmax_filename = get_madmax_filename -ksize $ksize -ver $ver -os $os -arch $arch
 
     "${GITHUB_BASE_URL}/${ver}/${madmax_filename}"
