@@ -30,7 +30,7 @@ from tests.core.make_block_generator import make_spend_bundle
 from tests.generator.test_rom import run_generator
 
 TEST_GEN_DESERIALIZE = load_clvm("test_generator_deserialize.clsp", package_or_requirement="chik.wallet.puzzles")
-DESERIALIZE_MOD = load_clvm("chialisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles")
+DESERIALIZE_MOD = load_clvm("chiklisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles")
 
 DECOMPRESS_PUZZLE = load_clvm("decompress_puzzle.clsp", package_or_requirement="chik.wallet.puzzles")
 DECOMPRESS_CSE = load_clvm("decompress_coin_spend_entry.clsp", package_or_requirement="chik.wallet.puzzles")

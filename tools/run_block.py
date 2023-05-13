@@ -61,7 +61,7 @@ from chik.wallet.puzzles.load_clvm import load_serialized_clvm_maybe_recompile
 from chik.wallet.uncurried_puzzle import uncurry_puzzle
 
 DESERIALIZE_MOD = load_serialized_clvm_maybe_recompile(
-    "chialisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles"
+    "chiklisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles"
 )
 
 

@@ -2,7 +2,7 @@
     "block_program_zero": "f0a38c8efe58895ae527c65c37f700a4238504691b83990e5dd91bd8b3c30eae",
     "calculate_synthetic_public_key": "624c5d5704d0decadfc0503e71bbffb6cdfe45025bce7cf3e6864d1eafe8f65e",
     "cat_v2": "37bef360ee858133b69d595a906dc45d01af50379dad515eb9518abb7c1d2a7a",
-    "chialisp_deserialisation": "94ec19077f9a34e0b11ad2456af0170f4cc03f11230ca42e3f82e6e644ac4f5d",
+    "chiklisp_deserialisation": "94ec19077f9a34e0b11ad2456af0170f4cc03f11230ca42e3f82e6e644ac4f5d",
     "create_nft_launcher_from_did": "7a32d2d9571d3436791c0ad3d7fcfdb9c43ace2b0f0ff13f98d29f0cc093f445",
     "decompress_coin_spend_entry": "9d98ed08770d31be4bd1bde4705dab388db5e7e9c349f5a76fc3c347aa3a0b79",
     "decompress_coin_spend_entry_with_prefix": "92aa4bc8060a8836355a1884075141b4791ce1b67ae6092bb166b2845954bc89",

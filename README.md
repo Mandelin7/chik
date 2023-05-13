@@ -1,121 +1,73 @@
-# chik-blockchain
+# Chik-Blockchain
 
-[![Chik Network logo](https://www.chia.net/wp-content/uploads/2022/09/chia-logo.svg "Chik logo")](https://www.chiknetwork.org/)
+**Chik** is a modern community-centric green cryptocurrency based on a proof-of-space-and-time consensus algorithm. It is a community-supported fork of the [Chik Network](https://github.com/Chik-Network/chik-blockchain) codebase.
 
-| Current Release/main | Development Branch/dev |
-|         :---:          |          :---:         |
-| [![Ubuntu Core Tests](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-test-ubuntu-core.yml/badge.svg)](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-test-ubuntu-core.yml) [![MacOS Core Tests](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-test-macos-core.yml/badge.svg)](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-test-macos-core.yml) [![Windows Installer on Windows 10 and Python 3.7](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-windows-installer.yml/badge.svg)](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-windows-installer.yml)  |  [![Ubuntu Core Tests](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-test-ubuntu-core.yml/badge.svg?branch=dev)](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-test-ubuntu-core.yml) [![MacOS Core Tests](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-test-macos-core.yml/badge.svg?branch=dev)](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-test-macos-core.yml) [![Windows Installer on Windows 10 and Python 3.7](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-windows-installer.yml/badge.svg?branch=dev)](https://github.com/Chik-Network/chik-blockchain/actions/workflows/build-windows-installer.yml) |
+For more information, see our website and downloads at <a href="https://www.Chik-Network.net">Chik Network</a>.
+<p>You can learn more in the Chik Wiki: <a href="https://github.com/Chik-Network/chik-blockchain/wiki/Chik-Blockchain-Wiki">Quick Start Guide</a></p>
+<p>Please check out the Chik Discord Channel: (https://discord.gg/qfHBqZnXTj).</p>
 
+<p>Full Node List Here:<a href="https://alltheblocks.net/chik/peers" rel="nofollow"> Full Node IP's</a></p>
+<p>Introducer Port: 11444</p>
 
-***********************************************
-# PROJECT DESCRIPTION
-Chik is an eco-friendly decentralization blockchain based on the Proof of Space and Time (PoST) consensus pioneered by Chia™. It maintains network robustness, in line with Satoshi Nakamoto's principles.
+<h1>
+<a id="user-content-windows" class="anchor" href="#windows" aria-hidden="true"><svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Windows Installer</h1>
+<p>Download the Windows installer (exe) or Zip file - <a href="https://github.com/Chik-Network/chik-blockchain/releases/tag/v1.2.1" rel="nofollow">Chik Blockchain Windows</a></p>
+<p>As the Chik code signing certificate is new you will likely have to ask to keep the download and when you run the installer, you will have to choose "More Info" and "Run Anyway" to be able to run the installer. There is no need to use the command line. Some Windows anti-virus applications are seeing the download as a false positive. You can see the entire source code and build method here so we think it's safe for you to ask those tools to ignore it. Running the installer while plotting on a previous version will stop your plotting process, so be careful.</p>
+<p>You can learn more through the Chik Quick Start Guide: <a href="https://github.com/Chik-Network/chik-blockchain/wiki/Quick-Start-Guide">Quick Start Guide</a></p>
+<h1>
 
-Chik uses the powerful and secure Chialisp language for Smart Contracts, and supports digital money, global payments and applications. HDDcoin is not affiliated with Chia Network, Inc., but uses their open-sourced software as its foundation.
+  <h1>
+<a id="user-content-Ubuntu/Debian" class="anchor" href="#windows" aria-hidden="true"><svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Ubuntu/Debian Install</h1>
 
-Farming Chik does not consume significant amounts of electricity, and utilizes hard drive space, instead of specialized computing hardware that most Proof of Work (PoW) consensus blockchains have come to demand. Moreover, since electrical energy costs for running hard drives is very minimal, due to this low cost of entry, Chik will remain more decentralized and fair, and thus more secure than any Proof of Stake cryptocurrency.
+<p>
+sudo apt-get update
+ <p>
+sudo apt-get upgrade -y
+  </p>
+  <p>
+# Install Git
+    <p>
+sudo apt install git -y
+  </p>
+  <p>
+# Checkout the source and install
+    <p>
+git clone https://github.com/Chik-Network/chik-blockchain.git --recurse-submodules
+<p>
+      cd chik-blockchain
+sh install.sh
+<p>
+. ./activate
+chik init
+    <p>
+#add your plot directories the /.chik/main/config/config.yaml
+      <p>
+chik start famer<p>
+#add your harvesters - https://github.com/Chik-Network/chik-blockchain/wiki/Farming-on-many-machines
+<p>
+# The GUI requires you have Ubuntu Desktop or a similar windowing system installed.<p>
+# You can not install and run the GUI as root
+<p>
+cd /home/'yourusername'/chik-blockchain/
+  <p>
+. ./activate
+sh install-gui.sh
+<p>
+cd chik-blockchain-gui
+npm run electron &
+  </p>
 
-Chik core values include green cryptocurrency, long term value, building for the future, strength in community, and maintaining a huge team to ensure long term development.
-
-The goal of Chik is to reshape the global financial system through the power of the blockchain technology, powered by thousands of nodes maintained by the community, and with transparency and a commitment to the environment — thereby taking control from any central entity, person or organization, and giving that control back to the community.
-
-**BLOCKCHAIN SPECIFICATION:**
-- Launch date: July 8th 2023
-- Cryptocurrency coin: XCK
-- Lowest coin denomination: Bytes
-- Conversion: 1 XCK = 1,000,000,000,000 Bytes
-- Blocks per 24 hours target: 4,608
-- Farmed rewards per block: 2 XCK
-- Halving period for block rewards: 3 years
-
-**BLOCKCHAIN RESOURCES:**
-- Website: https://chiknetwork.org
-- Online Store: https://store.chiknetwork.org
-- Explorer: https://explorer.chiknetwork.org
-- Graphs: https://graphs.chiknetwork.org
-- White Paper: https://chiknetwork.org/white-paper
-- Roadmap: https://chiknetwork.org/roadmap
-- Calculator: https://chiaforkscalculator.com/chiknetwork
-- Chik DB: https://download.chiknetwork.org/blockchain_v1_mainnet.sqlite
-
-**COMMUNITIES AND SOCIAL CHANNELS:**
-- Discord: https://discord.gg/
-- Twitter: https://twitter.com/chik
-- Facebook: https://www.facebook.com/ChikNetwork
-- Reddit: https://www.reddit.com/r/ChikNetwork
-- YouTube: https://www.youtube.com/channel/
-- Telegram: https://t.me/ChikNetwork
-
-
-***********************************************
-# CO-FARMING WITH COMPATIBLE PLOTS?
-Please note that if you wish to co-farm with compatible plots made using the Client of another blockchain (like Chia™), or any other plotting tool like MadMax, because public keys are encoded in the plots, in order to utilize these plots for HDDcoin, you'll need to set the same mnemonic phrase (24 words) that you used for creating the plots. Learn more on our FAQ page -- https://chiknetwork.org/faq.
- 
-***********************************************
-# INSTALL INSTRUCTIONS:
-
-You can install Chik by building from source, or by using the latest binaries for your operating system.
-
-(A.) To **install from available binaries**, download executables from:  https://github.com/Chik-Network/chik-blockchain/releases
-
-
-(B.) To **build from source**, do the following:
-
-```
-# Update / Upgrade OS:
-
-   sudo apt-get update
-   sudo apt-get upgrade -y
-
-# Install Git:
-
-   sudo apt install git -y
-
-# Checkout the correct source:
-
-   git clone https://github.com/Chik-Network/chik-blockchain.git
-
-  
-# Install the Blockchain:
-
-   cd chik-blockchain
-   sh install.sh
-   . ./activate
-   chik init
-
-# Install and run the GUI:
-
-   sh install-gui.sh
-   cd chik-blockchain-gui
-   npm run electron &
-```
-
-If the client does not find any connections automatically, you can add any of the following:
-
-- introducer.chiknetwork.org / Port: 9678
-- dns-introducer.chiknetwork.org / Port: 9678
-
-***********************************************
-# UPDATE/UPGRADE INSTRUCTIONS:
-
-You can update Chik from a previous version by downloading and installing the latest executable for your operating system, available from the **Releases page**, or by building from source:
-
-```
-# Checkout the source and update
-
-  cd chik-blockchain
-  . ./activate
-  chik stop -d all
-  deactivate
-  git fetch
-  git checkout main
-  git reset --hard FETCH_HEAD --recurse-submodules
-  sh install.sh
-  . ./activate
-  chik init
-
-# Update the GUI
-
-  chmod +x ./install-gui.sh
-  ./install-gui.sh
-```
+ <h1> <a id="user-content-Ubuntu/Debian" class="anchor" href="#windows" aria-hidden="true"><svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Ubuntu/Debian Update to 1.3.4</h1>
+<p>
+  **Stop all chik processes (chik stop -d all) then,
+<p>Delete ('rm -rf) your 'chik-blockchain' folder (**not your '.chik' folder**). Then clone 'chik-blockchain'.
+  <p>
+   git clone https://github.com/Chik-Network/chik-blockchain.git --recurse-submodules
+   <p>cd chik-blockchain
+<p>sh install.sh
+  <p> . ./activate
+    <p> chik init
+      <p> chik start farmer
+  <p>
+ *Note, if you would like to run the Timelord to support the Chik ecosystem, run 'sh install-timelord.sh', then chik start timelord. If you receive errors during the installation process, your system is missing dependencies. In this case, thank you for trying :)
+  </p>

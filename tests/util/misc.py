@@ -18,7 +18,7 @@ from typing import Any, Callable, Iterator, List, Optional, Type, Union
 import pytest
 from typing_extensions import final
 
-from tests.core.data_layer.util import ChiaRoot
+from tests.core.data_layer.util import ChikRoot
 
 
 class GcMode(enum.Enum):
@@ -291,8 +291,8 @@ def assert_rpc_error(error: str) -> Iterator[None]:
 
 
 @contextlib.contextmanager
-def closing_chia_root_popen(chia_root: ChiaRoot, args: List[str]) -> Iterator[subprocess.Popen[Any]]:
-    environment = {**os.environ, "CHIA_ROOT": os.fspath(chia_root.path)}
+def closing_chik_root_popen(chik_root: ChikRoot, args: List[str]) -> Iterator[subprocess.Popen[Any]]:
+    environment = {**os.environ, "CHIK_ROOT": os.fspath(chik_root.path)}
 
     with subprocess.Popen(args=args, env=environment) as process:
         try:

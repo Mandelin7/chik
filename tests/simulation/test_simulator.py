@@ -5,7 +5,7 @@ from typing import Iterator, List, Tuple
 import pytest
 
 from chik.cmds.units import units
-from chik.server.server import ChiaServer
+from chik.server.server import ChikServer
 from chik.simulator.block_tools import BlockTools
 from chik.simulator.full_node_simulator import FullNodeSimulator, backoff_times
 from chik.types.peer_info import PeerInfo
@@ -51,7 +51,7 @@ def test_backoff_saturates_at_final() -> None:
 async def test_simulation_farm_blocks_to_puzzlehash(
     count: int,
     guarantee_transaction_blocks: bool,
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
 ) -> None:
     [[full_node_api], _, _] = simulator_and_wallet
 
@@ -71,7 +71,7 @@ async def test_simulation_farm_blocks_to_puzzlehash(
 @pytest.mark.parametrize(argnames="count", argvalues=[0, 1, 2, 5, 10])
 async def test_simulation_farm_blocks_to_wallet(
     count: int,
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
 ) -> None:
     [[full_node_api], [[wallet_node, wallet_server]], _] = simulator_and_wallet
 
@@ -109,7 +109,7 @@ async def test_simulation_farm_blocks_to_wallet(
 async def test_simulation_farm_rewards_to_wallet(
     amount: int,
     coin_count: int,
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
 ) -> None:
     [[full_node_api], [[wallet_node, wallet_server]], _] = simulator_and_wallet
 
@@ -137,7 +137,7 @@ async def test_simulation_farm_rewards_to_wallet(
 
 @pytest.mark.asyncio
 async def test_wait_transaction_records_entered_mempool(
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
 ) -> None:
     repeats = 50
     tx_amount = 1
@@ -171,7 +171,7 @@ async def test_wait_transaction_records_entered_mempool(
 
 @pytest.mark.asyncio
 async def test_process_transaction_records(
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
 ) -> None:
     repeats = 50
     tx_amount = 1
@@ -215,7 +215,7 @@ async def test_process_transaction_records(
 )
 async def test_create_coins_with_amounts(
     amounts: List[uint64],
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
 ) -> None:
     [[full_node_api], [[wallet_node, wallet_server]], _] = simulator_and_wallet
 
@@ -247,7 +247,7 @@ async def test_create_coins_with_amounts(
 )
 async def test_create_coins_with_invalid_amounts_raises(
     amounts: List[int],
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
 ) -> None:
     [[full_node_api], [[wallet_node, wallet_server]], _] = simulator_and_wallet
 

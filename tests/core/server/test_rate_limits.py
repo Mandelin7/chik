@@ -11,8 +11,8 @@ from chik.server.outbound_message import make_msg
 from chik.server.rate_limit_numbers import compose_rate_limits, get_rate_limits_to_use
 from chik.server.rate_limit_numbers import rate_limits as rl_numbers
 from chik.server.rate_limits import RateLimiter
-from chik.server.server import ChiaServer
-from chik.server.ws_connection import WSChiaConnection
+from chik.server.server import ChikServer
+from chik.server.ws_connection import WSChikConnection
 from chik.simulator.block_tools import test_constants
 from chik.types.peer_info import PeerInfo
 from chik.util.ints import uint16
@@ -306,16 +306,16 @@ class TestRateLimits:
         node_a = node_with_params
         node_b = node_with_params_b
 
-        full_node_server_a: ChiaServer = node_a.full_node.server
-        full_node_server_b: ChiaServer = node_b.full_node.server
+        full_node_server_a: ChikServer = node_a.full_node.server
+        full_node_server_b: ChikServer = node_b.full_node.server
 
         await full_node_server_b.start_client(PeerInfo(self_hostname, uint16(full_node_server_a._port)), None)
 
         assert len(full_node_server_b.get_connections()) == 1
         assert len(full_node_server_a.get_connections()) == 1
 
-        a_con: WSChiaConnection = full_node_server_a.get_connections()[0]
-        b_con: WSChiaConnection = full_node_server_b.get_connections()[0]
+        a_con: WSChikConnection = full_node_server_a.get_connections()[0]
+        b_con: WSChikConnection = full_node_server_b.get_connections()[0]
 
         print(a_con.local_capabilities, a_con.peer_capabilities)
         print(b_con.local_capabilities, b_con.peer_capabilities)

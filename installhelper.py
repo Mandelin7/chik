@@ -64,7 +64,7 @@ def update_version(package_json_path: str):
     with open(package_json_path) as f:
         data = json.load(f)
 
-    data["version"] = get_chik_version()
+    data["version"] = "1.8.0"
 
     with open(package_json_path, "w") as w:
         json.dump(data, indent=4, fp=w)

@@ -7,7 +7,7 @@ A lot of fascinating new cryptography and blockchain concepts are used and imple
 This repo includes the code for the Chik full node, farmer, and timelord (in chik folder), which are all written in python.
 It also includes a verifiable delay function implementation that it imports from the [chiavdf repo](https://github.com/Chik-Network/chiavdf) (in c/c++), and a proof of space implementation that it imports from the [chiapos repo](https://github.com/Chik-Network/chiapos). BLS signatures are imported from the [bls-signatures repo](https://github.com/Chik-Network/bls-signatures) as blspy. There is an additional dependency on the [chiabip158 repo](https://github.com/Chik-Network/chiabip158). For major platforms, binary and source wheels are shipped to PyPI from each dependent repo. Then chik-blockchain can pip install those from PyPI or they can be prepackaged as is done for the Windows installer. On unsupported platforms, pip will fall back to the source distributions, to be compiled locally.
 
-If you want to learn more about this project, read the [wiki](https://github.com/Chik-Network/chik-blockchain/wiki), or check out the [green paper](https://www.chia.net/assets/ChiaGreenPaper.pdf).
+If you want to learn more about this project, read the [wiki](https://github.com/Chik-Network/chik-blockchain/wiki), or check out the [green paper](https://www.chik-network.net/assets/ChikGreenPaper.pdf).
 
 ## Contributions
 
@@ -25,7 +25,7 @@ We ask that external contributors create a fork of the `main` branch for any fea
 
 Members of the Chik organization may create feature branches from the `main` branch.
 
-In the event an emergency fix is required for the release version of Chik, members of the Chia organization will create a feature branch from the current release branch `latest`.
+In the event an emergency fix is required for the release version of Chik, members of the Chik organization will create a feature branch from the current release branch `latest`.
 
 ## Branching Strategy
 

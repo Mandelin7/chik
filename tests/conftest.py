@@ -20,7 +20,7 @@ from chik.clvm.spend_sim import CostLogger
 from chik.full_node.full_node import FullNode
 from chik.full_node.full_node_api import FullNodeAPI
 from chik.protocols import full_node_protocol
-from chik.server.server import ChiaServer
+from chik.server.server import ChikServer
 from chik.server.start_service import Service
 from chik.simulator.full_node_simulator import FullNodeSimulator
 from chik.simulator.setup_nodes import (
@@ -35,14 +35,14 @@ from chik.simulator.setup_services import setup_daemon, setup_introducer, setup_
 from chik.simulator.time_out_assert import time_out_assert
 from chik.simulator.wallet_tools import WalletTool
 from chik.types.peer_info import PeerInfo
-from chik.util.config import create_default_chia_config, lock_and_load_config
+from chik.util.config import create_default_chik_config, lock_and_load_config
 from chik.util.ints import uint16, uint64
 from chik.util.keychain import Keychain
 from chik.util.task_timing import main as task_instrumentation_main
 from chik.util.task_timing import start_task_instrumentation, stop_task_instrumentation
 from chik.wallet.wallet import Wallet
 from chik.wallet.wallet_node import WalletNode
-from tests.core.data_layer.util import ChiaRoot
+from tests.core.data_layer.util import ChikRoot
 from tests.core.node_height import node_height_at_least
 from tests.simulation.test_simulation import test_constants_modified
 
@@ -340,7 +340,7 @@ async def wallet_node_100_pk():
 
 @pytest_asyncio.fixture(scope="function")
 async def simulator_and_wallet() -> AsyncIterator[
-    Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools]
+    Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools]
 ]:
     async for _ in setup_simulators_and_wallets(simulator_count=1, wallet_count=1, dic={}):
         yield _
@@ -364,8 +364,8 @@ async def two_wallet_nodes_services() -> AsyncIterator[
 
 
 @pytest_asyncio.fixture(scope="function")
-async def two_wallet_nodes_custom_spam_filtering(spam_filter_after_n_txs, xch_spam_amount):
-    async for _ in setup_simulators_and_wallets(1, 2, {}, spam_filter_after_n_txs, xch_spam_amount):
+async def two_wallet_nodes_custom_spam_filtering(spam_filter_after_n_txs, xck_spam_amount):
+    async for _ in setup_simulators_and_wallets(1, 2, {}, spam_filter_after_n_txs, xck_spam_amount):
         yield _
 
 
@@ -465,7 +465,7 @@ def enable_softfork2(request):
 @pytest_asyncio.fixture(scope="function")
 async def one_node_one_block_with_softfork2(
     enable_softfork2,
-) -> AsyncIterator[Tuple[Union[FullNodeAPI, FullNodeSimulator], ChiaServer, BlockTools]]:
+) -> AsyncIterator[Tuple[Union[FullNodeAPI, FullNodeSimulator], ChikServer, BlockTools]]:
     if enable_softfork2:
         constant_replacements = {"SOFT_FORK2_HEIGHT": 0}
     else:
@@ -500,7 +500,7 @@ async def one_node_one_block_with_softfork2(
 
 
 @pytest_asyncio.fixture(scope="function")
-async def one_node_one_block() -> AsyncIterator[Tuple[Union[FullNodeAPI, FullNodeSimulator], ChiaServer, BlockTools]]:
+async def one_node_one_block() -> AsyncIterator[Tuple[Union[FullNodeAPI, FullNodeSimulator], ChikServer, BlockTools]]:
     async_gen = setup_simulators_and_wallets(1, 0, {})
     nodes, _, bt = await async_gen.__anext__()
     full_node_1 = nodes[0]
@@ -772,23 +772,23 @@ async def timelord_service(bt):
 
 
 @pytest.fixture(scope="function")
-def tmp_chia_root(tmp_path):
+def tmp_chik_root(tmp_path):
     """
-    Create a temp directory and populate it with an empty chia_root directory.
+    Create a temp directory and populate it with an empty chik_root directory.
     """
-    path: Path = tmp_path / "chia_root"
+    path: Path = tmp_path / "chik_root"
     path.mkdir(parents=True, exist_ok=True)
     return path
 
 
 @pytest.fixture(scope="function")
-def root_path_populated_with_config(tmp_chia_root) -> Path:
+def root_path_populated_with_config(tmp_chik_root) -> Path:
     """
-    Create a temp chia_root directory and populate it with a default config.yaml.
-    Returns the chia_root path.
+    Create a temp chik_root directory and populate it with a default config.yaml.
+    Returns the chik_root path.
     """
-    root_path: Path = tmp_chia_root
-    create_default_chia_config(root_path)
+    root_path: Path = tmp_chik_root
+    create_default_chik_config(root_path)
     return root_path
 
 
@@ -809,9 +809,9 @@ def scripts_path_fixture() -> Path:
     return Path(scripts_string)
 
 
-@pytest.fixture(name="chia_root", scope="function")
-def chia_root_fixture(tmp_path: Path, scripts_path: Path) -> ChiaRoot:
-    root = ChiaRoot(path=tmp_path.joinpath("chia_root"), scripts_path=scripts_path)
+@pytest.fixture(name="chik_root", scope="function")
+def chik_root_fixture(tmp_path: Path, scripts_path: Path) -> ChikRoot:
+    root = ChikRoot(path=tmp_path.joinpath("chik_root"), scripts_path=scripts_path)
     root.run(args=["init"])
     root.run(args=["configure", "--set-log-level", "INFO"])
 

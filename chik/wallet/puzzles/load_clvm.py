@@ -92,7 +92,7 @@ def load_serialized_clvm(
     hex_filename = f"{clvm_filename}.hex"
 
     # Set the CHIK_DEV_COMPILE_CLVM_ON_IMPORT environment variable to anything except
-    # "" or "0" to trigger automatic recompilation of the Chialisp on load.
+    # "" or "0" to trigger automatic recompilation of the Chiklisp on load.
     if recompile:
         try:
             if pkg_resources.resource_exists(package_or_requirement, clvm_filename):
@@ -103,7 +103,7 @@ def load_serialized_clvm(
                     search_paths = [full_path.parent]
                     if include_standard_libraries:
                         # we can't get the dir, but we can get a file then get its parent.
-                        chia_puzzles_path = pathlib.Path(
+                        chik_puzzles_path = pathlib.Path(
                             pkg_resources.resource_filename(__name__, "__init__.py")
                         ).parent
                         search_paths.append(chik_puzzles_path)

@@ -10,7 +10,7 @@ import pytest
 from blspy import AugSchemeMPL, G1Element, G2Element
 
 from chik.rpc.wallet_rpc_api import WalletRpcApi
-from chik.server.server import ChiaServer
+from chik.server.server import ChikServer
 from chik.simulator.block_tools import BlockTools
 from chik.simulator.full_node_simulator import FullNodeSimulator, wait_for_coins_in_wallet
 from chik.simulator.simulator_protocol import ReorgProtocol
@@ -39,14 +39,14 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_coinbase(
         self,
-        simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
         num_blocks = 10
         full_nodes, wallets, _ = simulator_and_wallet
         full_node_api = full_nodes[0]
-        server_1: ChiaServer = full_node_api.full_node.server
+        server_1: ChikServer = full_node_api.full_node.server
         wallet_node, server_2 = wallets[0]
 
         wallet = wallet_node.wallet_state_manager.main_wallet
@@ -84,7 +84,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_make_transaction(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -132,7 +132,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_reuse_address(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -184,7 +184,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_coinbase_reorg(
         self,
-        simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -225,7 +225,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_send_to_three_peers(
         self,
-        three_sim_two_wallets: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        three_sim_two_wallets: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -291,7 +291,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_make_transaction_hop(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -385,7 +385,7 @@ class TestWalletSimulator:
     #     introducer, introducer_server = await node_iters[2].__anext__()
     #
     #     async def has_full_node():
-    #         outbound: List[WSChiaConnection] = wallet.server.get_outgoing_connections()
+    #         outbound: List[WSChikConnection] = wallet.server.get_outgoing_connections()
     #         for connection in outbound:
     #             if connection.connection_type is NodeType.FULL_NODE:
     #                 return True
@@ -404,7 +404,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_make_transaction_with_fee(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -467,7 +467,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_make_transaction_with_memo(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -537,7 +537,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_create_hit_max_send_amount(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -612,7 +612,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_prevent_fee_theft(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -697,7 +697,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_tx_reorg(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -801,13 +801,13 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_address_sliding_window(
         self,
-        wallet_node_100_pk: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        wallet_node_100_pk: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
         full_nodes, wallets, _ = wallet_node_100_pk
         full_node_api = full_nodes[0]
-        server_1: ChiaServer = full_node_api.full_node.server
+        server_1: ChikServer = full_node_api.full_node.server
         wallet_node, server_2 = wallets[0]
         if trusted:
             wallet_node.config["trusted_peers"] = {server_1.node_id.hex(): server_1.node_id.hex()}
@@ -864,7 +864,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_sign_message(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -887,7 +887,7 @@ class TestWalletSimulator:
         await server_2.start_client(PeerInfo(self_hostname, uint16(server_1._port)), None)
         # Test general string
         message = "Hello World"
-        response = await api_0.sign_message_by_address({"address": encode_puzzle_hash(ph, "xch"), "message": message})
+        response = await api_0.sign_message_by_address({"address": encode_puzzle_hash(ph, "xck"), "message": message})
         puzzle: Program = Program.to((CHIP_0002_SIGN_MESSAGE_PREFIX, message))
 
         assert AugSchemeMPL.verify(
@@ -898,7 +898,7 @@ class TestWalletSimulator:
         # Test hex string
         message = "0123456789ABCDEF"
         response = await api_0.sign_message_by_address(
-            {"address": encode_puzzle_hash(ph, "xch"), "message": message, "is_hex": True}
+            {"address": encode_puzzle_hash(ph, "xck"), "message": message, "is_hex": True}
         )
         puzzle = Program.to((CHIP_0002_SIGN_MESSAGE_PREFIX, bytes.fromhex(message)))
 
@@ -910,7 +910,7 @@ class TestWalletSimulator:
         # Test informal input
         message = "0123456789ABCDEF"
         response = await api_0.sign_message_by_address(
-            {"address": encode_puzzle_hash(ph, "xch"), "message": message, "is_hex": "true"}
+            {"address": encode_puzzle_hash(ph, "xck"), "message": message, "is_hex": "true"}
         )
         puzzle = Program.to((CHIP_0002_SIGN_MESSAGE_PREFIX, bytes.fromhex(message)))
 
@@ -927,7 +927,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_transaction_options(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:

@@ -10,7 +10,7 @@ from chik.consensus.block_record import BlockRecord
 from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
 from chik.full_node.full_node import FullNode
 from chik.server.outbound_message import NodeType
-from chik.server.server import ChiaServer
+from chik.server.server import ChikServer
 from chik.server.start_service import Service
 from chik.simulator.block_tools import BlockTools, create_block_tools_async, test_constants
 from chik.simulator.full_node_simulator import FullNodeSimulator
@@ -68,7 +68,7 @@ class TestSimulation:
     @pytest.mark.asyncio
     async def test_simulation_1(self, simulation, extra_node, self_hostname):
         node1, node2, _, _, _, _, _, _, _, sanitizer_server = simulation
-        server1: ChiaServer = node1.full_node.server
+        server1: ChikServer = node1.full_node.server
 
         node1_port: uint16 = server1.get_port()
         node2_port: uint16 = node2.full_node.server.get_port()
@@ -80,7 +80,7 @@ class TestSimulation:
 
         # Connect node3 to node1 and node2 - checks come later
         node3: Service[FullNode] = extra_node
-        server3: ChiaServer = node3.full_node.server
+        server3: ChikServer = node3.full_node.server
         connected = await server3.start_client(PeerInfo(self_hostname, node1_port))
         assert connected, f"server3 was unable to connect to node1 on port {node1_port}"
         connected = await server3.start_client(PeerInfo(self_hostname, node2_port))
@@ -143,7 +143,7 @@ class TestSimulation:
     @pytest.mark.asyncio
     async def test_simulator_auto_farm_and_get_coins(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
         self_hostname: str,
     ) -> None:
         num_blocks = 2

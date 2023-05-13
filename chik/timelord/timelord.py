@@ -20,7 +20,7 @@ from chik.protocols import timelord_protocol
 from chik.protocols.protocol_message_types import ProtocolMessageTypes
 from chik.rpc.rpc_server import StateChangedProtocol, default_get_connections
 from chik.server.outbound_message import NodeType, make_msg
-from chik.server.server import Chikerver
+from chik.server.server import ChikServer
 from chik.server.ws_connection import WSChikConnection
 from chik.timelord.iters_from_block import iters_from_block
 from chik.timelord.timelord_state import LastState

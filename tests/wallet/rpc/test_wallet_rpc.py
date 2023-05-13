@@ -17,7 +17,7 @@ from chik.rpc.full_node_rpc_client import FullNodeRpcClient
 from chik.rpc.rpc_server import RpcServer
 from chik.rpc.wallet_rpc_api import WalletRpcApi
 from chik.rpc.wallet_rpc_client import WalletRpcClient
-from chik.server.server import ChiaServer
+from chik.server.server import ChikServer
 from chik.server.start_service import Service
 from chik.simulator.full_node_simulator import FullNodeSimulator
 from chik.simulator.simulator_protocol import FarmNewBlockProtocol
@@ -67,7 +67,7 @@ class WalletBundle:
 
 @dataclasses.dataclass
 class FullNodeBundle:
-    server: ChiaServer
+    server: ChikServer
     api: FullNodeSimulator
     rpc_client: FullNodeRpcClient
 
@@ -267,7 +267,7 @@ async def test_send_transaction(wallet_rpc_environment: WalletRpcTestEnvironment
 
     generated_funds = await generate_funds(full_node_api, env.wallet_1)
 
-    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txch")
+    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txck")
     tx_amount = uint64(15600000)
     with pytest.raises(ValueError):
         await client.send_transaction(1, uint64(100000000000000001), addr)
@@ -612,7 +612,7 @@ async def test_get_transactions(wallet_rpc_environment: WalletRpcTestEnvironment
 
     # Test RELEVANCE
     await client.send_transaction(
-        1, uint64(1), encode_puzzle_hash(await wallet.get_new_puzzlehash(), "txch")
+        1, uint64(1), encode_puzzle_hash(await wallet.get_new_puzzlehash(), "txck")
     )  # Create a pending tx
 
     all_transactions = await client.get_transactions(1, sort_key=SortKey.RELEVANCE)
@@ -629,11 +629,11 @@ async def test_get_transactions(wallet_rpc_environment: WalletRpcTestEnvironment
 
     # Test get_transactions to address
     ph_by_addr = await wallet.get_new_puzzlehash()
-    await client.send_transaction(1, uint64(1), encode_puzzle_hash(ph_by_addr, "txch"))
-    await client.farm_block(encode_puzzle_hash(ph_by_addr, "txch"))
+    await client.send_transaction(1, uint64(1), encode_puzzle_hash(ph_by_addr, "txck"))
+    await client.farm_block(encode_puzzle_hash(ph_by_addr, "txck"))
     await full_node_api.wait_for_wallet_synced(wallet_node=wallet_node, timeout=20)
 
-    tx_for_address = await client.get_transactions(1, to_address=encode_puzzle_hash(ph_by_addr, "txch"))
+    tx_for_address = await client.get_transactions(1, to_address=encode_puzzle_hash(ph_by_addr, "txck"))
     assert len(tx_for_address) == 1
     assert tx_for_address[0].to_puzzle_hash == ph_by_addr
 
@@ -841,7 +841,7 @@ async def test_offer_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment)
     assert id == offer.name()
     id, advanced_summary = await wallet_1_rpc.get_offer_summary(offer, advanced=True)
     assert id == offer.name()
-    assert summary == {"offered": {"xch": 5}, "requested": {cat_asset_id.hex(): 1}, "infos": driver_dict, "fees": 1}
+    assert summary == {"offered": {"xck": 5}, "requested": {cat_asset_id.hex(): 1}, "infos": driver_dict, "fees": 1}
     assert advanced_summary == summary
 
     id, valid = await wallet_1_rpc.check_offer_validity(offer)
@@ -1001,7 +1001,7 @@ async def test_did_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment):
     await farm_transaction_block(full_node_api, wallet_1_node)
 
     # Transfer DID
-    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txch")
+    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txck")
     res = await wallet_1_rpc.did_transfer_did(did_wallet_id_0, addr, 0, True)
     assert res["success"]
 
@@ -1048,7 +1048,7 @@ async def test_nft_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment):
         None,
         None,
         "0xD4584AD463139FA8C0D9F68F4B59F185",
-        ["https://www.chia.net/img/branding/chia-logo.svg"],
+        ["https://www.chik-network.net/img/branding/chik-logo.svg"],
     )
     assert res["success"]
 
@@ -1077,7 +1077,7 @@ async def test_nft_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment):
     nft_info = (await wallet_1_rpc.get_nft_info(hmr_nft_id))["nft_info"]
     assert nft_info["nft_coin_id"][2:] == (await nft_wallet.get_current_nfts())[0].coin.name().hex()
 
-    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txch")
+    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txck")
     res = await wallet_1_rpc.transfer_nft(nft_wallet_id, nft_id, addr, 0)
     assert res["success"]
     await time_out_assert(5, check_mempool_spend_count, True, full_node_api, 1)
@@ -1139,7 +1139,7 @@ async def test_key_and_address_endpoints(wallet_rpc_environment: WalletRpcTestEn
     assert (await client.get_height_info()) > 0
 
     ph = await wallet.get_new_puzzlehash()
-    addr = encode_puzzle_hash(ph, "txch")
+    addr = encode_puzzle_hash(ph, "txck")
     tx_amount = uint64(15600000)
 
     created_tx = await client.send_transaction(1, tx_amount, addr)
@@ -1172,11 +1172,11 @@ async def test_key_and_address_endpoints(wallet_rpc_environment: WalletRpcTestEn
     sk = await wallet_node.get_key_for_fingerprint(pks[0])
     test_ph = create_puzzlehash_for_pk(master_sk_to_wallet_sk(sk, uint32(0)).get_g1())
     with lock_and_load_config(wallet_node.root_path, "config.yaml") as test_config:
-        test_config["farmer"]["xch_target_address"] = encode_puzzle_hash(test_ph, "txch")
+        test_config["farmer"]["xck_target_address"] = encode_puzzle_hash(test_ph, "txck")
         # set pool to second private key
         sk = await wallet_node.get_key_for_fingerprint(pks[1])
         test_ph = create_puzzlehash_for_pk(master_sk_to_wallet_sk(sk, uint32(0)).get_g1())
-        test_config["pool"]["xch_target_address"] = encode_puzzle_hash(test_ph, "txch")
+        test_config["pool"]["xck_target_address"] = encode_puzzle_hash(test_ph, "txck")
         save_config(wallet_node.root_path, "config.yaml", test_config)
 
     # Check first key
@@ -1202,11 +1202,11 @@ async def test_key_and_address_endpoints(wallet_rpc_environment: WalletRpcTestEn
     sk = await wallet_node.get_key_for_fingerprint(pks[0])
     test_ph = create_puzzlehash_for_pk(master_sk_to_wallet_sk_unhardened(sk, uint32(0)).get_g1())
     with lock_and_load_config(wallet_node.root_path, "config.yaml") as test_config:
-        test_config["farmer"]["xch_target_address"] = encode_puzzle_hash(test_ph, "txch")
+        test_config["farmer"]["xck_target_address"] = encode_puzzle_hash(test_ph, "txck")
         # set pool to second private key
         sk = await wallet_node.get_key_for_fingerprint(pks[1])
         test_ph = create_puzzlehash_for_pk(master_sk_to_wallet_sk_unhardened(sk, uint32(0)).get_g1())
-        test_config["pool"]["xch_target_address"] = encode_puzzle_hash(test_ph, "txch")
+        test_config["pool"]["xck_target_address"] = encode_puzzle_hash(test_ph, "txck")
         save_config(wallet_node.root_path, "config.yaml", test_config)
 
     # Check first key
@@ -1257,7 +1257,7 @@ async def test_select_coins_rpc(wallet_rpc_environment: WalletRpcTestEnvironment
 
     funds = await generate_funds(full_node_api, env.wallet_1)
 
-    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txch")
+    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txck")
     coin_300: List[Coin]
     for tx_amount in [uint64(1000), uint64(300), uint64(1000), uint64(1000), uint64(10000)]:
         funds -= tx_amount
@@ -1383,9 +1383,9 @@ async def test_notification_rpcs(wallet_rpc_environment: WalletRpcTestEnvironmen
 #
 # Example 2:
 # $ chik wallet get_address
-# xch1vk0dj7cx7d638h80mcuw70xqlnr56pmuhzajemn5ym02vhl3mzyqrrd4wp
+# xck1vk0dj7cx7d638h80mcuw70xqlnr56pmuhzajemn5ym02vhl3mzyqrrd4wp
 # $ chik wallet sign_message -m $(echo -n 'hello world' | xxd -p)
-# -a xch1vk0dj7cx7d638h80mcuw70xqlnr56pmuhzajemn5ym02vhl3mzyqrrd4wp
+# -a xck1vk0dj7cx7d638h80mcuw70xqlnr56pmuhzajemn5ym02vhl3mzyqrrd4wp
 #
 @pytest.mark.parametrize(
     ["rpc_request", "rpc_response"],
@@ -1409,7 +1409,7 @@ async def test_notification_rpcs(wallet_rpc_environment: WalletRpcTestEnvironmen
         ),
         (
             # chik wallet sign_message -m $(echo -n 'Happy happy joy joy' | xxd -p)
-            # -a xch1e2pcue5q7t4sg8gygz3aht369sk78rzzs92zx65ktn9a9qurw35saajvkh
+            # -a xck1e2pcue5q7t4sg8gygz3aht369sk78rzzs92zx65ktn9a9qurw35saajvkh
             {
                 "message": "4861707079206861707079206a6f79206a6f79",  # Happy happy joy joy
                 "pubkey": (
@@ -1427,7 +1427,7 @@ async def test_notification_rpcs(wallet_rpc_environment: WalletRpcTestEnvironmen
         ),
         (
             # chik wallet sign_message -m $(echo -n 'Happy happy joy joy' | xxd -p)
-            # -a xch1e2pcue5q7t4sg8gygz3aht369sk78rzzs92zx65ktn9a9qurw35saajvkh
+            # -a xck1e2pcue5q7t4sg8gygz3aht369sk78rzzs92zx65ktn9a9qurw35saajvkh
             {
                 "message": "4861707079206861707079206a6f79206a6f79",  # Happy happy joy joy
                 "pubkey": (
@@ -1440,7 +1440,7 @@ async def test_notification_rpcs(wallet_rpc_environment: WalletRpcTestEnvironmen
                     "91246eb1c7f1b66a6a"
                 ),
                 "signing_mode": SigningMode.CHIP_0002.value,
-                "address": "xch1e2pcue5q7t4sg8gygz3aht369sk78rzzs92zx65ktn9a9qurw35saajvkh",
+                "address": "xck1e2pcue5q7t4sg8gygz3aht369sk78rzzs92zx65ktn9a9qurw35saajvkh",
             },
             {"isValid": True},
         ),
@@ -1475,7 +1475,7 @@ async def test_notification_rpcs(wallet_rpc_environment: WalletRpcTestEnvironmen
                     "91246eb1c7f1b66a6a"
                 ),
                 "signing_mode": SigningMode.CHIP_0002.value,
-                "address": "xch1d0rekc2javy5gpruzmcnk4e4qq834jzlvxt5tcgl2ylt49t26gdsjen7t0",
+                "address": "xck1d0rekc2javy5gpruzmcnk4e4qq834jzlvxt5tcgl2ylt49t26gdsjen7t0",
             },
             {"isValid": False, "error": "Public key doesn't match the address"},
         ),
@@ -1644,7 +1644,7 @@ async def test_cat_spend_run_tail(wallet_rpc_environment: WalletRpcTestEnvironme
     cat_puzzle: Program = construct_cat_puzzle(CAT_MOD, Program.to(None).get_tree_hash(), Program.to(1))
     addr = encode_puzzle_hash(
         cat_puzzle.get_tree_hash(),
-        "txch",
+        "txck",
     )
     tx_amount = uint64(100)
 
@@ -1691,7 +1691,7 @@ async def test_cat_spend_run_tail(wallet_rpc_environment: WalletRpcTestEnvironme
     tx = await client.cat_spend(
         cat_wallet_id,
         amount=uint64(0),
-        inner_address=encode_puzzle_hash(our_ph, "txch"),
+        inner_address=encode_puzzle_hash(our_ph, "txck"),
         cat_discrepancy=(tx_amount * -1, Program.to(None), Program.to(None)),
     )
     transaction_id = tx.name

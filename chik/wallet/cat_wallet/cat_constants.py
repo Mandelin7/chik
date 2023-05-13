@@ -1,18 +1,30 @@
-from __future__ import annotations
-
-CHIK_FAN_TOKEN = {
-    "asset_id": "32b927c523d1dd554bdf630007bfd480e2ecb5beaa39a5b3cbe230c722b3013f",
-    "name": "CHIK Fan Token",
-    "symbol": "XCKF",
+CHIK_CAT = {
+    "asset_id": "f4714b401018304bce5b7d48d67f943a4c71b7a4b186db5ea138bafb4d6cd60a",
+    "name": "Chik-CAT!",
+    "symbol": "SUNY",
 }
 
-CHIK_BETA_TOKEN = {
-    "asset_id": "366d5f6434de5e7a1bd32e1ec4e847c2f56c34b9edf5bbfc7e0e35166d3e0d8e",
-    "name": "CHIK Beta Token",
-    "symbol": "XCKB",
+STABLY_USDS = {
+    "asset_id": "6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589",
+    "name": "Stably USD",
+    "symbol": "USDS",
+}
+
+orfinkat = {
+    "asset_id": "9731463686b47572d144d43007480e1a213505918d78436b0f22f51365f9eec1",
+    "name": "orfinkat",
+    "symbol": "CACT",
+}
+
+MONKEY = {
+    "asset_id": "2f23b6d88850cbf0644af602c68ad0fcf3c91ea64b3ea78cb098f736aafbeee1",
+    "name": "Monkey",
+    "symbol": "MONK",
 }
 
 DEFAULT_CATS = {
-    CHIK_FAN_TOKEN["asset_id"]: CHIK_FAN_TOKEN,
-    CHIK_BETA_TOKEN["asset_id"]: CHIK_BETA_TOKEN,
+    CHIK_CAT["asset_id"]: CHIK_CAT,
+    STABLY_USDS["asset_id"]: STABLY_USDS,
+    orfinkat["asset_id"]: orfinkat,
+    MONKEY["asset_id"]: MONKEY,
 }

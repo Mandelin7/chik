@@ -15,7 +15,7 @@ import typing_extensions
 
 here = pathlib.Path(__file__).parent.resolve()
 root = here.parent
-cache_path = root.joinpath(".chia_cache", "manage_clvm.json")
+cache_path = root.joinpath(".chik_cache", "manage_clvm.json")
 
 # This is a work-around for fixing imports so they get the appropriate top level
 # packages instead of those of the same name in the same directory as this program.
@@ -419,4 +419,4 @@ def build() -> int:
     sys.exit(1 if overall_fail else 0)
 
 
-main(auto_envvar_prefix="CHIA_MANAGE_CLVM")
+main(auto_envvar_prefix="CHIK_MANAGE_CLVM")

@@ -33,7 +33,7 @@ from chik.util.ints import uint32, uint64
 from chik.util.streamable import Streamable, streamable
 
 """
-The purpose of this file is to provide a lightweight simulator for the testing of Chialisp smart contracts.
+The purpose of this file is to provide a lightweight simulator for the testing of Chiklisp smart contracts.
 
 The Node object uses actual MempoolManager, Mempool and CoinStore objects, while substituting FullBlock and
 BlockRecord objects for trimmed down versions.

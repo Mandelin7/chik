@@ -117,7 +117,7 @@ async def add_01234567_example(data_store: DataStore, tree_id: bytes32) -> Examp
 
 
 @dataclass
-class ChiaRoot:
+class ChikRoot:
     path: pathlib.Path
     scripts_path: pathlib.Path
 
@@ -133,8 +133,8 @@ class ChiaRoot:
     ) -> subprocess_CompletedProcess_str:
         # TODO: --root-path doesn't seem to work here...
         kwargs.setdefault("env", {})
-        kwargs["env"]["CHIA_ROOT"] = os.fspath(self.path)
-        kwargs["env"]["CHIA_KEYS_ROOT"] = os.fspath(self.path)
+        kwargs["env"]["CHIK_ROOT"] = os.fspath(self.path)
+        kwargs["env"]["CHIK_KEYS_ROOT"] = os.fspath(self.path)
 
         # This is for windows
         if "SYSTEMROOT" in os.environ:

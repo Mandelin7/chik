@@ -83,14 +83,14 @@ def generate_example_submission_data(beta_root_path: Path, versions: int, logs: 
     for version in range(versions):
         version_path = beta_root_path / str(version)
         version_path.mkdir()
-        chia_blockchain_logs = version_path / "chik-blockchain"
+        chik_blockchain_logs = version_path / "chik-blockchain"
         plotting_logs = version_path / "plotting"
-        chia_blockchain_logs.mkdir()
+        chik_blockchain_logs.mkdir()
         plotting_logs.mkdir()
         for i in range(logs):
-            with open(chia_blockchain_logs / f"beta_{i}.log", "w"):
+            with open(chik_blockchain_logs / f"beta_{i}.log", "w"):
                 pass
-            with open(chia_blockchain_logs / f"beta_{i + 10}.gz", "w"):
+            with open(chik_blockchain_logs / f"beta_{i + 10}.gz", "w"):
                 pass
             with open(plotting_logs / f"plot_{i}.log", "w"):
                 pass
@@ -347,11 +347,11 @@ def test_prepare_submission(
         with zipfile.ZipFile(submission_file) as zip_file:
             all_files = [Path(info.filename) for info in zip_file.filelist]
             for version in range(versions):
-                chia_blockchain_logs = Path("chik-blockchain")
+                chik_blockchain_logs = Path("chik-blockchain")
                 plotting_logs = Path("plotting")
                 for i in range(logs):
-                    assert chia_blockchain_logs / f"beta_{i}.log" in all_files
-                    assert chia_blockchain_logs / f"beta_{i + 10}.gz" in all_files
+                    assert chik_blockchain_logs / f"beta_{i}.log" in all_files
+                    assert chik_blockchain_logs / f"beta_{i + 10}.gz" in all_files
                     assert plotting_logs / f"plot_{i}.log" in all_files
 
 

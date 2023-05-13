@@ -24,7 +24,7 @@ from chik.protocols.shared_protocol import Capability, capabilities
 from chik.protocols.wallet_protocol import SendTransaction, TransactionAck
 from chik.server.address_manager import AddressManager
 from chik.server.outbound_message import Message, NodeType
-from chik.server.server import ChiaServer
+from chik.server.server import ChikServer
 from chik.simulator.block_tools import BlockTools, get_signage_point, test_constants
 from chik.simulator.simulator_protocol import FarmNewBlockProtocol
 from chik.simulator.time_out_assert import time_out_assert, time_out_assert_custom_interval, time_out_messages
@@ -1910,7 +1910,7 @@ class TestFullNodeProtocol:
             [capabilities, True],
             # an additional enabled but unknown capability
             [[*capabilities, (uint16(max(Capability) + 1), "1")], True],
-            # no capability, not even Chia mainnet
+            # no capability, not even Chik mainnet
             # TODO: shouldn't we fail without Capability.BASE?
             [[], True],
             # only an unknown capability
@@ -1921,7 +1921,7 @@ class TestFullNodeProtocol:
     @pytest.mark.asyncio
     async def test_invalid_capability_can_connect(
         self,
-        two_nodes: Tuple[FullNodeAPI, FullNodeAPI, ChiaServer, ChiaServer, BlockTools],
+        two_nodes: Tuple[FullNodeAPI, FullNodeAPI, ChikServer, ChikServer, BlockTools],
         self_hostname: str,
         custom_capabilities: List[Tuple[uint16, str]],
         expect_success: bool,

@@ -135,9 +135,9 @@ async def get_nft_info_from_puzzle(
 
 def metadata_to_program(metadata: Dict[bytes, Any]) -> Program:
     """
-    Convert the metadata dict to a Chialisp program
+    Convert the metadata dict to a Chiklisp program
     :param metadata: User defined metadata
-    :return: Chialisp program
+    :return: Chiklisp program
     """
     kv_list = []
     for key, value in metadata.items():
@@ -149,7 +149,7 @@ def metadata_to_program(metadata: Dict[bytes, Any]) -> Program:
 def program_to_metadata(program: Program) -> Dict[bytes, Any]:
     """
     Convert a program to a metadata dict
-    :param program: Chialisp program contains the metadata
+    :param program: Chiklisp program contains the metadata
     :return: Metadata dict
     """
     metadata = {}

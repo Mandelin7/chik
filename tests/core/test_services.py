@@ -23,8 +23,8 @@ from chik.simulator.time_out_assert import adjusted_timeout
 from chik.util.config import lock_and_load_config, save_config
 from chik.util.ints import uint16
 from chik.util.misc import sendable_termination_signals
-from tests.core.data_layer.util import ChiaRoot
-from tests.util.misc import closing_chia_root_popen
+from tests.core.data_layer.util import ChikRoot
+from tests.util.misc import closing_chik_root_popen
 
 
 class CreateServiceProtocol(Protocol):
@@ -54,14 +54,14 @@ async def wait_for_daemon_connection(root_path: Path, config: Dict[str, Any], ti
 
 @pytest.mark.parametrize(argnames="signal_number", argvalues=sendable_termination_signals)
 @pytest.mark.asyncio
-async def test_daemon_terminates(signal_number: signal.Signals, chia_root: ChiaRoot) -> None:
+async def test_daemon_terminates(signal_number: signal.Signals, chik_root: ChikRoot) -> None:
     port = find_available_listen_port()
-    with lock_and_load_config(root_path=chia_root.path, filename="config.yaml") as config:
+    with lock_and_load_config(root_path=chik_root.path, filename="config.yaml") as config:
         config["daemon_port"] = port
-        save_config(root_path=chia_root.path, filename="config.yaml", config_data=config)
+        save_config(root_path=chik_root.path, filename="config.yaml", config_data=config)
 
-    with closing_chia_root_popen(chia_root=chia_root, args=[sys.executable, "-m", "chik.daemon.server"]) as process:
-        client = await wait_for_daemon_connection(root_path=chia_root.path, config=config)
+    with closing_chik_root_popen(chik_root=chik_root, args=[sys.executable, "-m", "chik.daemon.server"]) as process:
+        client = await wait_for_daemon_connection(root_path=chik_root.path, config=config)
 
         try:
             return_code = process.poll()
@@ -94,12 +94,12 @@ async def test_daemon_terminates(signal_number: signal.Signals, chia_root: ChiaR
 @pytest.mark.asyncio
 async def test_services_terminate(
     signal_number: signal.Signals,
-    chia_root: ChiaRoot,
+    chik_root: ChikRoot,
     create_service: CreateServiceProtocol,
     module_path: str,
     service_config_name: str,
 ) -> None:
-    with lock_and_load_config(root_path=chia_root.path, filename="config.yaml") as config:
+    with lock_and_load_config(root_path=chik_root.path, filename="config.yaml") as config:
         config["daemon_port"] = find_available_listen_port(name="daemon")
         service_config = config[service_config_name]
         if "port" in service_config:
@@ -107,27 +107,27 @@ async def test_services_terminate(
             service_config["port"] = port
         rpc_port = find_available_listen_port(name="rpc")
         service_config["rpc_port"] = rpc_port
-        save_config(root_path=chia_root.path, filename="config.yaml", config_data=config)
+        save_config(root_path=chik_root.path, filename="config.yaml", config_data=config)
 
     # TODO: make the wallet start up regardless so this isn't needed
-    with closing_chia_root_popen(
-        chia_root=chia_root,
+    with closing_chik_root_popen(
+        chik_root=chik_root,
         args=[sys.executable, "-m", "chik.daemon.server"],
     ):
         # Make sure the daemon is running and responsive before starting other services.
         # This probably shouldn't be required.  For now, it helps at least with the
         # farmer.
-        daemon_client = await wait_for_daemon_connection(root_path=chia_root.path, config=config)
+        daemon_client = await wait_for_daemon_connection(root_path=chik_root.path, config=config)
         await daemon_client.close()
 
-        with closing_chia_root_popen(
-            chia_root=chia_root,
+        with closing_chik_root_popen(
+            chik_root=chik_root,
             args=[sys.executable, "-m", module_path],
         ) as process:
             client = await create_service(
                 self_hostname=config["self_hostname"],
                 port=uint16(rpc_port),
-                root_path=chia_root.path,
+                root_path=chik_root.path,
                 net_config=config,
             )
             try:

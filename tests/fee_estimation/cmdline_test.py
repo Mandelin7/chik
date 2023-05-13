@@ -9,13 +9,13 @@ from click.testing import CliRunner
 
 from chik.cmds.chik import cli
 from chik.full_node.full_node_api import FullNodeAPI
-from chik.server.server import ChiaServer
+from chik.server.server import ChikServer
 from chik.simulator.block_tools import BlockTools
 from chik.simulator.full_node_simulator import FullNodeSimulator
 
 
 def test_print_fee_info_cmd(
-    one_node_one_block: Tuple[Union[FullNodeAPI, FullNodeSimulator], ChiaServer, BlockTools]
+    one_node_one_block: Tuple[Union[FullNodeAPI, FullNodeSimulator], ChikServer, BlockTools]
 ) -> None:
     _, _, _ = one_node_one_block
     scripts_path = Path(sysconfig.get_path("scripts"))
@@ -23,7 +23,7 @@ def test_print_fee_info_cmd(
 
 
 def test_show_fee_info(
-    one_node_one_block: Tuple[Union[FullNodeAPI, FullNodeSimulator], ChiaServer, BlockTools]
+    one_node_one_block: Tuple[Union[FullNodeAPI, FullNodeSimulator], ChikServer, BlockTools]
 ) -> None:
     _, _, _ = one_node_one_block
     runner = CliRunner()
