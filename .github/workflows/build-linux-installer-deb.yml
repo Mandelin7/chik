@@ -105,14 +105,14 @@ jobs:
       if: '!github.event.release.prerelease'
       run: |
         mkdir "$GITHUB_WORKSPACE/bladebit"
-        wget -O /tmp/bladebit.tar.gz https://github.com/Chik-Network/bladebit/releases/download/${{ steps.latest-bladebit.outputs.result }}/bladebit-${{ steps.latest-bladebit.outputs.result }}-ubuntu-x86-64.tar.gz
+        wget -O /tmp/bladebit.tar.gz https://github.com/Chia-Network/bladebit/releases/download/${{ steps.latest-bladebit.outputs.result }}/bladebit-${{ steps.latest-bladebit.outputs.result }}-ubuntu-x86-64.tar.gz
         tar -xvzf /tmp/bladebit.tar.gz -C $GITHUB_WORKSPACE/bladebit
         chmod +x "$GITHUB_WORKSPACE/bladebit/bladebit"
 
     - name: Get latest prerelease bladebit plotter
       if: env.PRE_RELEASE == 'true'
       run: |
-        PRERELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chik-Network/bladebit/releases" | jq -r 'map(select(.prerelease)) | first.assets[] | select(.browser_download_url | endswith("ubuntu-x86-64.tar.gz")).browser_download_url')
+        PRERELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chia-Network/bladebit/releases" | jq -r 'map(select(.prerelease)) | first.assets[] | select(.browser_download_url | endswith("ubuntu-x86-64.tar.gz")).browser_download_url')
         mkdir "$GITHUB_WORKSPACE/bladebit"
         wget -O /tmp/bladebit.tar.gz $PRERELEASE_URL
         tar -xvzf /tmp/bladebit.tar.gz -C $GITHUB_WORKSPACE/bladebit
