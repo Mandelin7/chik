@@ -98,7 +98,7 @@ async def test_nft_offer_with_fee(
 
     metadata = Program.to(
         [
-            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.com/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -327,7 +327,7 @@ async def test_nft_offer_cancellations(self_hostname: str, two_wallet_nodes: Any
 
     metadata = Program.to(
         [
-            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.com/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -436,7 +436,7 @@ async def test_nft_offer_with_metadata_update(self_hostname: str, two_wallet_nod
 
     metadata = Program.to(
         [
-            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.com/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
             ("mu", []),
             ("lu", []),
@@ -582,7 +582,7 @@ async def test_nft_offer_nft_for_cat(
 
     metadata = Program.to(
         [
-            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.com/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -828,7 +828,7 @@ async def test_nft_offer_nft_for_nft(self_hostname: str, two_wallet_nodes: Any, 
 
     metadata = Program.to(
         [
-            ("u", ["https://www.chiknetwork.org/img/branding/chik-logo.svg"]),
+            ("u", ["https://www.chiknetwork.com/img/branding/chik-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -839,7 +839,7 @@ async def test_nft_offer_nft_for_nft(self_hostname: str, two_wallet_nodes: Any, 
 
     metadata_2 = Program.to(
         [
-            ("u", ["https://www.chiknetwork.org/image2.html"]),
+            ("u", ["https://www.chiknetwork.com/image2.html"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F183"),
         ]
     )

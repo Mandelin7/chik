@@ -77,9 +77,9 @@ legacy_keyring_dependencies = [
 kwargs = dict(
     name="chik-blockchain",
     author="Mariano Sorgente",
-    author_email="mariano@chiknetwork.org",
+    author_email="mariano@chiknetwork.com",
     description="Chik blockchain full node, farmer, timelord, and wallet.",
-    url="https://chiknetwork.org/",
+    url="https://chiknetwork.com/",
     license="Apache License",
     python_requires=">=3.7, <4",
     keywords="chik blockchain node",

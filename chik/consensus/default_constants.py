@@ -31,14 +31,14 @@ default_kwargs = {
     # Used as the initial cc rc challenges, as well as first block back pointers, and first SES back pointer
     # We override this value based on the chain being run (testnet0, testnet1, mainnet, etc)
     # Default used for tests is std_hash(b'')
-    "GENESIS_CHALLENGE": bytes.fromhex("d3cb42f2029fda7927fc177c49789544044656f2437e6130ab9471f17770124f"),
+    "GENESIS_CHALLENGE": bytes.fromhex("4b8f8f2f852c0a89a0f97a1bc91f1806e1f2efd4924fc3a82bec9a7b31b61f31"),
     # Forks of chik should change this value to provide replay attack protection. This is set to mainnet genesis chall
-    "AGG_SIG_ME_ADDITIONAL_DATA": bytes.fromhex("55830f14be472f67c4fc19825ac22ae785204c539bb43169d5ff47a9c7b2ae2a"),
+    "AGG_SIG_ME_ADDITIONAL_DATA": bytes.fromhex("6952ce05c863008c10b211baab87ee58e11c52fda1b9a13d0190d48d6b18354b"),
     "GENESIS_PRE_FARM_POOL_PUZZLE_HASH": bytes.fromhex(
-        "d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc"
+        "99d9dc89c0ef7f82ed02a99705f261e719a01678165bd49ae8580e04812d79db"
     ),
     "GENESIS_PRE_FARM_FARMER_PUZZLE_HASH": bytes.fromhex(
-        "3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af"
+        "16ea98ae61f666a5251e6c851c59f5dc72e009e491457ed51ebaed4c4c6631aa"
     ),
     "MAX_VDF_WITNESS_SIZE": 64,
     # Size of mempool = 50x the size of block
@@ -57,7 +57,7 @@ default_kwargs = {
     "MAX_GENERATOR_REF_LIST_SIZE": 512,  # Number of references allowed in the block generator ref list
     "POOL_SUB_SLOT_ITERS": 37600000000,  # iters limit * NUM_SPS
     "SOFT_FORK_HEIGHT": 3630000,
-    "SOFT_FORK2_HEIGHT": 3830000,
+    "SOFT_FORK2_HEIGHT": 3886635,
 }
 
 

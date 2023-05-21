@@ -2,12 +2,12 @@
 
 **Chik** is a modern community-centric green cryptocurrency based on a proof-of-space-and-time consensus algorithm. It is a community-supported fork of the [Chik Network](https://github.com/Chik-Network/chik-blockchain) codebase.
 
-For more information, see our website and downloads at <a href="https://www.Chik-Network.net">Chik Network</a>.
+For more information, see our website and downloads at <a href="https://www.chiknetwork.com">Chik Network</a>.
 <p>You can learn more in the Chik Wiki: <a href="https://github.com/Chik-Network/chik-blockchain/wiki/Chik-Blockchain-Wiki">Quick Start Guide</a></p>
 <p>Please check out the Chik Discord Channel: (https://discord.gg/qfHBqZnXTj).</p>
 
 <p>Full Node List Here:<a href="https://alltheblocks.net/chik/peers" rel="nofollow"> Full Node IP's</a></p>
-<p>Introducer Port: 11444</p>
+<p>Introducer Port: 9678</p>
 
 <h1>
 <a id="user-content-windows" class="anchor" href="#windows" aria-hidden="true"><svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Windows Installer</h1>

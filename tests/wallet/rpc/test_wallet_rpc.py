@@ -1048,7 +1048,7 @@ async def test_nft_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment):
         None,
         None,
         "0xD4584AD463139FA8C0D9F68F4B59F185",
-        ["https://www.chiknetwork.org/img/branding/chik-logo.svg"],
+        ["https://www.chiknetwork.com/img/branding/chik-logo.svg"],
     )
     assert res["success"]
 
