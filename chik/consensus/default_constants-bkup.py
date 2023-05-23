@@ -35,10 +35,10 @@ default_kwargs = {
     # Forks of chik should change this value to provide replay attack protection. This is set to mainnet genesis chall
     "AGG_SIG_ME_ADDITIONAL_DATA": bytes.fromhex("6952ce05c863008c10b211baab87ee58e11c52fda1b9a13d0190d48d6b18354b"),
     "GENESIS_PRE_FARM_POOL_PUZZLE_HASH": bytes.fromhex(
-        "99d9dc89c0ef7f82ed02a99705f261e719a01678165bd49ae8580e04812d79db"
+        "09b2395c02bf08906a78e3bd10f4849e182c2b05086419ebb90ac94bcd9b0094"
     ),
     "GENESIS_PRE_FARM_FARMER_PUZZLE_HASH": bytes.fromhex(
-        "16ea98ae61f666a5251e6c851c59f5dc72e009e491457ed51ebaed4c4c6631aa"
+        "68e9833c8ea4fe2f222bf36ea6ff2236ccc209eda50b56ed84091d75d3f3c4d5"
     ),
     "MAX_VDF_WITNESS_SIZE": 64,
     # Size of mempool = 50x the size of block
