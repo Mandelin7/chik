@@ -5,14 +5,14 @@ import logging
 import pytest
 from clvm.casts import int_to_bytes
 
-from chia.full_node.hint_store import HintStore
-from chia.simulator.wallet_tools import WalletTool
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.condition_with_args import ConditionWithArgs
-from chia.types.spend_bundle import SpendBundle
-from chia.util.ints import uint64
+from chik.full_node.hint_store import HintStore
+from chik.simulator.wallet_tools import WalletTool
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.condition_opcodes import ConditionOpcode
+from chik.types.condition_with_args import ConditionWithArgs
+from chik.types.spend_bundle import SpendBundle
+from chik.util.ints import uint64
 from tests.util.db_connection import DBConnection
 
 log = logging.getLogger(__name__)

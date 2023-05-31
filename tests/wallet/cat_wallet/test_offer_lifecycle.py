@@ -6,25 +6,25 @@ from typing import Any, Dict, List, Optional
 import pytest
 from blspy import G2Element
 
-from chia.clvm.spend_sim import sim_and_client
-from chia.types.announcement import Announcement
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.types.spend_bundle import SpendBundle
-from chia.util.ints import uint64
-from chia.wallet.cat_wallet.cat_utils import (
+from chik.clvm.spend_sim import sim_and_client
+from chik.types.announcement import Announcement
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_spend import CoinSpend
+from chik.types.mempool_inclusion_status import MempoolInclusionStatus
+from chik.types.spend_bundle import SpendBundle
+from chik.util.ints import uint64
+from chik.wallet.cat_wallet.cat_utils import (
     SpendableCAT,
     construct_cat_puzzle,
     unsigned_spend_bundle_for_spendable_cats,
 )
-from chia.wallet.outer_puzzles import AssetType
-from chia.wallet.payment import Payment
-from chia.wallet.puzzle_drivers import PuzzleInfo
-from chia.wallet.puzzles.cat_loader import CAT_MOD
-from chia.wallet.trading.offer import OFFER_MOD, NotarizedPayment, Offer
+from chik.wallet.outer_puzzles import AssetType
+from chik.wallet.payment import Payment
+from chik.wallet.puzzle_drivers import PuzzleInfo
+from chik.wallet.puzzles.cat_loader import CAT_MOD
+from chik.wallet.trading.offer import OFFER_MOD, NotarizedPayment, Offer
 
 acs = Program.to(1)
 acs_ph = acs.get_tree_hash()
@@ -43,7 +43,7 @@ def str_to_cat_hash(tail_str: str) -> bytes32:
     return construct_cat_puzzle(CAT_MOD, str_to_tail_hash(tail_str), acs).get_tree_hash()
 
 
-# This method takes a dictionary of strings mapping to amounts and generates the appropriate CAT/XCH coins
+# This method takes a dictionary of strings mapping to amounts and generates the appropriate CAT/XCK coins
 async def generate_coins(
     sim,
     sim_client,
@@ -175,7 +175,7 @@ class TestOfferLifecycle:
                 "blue": [3000],
             }
             all_coins: Dict[Optional[str], List[Coin]] = await generate_coins(sim, sim_client, coins_needed)
-            chia_coins: List[Coin] = all_coins[None]
+            chik_coins: List[Coin] = all_coins[None]
             red_coins: List[Coin] = all_coins["red"]
             blue_coins: List[Coin] = all_coins["blue"]
 
@@ -192,23 +192,23 @@ class TestOfferLifecycle:
             for key, value in driver_dict.items():
                 driver_dict_as_infos[key.hex()] = value.info
 
-            # Create an XCH Offer for RED
-            chia_requested_payments: Dict[Optional[bytes32], List[Payment]] = {
+            # Create an XCK Offer for RED
+            chik_requested_payments: Dict[Optional[bytes32], List[Payment]] = {
                 str_to_tail_hash("red"): [
                     Payment(acs_ph, 100, [b"memo"]),
                     Payment(acs_ph, 200, [b"memo"]),
                 ]
             }
 
-            chia_requested_payments: Dict[Optional[bytes32], List[NotarizedPayment]] = Offer.notarize_payments(
-                chia_requested_payments, chia_coins
+            chik_requested_payments: Dict[Optional[bytes32], List[NotarizedPayment]] = Offer.notarize_payments(
+                chik_requested_payments, chik_coins
             )
-            chia_announcements: List[Announcement] = Offer.calculate_announcements(chia_requested_payments, driver_dict)
-            chia_secured_bundle: SpendBundle = generate_secure_bundle(chia_coins, chia_announcements, 1000)
-            chia_offer = Offer(chia_requested_payments, chia_secured_bundle, driver_dict)
-            assert not chia_offer.is_valid()
+            chik_announcements: List[Announcement] = Offer.calculate_announcements(chik_requested_payments, driver_dict)
+            chik_secured_bundle: SpendBundle = generate_secure_bundle(chik_coins, chik_announcements, 1000)
+            chik_offer = Offer(chik_requested_payments, chik_secured_bundle, driver_dict)
+            assert not chik_offer.is_valid()
 
-            # Create a RED Offer for XCH
+            # Create a RED Offer for XCK
             red_coins_1 = red_coins[0:1]
             red_coins_2 = red_coins[1:]
             red_requested_payments: Dict[Optional[bytes32], List[Payment]] = {
@@ -247,12 +247,12 @@ class TestOfferLifecycle:
             assert not red_offer_2.is_valid()
 
             # Test aggregation of offers
-            new_offer = Offer.aggregate([chia_offer, red_offer, red_offer_2])
+            new_offer = Offer.aggregate([chik_offer, red_offer, red_offer_2])
             assert new_offer.get_offered_amounts() == {None: 1000, str_to_tail_hash("red"): 350}
             assert new_offer.get_requested_amounts() == {None: 700, str_to_tail_hash("red"): 300}
             assert new_offer.is_valid()
 
-            # Create yet another offer of BLUE for XCH and RED
+            # Create yet another offer of BLUE for XCK and RED
             blue_requested_payments: Dict[Optional[bytes32], List[Payment]] = {
                 None: [
                     Payment(acs_ph, 200, [b"blue memo"]),
@@ -282,15 +282,15 @@ class TestOfferLifecycle:
             assert new_offer.get_requested_amounts() == {None: 900, str_to_tail_hash("red"): 350}
             assert new_offer.summary() == (
                 {
-                    "xch": 1000,
+                    "xck": 1000,
                     str_to_tail_hash("red").hex(): 350,
                     str_to_tail_hash("blue").hex(): 2000,
                 },
-                {"xch": 900, str_to_tail_hash("red").hex(): 350},
+                {"xck": 900, str_to_tail_hash("red").hex(): 350},
                 driver_dict_as_infos,
             )
             assert new_offer.get_pending_amounts() == {
-                "xch": 1200,
+                "xck": 1200,
                 str_to_tail_hash("red").hex(): 350,
                 str_to_tail_hash("blue").hex(): 3000,
             }

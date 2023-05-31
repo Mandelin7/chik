@@ -5,9 +5,9 @@ from typing import AsyncIterator
 
 import pytest
 
-from chia.simulator.setup_nodes import SimulatorsAndWallets
-from chia.util.ints import uint32
-from chia.wallet.wallet_state_manager import WalletStateManager
+from chik.simulator.setup_nodes import SimulatorsAndWallets
+from chik.util.ints import uint32
+from chik.wallet.wallet_state_manager import WalletStateManager
 
 
 @asynccontextmanager

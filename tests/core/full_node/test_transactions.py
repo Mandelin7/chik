@@ -6,13 +6,13 @@ from typing import Optional
 
 import pytest
 
-from chia.consensus.block_record import BlockRecord
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16, uint32
+from chik.consensus.block_record import BlockRecord
+from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from chik.full_node.full_node_api import FullNodeAPI
+from chik.simulator.simulator_protocol import FarmNewBlockProtocol
+from chik.simulator.time_out_assert import time_out_assert
+from chik.types.peer_info import PeerInfo
+from chik.util.ints import uint16, uint32
 
 
 class TestTransactions:

@@ -8,24 +8,24 @@ import pytest
 from clvm.casts import int_to_bytes
 from colorlog import getLogger
 
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.protocols import wallet_protocol
-from chia.protocols.full_node_protocol import RespondTransaction
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.protocols.wallet_protocol import CoinStateUpdate, RespondToCoinUpdates, RespondToPhUpdates
-from chia.server.outbound_message import NodeType
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.simulator.wallet_tools import WalletTool
-from chia.types.blockchain_format.coin import Coin
-from chia.types.coin_record import CoinRecord
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.condition_with_args import ConditionWithArgs
-from chia.types.peer_info import PeerInfo
-from chia.types.spend_bundle import SpendBundle
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.wallet import Wallet
-from chia.wallet.wallet_state_manager import WalletStateManager
+from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from chik.protocols import wallet_protocol
+from chik.protocols.full_node_protocol import RespondTransaction
+from chik.protocols.protocol_message_types import ProtocolMessageTypes
+from chik.protocols.wallet_protocol import CoinStateUpdate, RespondToCoinUpdates, RespondToPhUpdates
+from chik.server.outbound_message import NodeType
+from chik.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
+from chik.simulator.time_out_assert import time_out_assert
+from chik.simulator.wallet_tools import WalletTool
+from chik.types.blockchain_format.coin import Coin
+from chik.types.coin_record import CoinRecord
+from chik.types.condition_opcodes import ConditionOpcode
+from chik.types.condition_with_args import ConditionWithArgs
+from chik.types.peer_info import PeerInfo
+from chik.types.spend_bundle import SpendBundle
+from chik.util.ints import uint16, uint32, uint64
+from chik.wallet.wallet import Wallet
+from chik.wallet.wallet_state_manager import WalletStateManager
 from tests.connection_utils import add_dummy_connection
 
 
@@ -194,7 +194,7 @@ class TestSimpleSyncProtocol:
         await full_node_api.process_transaction_records(records=[tx_record])
 
         # Let's make sure the wallet can handle a non ephemeral launcher
-        from chia.wallet.puzzles.singleton_top_layer import SINGLETON_LAUNCHER_HASH
+        from chik.wallet.puzzles.singleton_top_layer import SINGLETON_LAUNCHER_HASH
 
         await full_node_api.wait_for_wallet_synced(wallet_node=wallet_node, timeout=20)
 

@@ -5,15 +5,15 @@ from typing import Any, List, Tuple
 
 import pytest
 
-from chia.data_layer.data_layer_wallet import DataLayerWallet
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.ints import uint64
-from chia.wallet.puzzle_drivers import Solver
-from chia.wallet.trade_record import TradeRecord
-from chia.wallet.trading.offer import Offer
-from chia.wallet.trading.trade_status import TradeStatus
-from chia.wallet.util.merkle_utils import build_merkle_tree, simplify_merkle_proof
+from chik.data_layer.data_layer_wallet import DataLayerWallet
+from chik.simulator.time_out_assert import time_out_assert
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.util.ints import uint64
+from chik.wallet.puzzle_drivers import Solver
+from chik.wallet.trade_record import TradeRecord
+from chik.wallet.trading.offer import Offer
+from chik.wallet.trading.trade_status import TradeStatus
+from chik.wallet.util.merkle_utils import build_merkle_tree, simplify_merkle_proof
 
 
 async def is_singleton_confirmed_and_root(dl_wallet: DataLayerWallet, lid: bytes32, root: bytes32) -> bool:

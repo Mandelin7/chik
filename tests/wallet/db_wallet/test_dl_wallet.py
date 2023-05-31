@@ -6,17 +6,17 @@ from typing import Any, List
 
 import pytest
 
-from chia.data_layer.data_layer_wallet import DataLayerWallet, Mirror
-from chia.simulator.setup_nodes import SimulatorsAndWallets
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import adjusted_timeout, time_out_assert
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.db_wallet.db_wallet_puzzles import create_mirror_puzzle
-from chia.wallet.util.merkle_tree import MerkleTree
+from chik.data_layer.data_layer_wallet import DataLayerWallet, Mirror
+from chik.simulator.setup_nodes import SimulatorsAndWallets
+from chik.simulator.simulator_protocol import FarmNewBlockProtocol
+from chik.simulator.time_out_assert import adjusted_timeout, time_out_assert
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.peer_info import PeerInfo
+from chik.util.ints import uint16, uint32, uint64
+from chik.wallet.db_wallet.db_wallet_puzzles import create_mirror_puzzle
+from chik.wallet.util.merkle_tree import MerkleTree
 
 pytestmark = pytest.mark.data_layer
 

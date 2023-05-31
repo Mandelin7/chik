@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from chia.full_node.sync_store import SyncStore
-from chia.util.hash import std_hash
+from chik.full_node.sync_store import SyncStore
+from chik.util.hash import std_hash
 
 
 class TestStore:

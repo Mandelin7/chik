@@ -26,7 +26,7 @@ get_bladebit_url() {
   OS="$2" # "ubuntu", "centos", "macos"
   ARCH="$3" # "x86-64", "arm64"
 
-  GITHUB_BASE_URL="https://github.com/Chia-Network/bladebit/releases/download"
+  GITHUB_BASE_URL="https://github.com/Chik-Network/bladebit/releases/download"
   BLADEBIT_FILENAME="$(get_bladebit_filename "${BLADEBIT_VER}" "${OS}" "${ARCH}")"
 
   echo "${GITHUB_BASE_URL}/${BLADEBIT_VER}/${BLADEBIT_FILENAME}"
@@ -38,9 +38,9 @@ get_madmax_filename() {
   OS="$3" # "macos", others
   ARCH="$4" # "arm64", "x86-64"
 
-  CHIA_PLOT="chia_plot"
+  CHIK_PLOT="chik_plot"
   if [ "$KSIZE" = "k34" ]; then
-    CHIA_PLOT="chia_plot_k34"
+    CHIK_PLOT="chik_plot_k34"
   fi
   SUFFIX=""
   if [ "$OS" = "macos" ]; then
@@ -54,7 +54,7 @@ get_madmax_filename() {
     SUFFIX="${ARCH}"
   fi
 
-  echo "${CHIA_PLOT}-${MADMAX_VER}-${SUFFIX}"
+  echo "${CHIK_PLOT}-${MADMAX_VER}-${SUFFIX}"
 }
 
 get_madmax_url() {
@@ -100,7 +100,7 @@ if [ "${SCRIPT_DIR}" != "$(pwd)" ]; then
 fi
 
 if [ -z "$VIRTUAL_ENV" ]; then
-  echo "This requires the chia python virtual environment."
+  echo "This requires the chik python virtual environment."
   echo "Execute '. ./activate' before running."
   exit 1
 fi
@@ -178,9 +178,9 @@ elif [ "$PLOTTER" = "madmax" ]; then
   fi
   echo "Successfully downloaded: ${URL}"
   madmax_filename="$(get_madmax_filename "k32" "${VERSION}" "${OS}" "${ARCH}")"
-  mv -f "${madmax_filename}" chia_plot
-  chmod 755 chia_plot
-  echo "Successfully installed madmax to $(pwd)/chia_plot"
+  mv -f "${madmax_filename}" chik_plot
+  chmod 755 chik_plot
+  echo "Successfully installed madmax to $(pwd)/chik_plot"
 
   URL="$(get_madmax_url k34 "${VERSION}" "${OS}" "${ARCH}")"
   echo "Fetching binary from: ${URL}"
@@ -190,9 +190,9 @@ elif [ "$PLOTTER" = "madmax" ]; then
   fi
   echo "Successfully downloaded: ${URL}"
   madmax_filename="$(get_madmax_filename "k34" "${VERSION}" "${OS}" "${ARCH}")"
-  mv -f "${madmax_filename}" chia_plot_k34
-  chmod 755 chia_plot_k34
-  echo "Successfully installed madmax for k34 to $(pwd)/chia_plot_k34"
+  mv -f "${madmax_filename}" chik_plot_k34
+  chmod 755 chik_plot_k34
+  echo "Successfully installed madmax for k34 to $(pwd)/chik_plot_k34"
 else
   usage
 fi

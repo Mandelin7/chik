@@ -10,10 +10,10 @@ from typing import Any, Callable, List, Tuple, Type, Union
 import pytest
 from blspy import G1Element
 
-from chia.plot_sync.delta import Delta
-from chia.plot_sync.receiver import Receiver, Sync
-from chia.plot_sync.util import ErrorCodes, State
-from chia.protocols.harvester_protocol import (
+from chik.plot_sync.delta import Delta
+from chik.plot_sync.receiver import Receiver, Sync
+from chik.plot_sync.util import ErrorCodes, State
+from chik.protocols.harvester_protocol import (
     Plot,
     PlotSyncDone,
     PlotSyncIdentifier,
@@ -22,11 +22,11 @@ from chia.protocols.harvester_protocol import (
     PlotSyncResponse,
     PlotSyncStart,
 )
-from chia.server.outbound_message import NodeType
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.ints import uint8, uint32, uint64
-from chia.util.misc import get_list_or_len
-from chia.util.streamable import _T_Streamable
+from chik.server.outbound_message import NodeType
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.util.ints import uint8, uint32, uint64
+from chik.util.misc import get_list_or_len
+from chik.util.streamable import _T_Streamable
 from tests.plot_sync.util import get_dummy_connection
 
 log = logging.getLogger(__name__)
@@ -78,7 +78,7 @@ def create_payload(payload_type: Any, start: bool, *args: Any) -> Any:
 def assert_error_response(plot_sync: Receiver, error_code: ErrorCodes) -> None:
     connection = plot_sync.connection()
     assert connection is not None
-    # WSChiaConnection doesn't have last_sent_message its part of the WSChiaConnectionDummy class used for testing
+    # WSChikConnection doesn't have last_sent_message its part of the WSChikConnectionDummy class used for testing
     message = connection.last_sent_message  # type: ignore[attr-defined]
     assert message is not None
     response: PlotSyncResponse = PlotSyncResponse.from_bytes(message.data)

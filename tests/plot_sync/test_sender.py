@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import pytest
 
-from chia.plot_sync.exceptions import AlreadyStartedError, InvalidConnectionTypeError
-from chia.plot_sync.sender import ExpectedResponse, Sender
-from chia.plot_sync.util import Constants
-from chia.protocols.harvester_protocol import PlotSyncIdentifier, PlotSyncResponse
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.server.outbound_message import NodeType
-from chia.simulator.block_tools import BlockTools
-from chia.util.ints import int16, uint64
+from chik.plot_sync.exceptions import AlreadyStartedError, InvalidConnectionTypeError
+from chik.plot_sync.sender import ExpectedResponse, Sender
+from chik.plot_sync.util import Constants
+from chik.protocols.harvester_protocol import PlotSyncIdentifier, PlotSyncResponse
+from chik.protocols.protocol_message_types import ProtocolMessageTypes
+from chik.server.outbound_message import NodeType
+from chik.simulator.block_tools import BlockTools
+from chik.util.ints import int16, uint64
 from tests.plot_sync.util import get_dummy_connection, plot_sync_identifier
 
 

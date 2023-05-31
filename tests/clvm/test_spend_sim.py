@@ -3,11 +3,11 @@ from __future__ import annotations
 import pytest
 from blspy import G2Element
 
-from chia.clvm.spend_sim import sim_and_client
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.types.spend_bundle import SpendBundle
+from chik.clvm.spend_sim import sim_and_client
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_spend import CoinSpend
+from chik.types.spend_bundle import SpendBundle
 
 
 class TestSpendSim:

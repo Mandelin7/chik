@@ -8,18 +8,18 @@ from typing import Dict, Optional
 from blspy import G2Element
 from clvm.casts import int_to_bytes
 
-from chia.consensus.cost_calculator import NPCResult
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.full_node.mempool_manager import MempoolManager
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_record import CoinRecord
-from chia.types.coin_spend import CoinSpend
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.spend_bundle import SpendBundle
-from chia.types.spend_bundle_conditions import Spend, SpendBundleConditions
-from chia.util.ints import uint32, uint64
+from chik.consensus.cost_calculator import NPCResult
+from chik.consensus.default_constants import DEFAULT_CONSTANTS
+from chik.full_node.mempool_manager import MempoolManager
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_record import CoinRecord
+from chik.types.coin_spend import CoinSpend
+from chik.types.condition_opcodes import ConditionOpcode
+from chik.types.spend_bundle import SpendBundle
+from chik.types.spend_bundle_conditions import Spend, SpendBundleConditions
+from chik.util.ints import uint32, uint64
 
 # this is one week worth of blocks
 NUM_ITERS = 32256

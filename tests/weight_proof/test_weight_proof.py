@@ -6,21 +6,21 @@ from typing import Dict, List, Optional, Tuple
 import aiosqlite
 import pytest
 
-from chia.consensus.block_record import BlockRecord
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.consensus.full_block_to_block_record import block_to_block_record
-from chia.consensus.pot_iterations import calculate_iterations_quality
-from chia.full_node.block_store import BlockStore
-from chia.full_node.weight_proof import WeightProofHandler, _map_sub_epoch_summaries, _validate_summaries_weight
-from chia.simulator.block_tools import test_constants
-from chia.types.blockchain_format.proof_of_space import verify_and_get_quality_string
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.blockchain_format.sub_epoch_summary import SubEpochSummary
-from chia.types.full_block import FullBlock
-from chia.types.header_block import HeaderBlock
-from chia.util.block_cache import BlockCache
-from chia.util.generator_tools import get_block_header
-from chia.util.ints import uint32, uint64
+from chik.consensus.block_record import BlockRecord
+from chik.consensus.default_constants import DEFAULT_CONSTANTS
+from chik.consensus.full_block_to_block_record import block_to_block_record
+from chik.consensus.pot_iterations import calculate_iterations_quality
+from chik.full_node.block_store import BlockStore
+from chik.full_node.weight_proof import WeightProofHandler, _map_sub_epoch_summaries, _validate_summaries_weight
+from chik.simulator.block_tools import test_constants
+from chik.types.blockchain_format.proof_of_space import verify_and_get_quality_string
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.blockchain_format.sub_epoch_summary import SubEpochSummary
+from chik.types.full_block import FullBlock
+from chik.types.header_block import HeaderBlock
+from chik.util.block_cache import BlockCache
+from chik.util.generator_tools import get_block_header
+from chik.util.ints import uint32, uint64
 
 
 def count_sub_epochs(blockchain, last_hash) -> int:

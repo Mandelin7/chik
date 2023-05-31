@@ -7,7 +7,7 @@ from time import sleep
 
 import pytest
 
-from chia.util.logging import TimedDuplicateFilter
+from chik.util.logging import TimedDuplicateFilter
 
 
 def test_logging_filter(caplog: pytest.LogCaptureFixture) -> None:

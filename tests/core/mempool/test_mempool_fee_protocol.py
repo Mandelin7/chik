@@ -5,23 +5,23 @@ from typing import List, Tuple, Union
 
 import pytest
 
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.protocols import wallet_protocol
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.protocols.wallet_protocol import RespondFeeEstimates
-from chia.server.server import ChiaServer
-from chia.simulator.block_tools import BlockTools
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.time_out_assert import time_out_assert
-from chia.util.ints import uint64
-from chia.wallet.wallet import Wallet
+from chik.full_node.full_node_api import FullNodeAPI
+from chik.protocols import wallet_protocol
+from chik.protocols.protocol_message_types import ProtocolMessageTypes
+from chik.protocols.wallet_protocol import RespondFeeEstimates
+from chik.server.server import ChikServer
+from chik.simulator.block_tools import BlockTools
+from chik.simulator.full_node_simulator import FullNodeSimulator
+from chik.simulator.time_out_assert import time_out_assert
+from chik.util.ints import uint64
+from chik.wallet.wallet import Wallet
 from tests.core.node_height import node_height_at_least
 
 
 @pytest.mark.asyncio
 async def test_protocol_messages(
     simulator_and_wallet: Tuple[
-        List[Union[FullNodeAPI, FullNodeSimulator]], List[Tuple[Wallet, ChiaServer]], BlockTools
+        List[Union[FullNodeAPI, FullNodeSimulator]], List[Tuple[Wallet, ChikServer]], BlockTools
     ]
 ) -> None:
     full_nodes, wallets, bt = simulator_and_wallet

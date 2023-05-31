@@ -7,29 +7,27 @@ import cProfile
 import logging
 import os
 import shutil
-import sys
 import tempfile
 import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Callable, Iterator, List, Optional, cast
+from typing import Callable, Iterator, List, Optional
 
 import aiosqlite
 import click
 import zstd
 
-from chia.cmds.init_funcs import chia_init
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.full_node.full_node import FullNode
-from chia.server.outbound_message import Message, NodeType
-from chia.server.server import ChiaServer
-from chia.server.ws_connection import WSChiaConnection
-from chia.simulator.block_tools import make_unfinished_block
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.full_block import FullBlock
-from chia.types.peer_info import PeerInfo
-from chia.util.config import load_config
-from chia.util.ints import uint16
+from chik.cmds.init_funcs import chik_init
+from chik.consensus.default_constants import DEFAULT_CONSTANTS
+from chik.full_node.full_node import FullNode
+from chik.server.outbound_message import Message, NodeType
+from chik.server.ws_connection import WSChikConnection
+from chik.simulator.block_tools import make_unfinished_block
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.full_block import FullBlock
+from chik.types.peer_info import PeerInfo
+from chik.util.config import load_config
+from chik.util.ints import uint16
 from tools.test_constants import test_constants as TEST_CONSTANTS
 
 
@@ -46,9 +44,6 @@ class ExitOnError(logging.Handler):
 
 @contextmanager
 def enable_profiler(profile: bool, counter: int) -> Iterator[None]:
-    if sys.version_info < (3, 8):
-        raise Exception(f"Python 3.8 or higher required, running with: {sys.version}")
-
     if not profile:
         yield
         return
@@ -74,7 +69,7 @@ class FakeServer:
 
     def get_connections(
         self, node_type: Optional[NodeType] = None, *, outbound: Optional[bool] = False
-    ) -> List[WSChiaConnection]:
+    ) -> List[WSChikConnection]:
         return []
 
     def is_duplicate_or_self_connection(self, target_node: PeerInfo) -> bool:
@@ -112,9 +107,6 @@ async def run_sync_test(
     node_profiler: bool,
     start_at_checkpoint: Optional[str],
 ) -> None:
-    if sys.version_info < (3, 8):
-        raise Exception(f"Python 3.8 or higher required, running with: {sys.version}")
-
     logger = logging.getLogger()
     logger.setLevel(logging.WARNING)
     handler = logging.FileHandler("test-full-sync.log")
@@ -133,7 +125,7 @@ async def run_sync_test(
         if start_at_checkpoint is not None:
             shutil.copytree(Path(start_at_checkpoint) / ".", root_path, dirs_exist_ok=True)
 
-        chia_init(root_path, should_check_keys=False, v1_db=(db_version == 1))
+        chik_init(root_path, should_check_keys=False, v1_db=(db_version == 1))
         config = load_config(root_path, "config.yaml")
 
         if test_constants:
@@ -152,7 +144,7 @@ async def run_sync_test(
         )
 
         try:
-            full_node.set_server(cast(ChiaServer, FakeServer()))
+            full_node.set_server(FakeServer())  # type: ignore[arg-type]
             await full_node._start()
 
             peak = full_node.blockchain.get_peak()
@@ -161,7 +153,7 @@ async def run_sync_test(
             else:
                 height = 0
 
-            peer: WSChiaConnection = cast(WSChiaConnection, FakePeer())
+            peer: WSChikConnection = FakePeer()  # type: ignore[assignment]
 
             print()
             counter = 0
@@ -246,7 +238,7 @@ def main() -> None:
     pass
 
 
-@main.command("run", help="run simulated full sync from an existing blockchain db")
+@main.command("run", short_help="run simulated full sync from an existing blockchain db")
 @click.argument("file", type=click.Path(), required=True)
 @click.option("--db-version", type=int, required=False, default=2, help="the DB version to use in simulated node")
 @click.option("--profile", is_flag=True, required=False, default=False, help="dump CPU profiles for slow batches")
@@ -310,7 +302,7 @@ def run(
     )
 
 
-@main.command("analyze", help="generate call stacks for all profiles dumped to current directory")
+@main.command("analyze", short_help="generate call stacks for all profiles dumped to current directory")
 def analyze() -> None:
     from glob import glob
     from shlex import quote
@@ -322,7 +314,7 @@ def analyze() -> None:
         check_call(f"gprof2dot -f pstats {quote(input_file)} | dot -T png >{quote(output)}", shell=True)
 
 
-@main.command("create-checkpoint", help="sync the full node up to specified height and save its state")
+@main.command("create-checkpoint", short_help="sync the full node up to specified height and save its state")
 @click.argument("file", type=click.Path(), required=True)
 @click.argument("out-file", type=click.Path(), required=True)
 @click.option("--height", type=int, required=True, help="Sync node up to this height")
@@ -340,7 +332,7 @@ async def run_sync_checkpoint(
 ) -> None:
     root_path.mkdir(parents=True, exist_ok=True)
 
-    chia_init(root_path, should_check_keys=False, v1_db=False)
+    chik_init(root_path, should_check_keys=False, v1_db=False)
     config = load_config(root_path, "config.yaml")
 
     overrides = config["network_overrides"]["constants"][config["selected_network"]]
@@ -356,7 +348,7 @@ async def run_sync_checkpoint(
         full_node.set_server(FakeServer())  # type: ignore[arg-type]
         await full_node._start()
 
-        peer: WSChiaConnection = FakePeer()  # type: ignore[assignment]
+        peer: WSChikConnection = FakePeer()  # type: ignore[assignment]
 
         print()
         height = 0

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from unittest import TestCase
 
-from chia.types.blockchain_format.program import INFINITE_COST, Program
-from chia.types.blockchain_format.serialized_program import SerializedProgram
-from chia.wallet.puzzles.load_clvm import load_clvm
+from chik.types.blockchain_format.program import INFINITE_COST, Program
+from chik.types.blockchain_format.serialized_program import SerializedProgram
+from chik.wallet.puzzles.load_clvm import load_clvm
 
 SHA256TREE_MOD = load_clvm("sha256tree_module.clsp")
 

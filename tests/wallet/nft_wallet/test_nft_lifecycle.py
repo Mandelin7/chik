@@ -6,15 +6,15 @@ from typing import List
 import pytest
 from blspy import G2Element
 
-from chia.clvm.spend_sim import CostLogger, sim_and_client
-from chia.types.announcement import Announcement
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.types.spend_bundle import SpendBundle
-from chia.util.errors import Err
-from chia.wallet.nft_wallet.nft_puzzles import (
+from chik.clvm.spend_sim import CostLogger, sim_and_client
+from chik.types.announcement import Announcement
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_spend import CoinSpend
+from chik.types.mempool_inclusion_status import MempoolInclusionStatus
+from chik.types.spend_bundle import SpendBundle
+from chik.util.errors import Err
+from chik.wallet.nft_wallet.nft_puzzles import (
     NFT_METADATA_UPDATER,
     NFT_TRANSFER_PROGRAM_DEFAULT,
     construct_ownership_layer,
@@ -301,7 +301,7 @@ async def test_default_transfer_program(cost_logger: CostLogger) -> None:
         cat_coin = (
             await sim_client.get_coin_records_by_puzzle_hash(FAKE_CAT.get_tree_hash(), include_spent_coins=False)
         )[0].coin
-        xch_coin = (await sim_client.get_coin_records_by_puzzle_hash(ACS_PH, include_spent_coins=False))[0].coin
+        xck_coin = (await sim_client.get_coin_records_by_puzzle_hash(ACS_PH, include_spent_coins=False))[0].coin
 
         ownership_spend = CoinSpend(
             ownership_coin,
@@ -320,8 +320,8 @@ async def test_default_transfer_program(cost_logger: CostLogger) -> None:
         expected_announcement_data = Program.to(
             (FAKE_LAUNCHER_ID, [[ROYALTY_ADDRESS, 50, [ROYALTY_ADDRESS]]])
         ).get_tree_hash()
-        xch_announcement_spend = CoinSpend(
-            xch_coin,
+        xck_announcement_spend = CoinSpend(
+            xck_coin,
             ACS,
             Program.to([[62, expected_announcement_data]]),
         )
@@ -331,16 +331,16 @@ async def test_default_transfer_program(cost_logger: CostLogger) -> None:
         # Make sure every combo except all of them fail
         for i in range(1, 3):
             for announcement_combo in itertools.combinations(
-                [did_announcement_spend, xch_announcement_spend, cat_announcement_spend], i
+                [did_announcement_spend, xck_announcement_spend, cat_announcement_spend], i
             ):
                 result = await sim_client.push_tx(SpendBundle([ownership_spend, *announcement_combo], G2Element()))
                 assert result == (MempoolInclusionStatus.FAILED, Err.ASSERT_ANNOUNCE_CONSUMED_FAILED)
 
         # Make sure all of them together pass
         full_bundle = cost_logger.add_cost(
-            "Ownership only coin (default NFT1 TP) - one child created + update DID + offer CATs + offer XCH",
+            "Ownership only coin (default NFT1 TP) - one child created + update DID + offer CATs + offer XCK",
             SpendBundle(
-                [ownership_spend, did_announcement_spend, xch_announcement_spend, cat_announcement_spend], G2Element()
+                [ownership_spend, did_announcement_spend, xck_announcement_spend, cat_announcement_spend], G2Element()
             ),
         )
         result = await sim_client.push_tx(full_bundle)

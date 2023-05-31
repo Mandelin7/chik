@@ -5,16 +5,16 @@ import logging
 
 import pytest
 
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.data_layer.data_layer_wallet import Mirror
-from chia.rpc.wallet_rpc_client import WalletRpcClient
-from chia.simulator.setup_nodes import SimulatorsAndWalletsServices
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.db_wallet.db_wallet_puzzles import create_mirror_puzzle
+from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from chik.data_layer.data_layer_wallet import Mirror
+from chik.rpc.wallet_rpc_client import WalletRpcClient
+from chik.simulator.setup_nodes import SimulatorsAndWalletsServices
+from chik.simulator.simulator_protocol import FarmNewBlockProtocol
+from chik.simulator.time_out_assert import time_out_assert
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.peer_info import PeerInfo
+from chik.util.ints import uint16, uint32, uint64
+from chik.wallet.db_wallet.db_wallet_puzzles import create_mirror_puzzle
 from tests.util.rpc import validate_get_routes
 
 log = logging.getLogger(__name__)

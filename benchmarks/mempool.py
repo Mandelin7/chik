@@ -9,19 +9,19 @@ from subprocess import check_call
 from time import monotonic
 from typing import Dict, Iterator, List, Optional, Tuple
 
-from chia.consensus.coinbase import create_farmer_coin, create_pool_coin
-from chia.consensus.cost_calculator import NPCResult
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.full_node.mempool_manager import MempoolManager
-from chia.simulator.wallet_tools import WalletTool
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_record import CoinRecord
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.types.spend_bundle import SpendBundle
-from chia.types.spend_bundle_conditions import Spend, SpendBundleConditions
-from chia.util.chunks import chunks
-from chia.util.ints import uint32, uint64
+from chik.consensus.coinbase import create_farmer_coin, create_pool_coin
+from chik.consensus.cost_calculator import NPCResult
+from chik.consensus.default_constants import DEFAULT_CONSTANTS
+from chik.full_node.mempool_manager import MempoolManager
+from chik.simulator.wallet_tools import WalletTool
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_record import CoinRecord
+from chik.types.mempool_inclusion_status import MempoolInclusionStatus
+from chik.types.spend_bundle import SpendBundle
+from chik.types.spend_bundle_conditions import Spend, SpendBundleConditions
+from chik.util.chunks import chunks
+from chik.util.ints import uint32, uint64
 
 NUM_ITERS = 200
 NUM_PEERS = 5

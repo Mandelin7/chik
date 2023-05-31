@@ -6,13 +6,13 @@ from typing import Dict, List
 
 import pytest
 
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.ints import uint32, uint64
-from chia.wallet.lineage_proof import LineageProof
-from chia.wallet.nft_wallet.nft_info import NFTCoinInfo
-from chia.wallet.wallet_nft_store import WalletNftStore
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.util.ints import uint32, uint64
+from chik.wallet.lineage_proof import LineageProof
+from chik.wallet.nft_wallet.nft_info import NFTCoinInfo
+from chik.wallet.wallet_nft_store import WalletNftStore
 from tests.util.db_connection import DBConnection
 
 

@@ -3,6 +3,8 @@ name: 📦🚀 Build Installer - Linux DEB AMD64
 on:
   workflow_dispatch:
   push:
+    paths-ignore:
+    - '**.md'
     branches:
       - 'long_lived/**'
       #- main
@@ -10,8 +12,15 @@ on:
   release:
     types: [published]
   pull_request:
+    paths-ignore:
+    - '**.md'
     branches:
       - '**'
+
+concurrency:
+  # SHA is added to the end if on `main` to let all main workflows run
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || startsWith(github.ref, 'refs/heads/long_lived/')) && github.sha || '' }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -26,10 +35,10 @@ jobs:
         python-version: [3.8]
 
     steps:
-    - uses: Chia-Network/actions/clean-workspace@main
+    - uses: Chik-Network/actions/clean-workspace@main
 
     - name: Add safe git directory
-      uses: Chia-Network/actions/git-mark-workspace-safe@main
+      uses: Chik-Network/actions/git-mark-workspace-safe@main
 
     - name: Checkout Code
       uses: actions/checkout@v3
@@ -37,7 +46,7 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
-    #- uses: Chia-Network/actions/git-ssh-to-https@main
+    #- uses: Chik-Network/actions/git-ssh-to-https@main
 
     - name: Cleanup any leftovers that exist from previous runs
       run: bash build_scripts/clean-runner.sh || true
@@ -123,7 +132,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
         development: true
 
-    - uses: chia-network/actions/activate-venv@main
+    - uses: chik-network/actions/activate-venv@main
 
     - name: Build GUI
       continue-on-error: false

@@ -3,6 +3,8 @@ name: 📦🚀 Build Installer - Windows 10
 on:
   workflow_dispatch:
   push:
+    paths-ignore:
+    - '**.md'
     branches:
       - 'long_lived/**'
       #- main
@@ -10,13 +12,20 @@ on:
   release:
     types: [published]
   pull_request:
+    paths-ignore:
+    - '**.md'
     branches:
       - '**'
+
+concurrency:
+  # SHA is added to the end if on `main` to let all main workflows run
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || startsWith(github.ref, 'refs/heads/long_lived/')) && github.sha || '' }}
+  cancel-in-progress: true
 
 jobs:
   build:
     name: Windows 10 Installer
-    runs-on: [windows-2019]
+    runs-on: windows-2019
     timeout-minutes: 50
     strategy:
       fail-fast: false
@@ -77,7 +86,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
-    - uses: Chia-Network/actions/setup-python@main
+    - uses: Chik-Network/actions/setup-python@main
       name: Install Python ${{ matrix.python-version }}
       with:
         python-version: ${{ matrix.python-version }}
@@ -198,7 +207,7 @@ jobs:
       run: |
         $env:path="C:\Program` Files` (x86)\Microsoft` Visual` Studio\2019\Enterprise\SDK\ScopeCppSDK\vc15\VC\bin\;$env:path"
         $env:path="C:\Program` Files` (x86)\Windows` Kits\10\App` Certification` Kit;$env:path"
-        .\venv\Scripts\Activate.ps1                           
+        .\venv\Scripts\Activate.ps1
         cd .\build_scripts
         .\build_windows-2-installer.ps1
 

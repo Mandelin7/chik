@@ -11,44 +11,44 @@ import pytest
 from blspy import AugSchemeMPL, G2Element, PrivateKey
 from clvm.casts import int_to_bytes
 
-from chia.consensus.pot_iterations import is_overflow_block
-from chia.full_node.bundle_tools import detect_potential_template_generator
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.full_node.signage_point import SignagePoint
-from chia.protocols import full_node_protocol
-from chia.protocols import full_node_protocol as fnp
-from chia.protocols import timelord_protocol, wallet_protocol
-from chia.protocols.full_node_protocol import RespondTransaction
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.protocols.shared_protocol import Capability, capabilities
-from chia.protocols.wallet_protocol import SendTransaction, TransactionAck
-from chia.server.address_manager import AddressManager
-from chia.server.outbound_message import Message, NodeType
-from chia.server.server import ChiaServer
-from chia.simulator.block_tools import BlockTools, get_signage_point, test_constants
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert, time_out_assert_custom_interval, time_out_messages
-from chia.types.blockchain_format.classgroup import ClassgroupElement
-from chia.types.blockchain_format.foliage import Foliage, FoliageTransactionBlock, TransactionsInfo
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.proof_of_space import ProofOfSpace, calculate_plot_id_pk, calculate_pos_challenge
-from chia.types.blockchain_format.reward_chain_block import RewardChainBlockUnfinished
-from chia.types.blockchain_format.serialized_program import SerializedProgram
-from chia.types.blockchain_format.vdf import CompressibleVDFField, VDFProof
-from chia.types.coin_spend import CoinSpend
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.condition_with_args import ConditionWithArgs
-from chia.types.full_block import FullBlock
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.types.peer_info import PeerInfo, TimestampedPeerInfo
-from chia.types.spend_bundle import SpendBundle
-from chia.types.unfinished_block import UnfinishedBlock
-from chia.util.errors import ConsensusError, Err
-from chia.util.hash import std_hash
-from chia.util.ints import uint8, uint16, uint32, uint64
-from chia.util.recursive_replace import recursive_replace
-from chia.util.vdf_prover import get_vdf_info_and_proof
-from chia.wallet.transaction_record import TransactionRecord
+from chik.consensus.pot_iterations import is_overflow_block
+from chik.full_node.bundle_tools import detect_potential_template_generator
+from chik.full_node.full_node_api import FullNodeAPI
+from chik.full_node.signage_point import SignagePoint
+from chik.protocols import full_node_protocol
+from chik.protocols import full_node_protocol as fnp
+from chik.protocols import timelord_protocol, wallet_protocol
+from chik.protocols.full_node_protocol import RespondTransaction
+from chik.protocols.protocol_message_types import ProtocolMessageTypes
+from chik.protocols.shared_protocol import Capability, capabilities
+from chik.protocols.wallet_protocol import SendTransaction, TransactionAck
+from chik.server.address_manager import AddressManager
+from chik.server.outbound_message import Message, NodeType
+from chik.server.server import ChikServer
+from chik.simulator.block_tools import BlockTools, get_signage_point, test_constants
+from chik.simulator.simulator_protocol import FarmNewBlockProtocol
+from chik.simulator.time_out_assert import time_out_assert, time_out_assert_custom_interval, time_out_messages
+from chik.types.blockchain_format.classgroup import ClassgroupElement
+from chik.types.blockchain_format.foliage import Foliage, FoliageTransactionBlock, TransactionsInfo
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.proof_of_space import ProofOfSpace, calculate_plot_id_pk, calculate_pos_challenge
+from chik.types.blockchain_format.reward_chain_block import RewardChainBlockUnfinished
+from chik.types.blockchain_format.serialized_program import SerializedProgram
+from chik.types.blockchain_format.vdf import CompressibleVDFField, VDFProof
+from chik.types.coin_spend import CoinSpend
+from chik.types.condition_opcodes import ConditionOpcode
+from chik.types.condition_with_args import ConditionWithArgs
+from chik.types.full_block import FullBlock
+from chik.types.mempool_inclusion_status import MempoolInclusionStatus
+from chik.types.peer_info import PeerInfo, TimestampedPeerInfo
+from chik.types.spend_bundle import SpendBundle
+from chik.types.unfinished_block import UnfinishedBlock
+from chik.util.errors import ConsensusError, Err
+from chik.util.hash import std_hash
+from chik.util.ints import uint8, uint16, uint32, uint64
+from chik.util.recursive_replace import recursive_replace
+from chik.util.vdf_prover import get_vdf_info_and_proof
+from chik.wallet.transaction_record import TransactionRecord
 from tests.blockchain.blockchain_test_utils import _validate_and_add_block, _validate_and_add_block_no_error
 from tests.connection_utils import add_dummy_connection, connect_and_get_peer
 from tests.core.full_node.stores.test_coin_store import get_future_reward_coins
@@ -1910,7 +1910,7 @@ class TestFullNodeProtocol:
             [capabilities, True],
             # an additional enabled but unknown capability
             [[*capabilities, (uint16(max(Capability) + 1), "1")], True],
-            # no capability, not even Chia mainnet
+            # no capability, not even Chik mainnet
             # TODO: shouldn't we fail without Capability.BASE?
             [[], True],
             # only an unknown capability
@@ -1921,7 +1921,7 @@ class TestFullNodeProtocol:
     @pytest.mark.asyncio
     async def test_invalid_capability_can_connect(
         self,
-        two_nodes: Tuple[FullNodeAPI, FullNodeAPI, ChiaServer, ChiaServer, BlockTools],
+        two_nodes: Tuple[FullNodeAPI, FullNodeAPI, ChikServer, ChikServer, BlockTools],
         self_hostname: str,
         custom_capabilities: List[Tuple[uint16, str]],
         expect_success: bool,

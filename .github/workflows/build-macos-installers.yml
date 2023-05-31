@@ -3,6 +3,8 @@ name: 📦🚀 Build Installers - MacOS
 on:
   workflow_dispatch:
   push:
+    paths-ignore:
+    - '**.md'
     branches:
       - 'long_lived/**'
       #- main
@@ -10,8 +12,15 @@ on:
   release:
     types: [published]
   pull_request:
+    paths-ignore:
+    - '**.md'
     branches:
       - '**'
+
+concurrency:
+  # SHA is added to the end if on `main` to let all main workflows run
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || startsWith(github.ref, 'refs/heads/long_lived/')) && github.sha || '' }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -24,21 +33,21 @@ jobs:
       matrix:
         python-version: [3.9]
         os:
-          - runs-on: macos-10.15
+          - runs-on: macOS-latest
             name: intel
             file-suffix: ""
-            mac-package-name: "Chik-darwin-x64"
+            mac-package-name: "Chia-darwin-x64"
             glue-name: "build-macos"
             bladebit-suffix: macos-x86-64.tar.gz
-          #- runs-on: [macOS, ARM64]
-            #name: m1
-            #file-suffix: "-arm64"
-            #mac-package-name: "Chik-darwin-arm64"
-            #glue-name: "build-mac-m1"
-            #bladebit-suffix: macos-arm64.tar.gz
+          #- runs-on: [MacOS, ARM64]
+          #  name: m1
+          #  file-suffix: "-arm64"
+          #  mac-package-name: "Chia-darwin-arm64"
+          #  glue-name: "build-mac-m1"
+          #  bladebit-suffix: macos-arm64.tar.gz
 
     steps:
-      - uses: Chia-Network/actions/clean-workspace@main
+      - uses: Chik-Network/actions/clean-workspace@main
 
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -46,7 +55,7 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - uses: Chia-Network/actions/git-ssh-to-https@main
+      - uses: Chik-Network/actions/git-ssh-to-https@main
 
       - name: Cleanup any leftovers that exist from previous runs
         run: bash build_scripts/clean-runner.sh || true
@@ -92,7 +101,7 @@ jobs:
           deactivate
 
       - name: Setup Python environment
-        uses: Chia-Network/actions/setup-python@main
+        uses: Chik-Network/actions/setup-python@main
         with:
           python-version: ${{ matrix.python-version }}
           force-pyenv: 'true'

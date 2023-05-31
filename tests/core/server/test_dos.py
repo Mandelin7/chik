@@ -7,17 +7,17 @@ import logging
 import pytest
 from aiohttp import ClientSession, ClientTimeout, ServerDisconnectedError, WSCloseCode, WSMessage, WSMsgType
 
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.protocols import full_node_protocol
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.protocols.shared_protocol import Handshake
-from chia.server.outbound_message import Message, make_msg
-from chia.server.rate_limits import RateLimiter
-from chia.server.ws_connection import WSChiaConnection
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.peer_info import PeerInfo
-from chia.util.errors import Err
-from chia.util.ints import uint16, uint64
+from chik.full_node.full_node_api import FullNodeAPI
+from chik.protocols import full_node_protocol
+from chik.protocols.protocol_message_types import ProtocolMessageTypes
+from chik.protocols.shared_protocol import Handshake
+from chik.server.outbound_message import Message, make_msg
+from chik.server.rate_limits import RateLimiter
+from chik.server.ws_connection import WSChikConnection
+from chik.simulator.time_out_assert import time_out_assert
+from chik.types.peer_info import PeerInfo
+from chik.util.errors import Err
+from chik.util.ints import uint16, uint64
 
 log = logging.getLogger(__name__)
 
@@ -168,8 +168,8 @@ class TestDos:
 
         assert len(server_1.all_connections) == 1
 
-        ws_con: WSChiaConnection = list(server_1.all_connections.values())[0]
-        ws_con_2: WSChiaConnection = list(server_2.all_connections.values())[0]
+        ws_con: WSChikConnection = list(server_1.all_connections.values())[0]
+        ws_con_2: WSChikConnection = list(server_2.all_connections.values())[0]
 
         ws_con.peer_info = PeerInfo("1.2.3.4", ws_con.peer_info.port)
         ws_con_2.peer_info = PeerInfo("1.2.3.4", ws_con_2.peer_info.port)
@@ -223,8 +223,8 @@ class TestDos:
 
         assert len(server_1.all_connections) == 1
 
-        ws_con: WSChiaConnection = list(server_1.all_connections.values())[0]
-        ws_con_2: WSChiaConnection = list(server_2.all_connections.values())[0]
+        ws_con: WSChikConnection = list(server_1.all_connections.values())[0]
+        ws_con_2: WSChikConnection = list(server_2.all_connections.values())[0]
 
         ws_con.peer_info = PeerInfo("1.2.3.4", ws_con.peer_info.port)
         ws_con_2.peer_info = PeerInfo("1.2.3.4", ws_con_2.peer_info.port)
@@ -272,8 +272,8 @@ class TestDos:
 
         assert len(server_1.all_connections) == 1
 
-        ws_con: WSChiaConnection = list(server_1.all_connections.values())[0]
-        ws_con_2: WSChiaConnection = list(server_2.all_connections.values())[0]
+        ws_con: WSChikConnection = list(server_1.all_connections.values())[0]
+        ws_con_2: WSChikConnection = list(server_2.all_connections.values())[0]
 
         ws_con.peer_info = PeerInfo("1.2.3.4", ws_con.peer_info.port)
         ws_con_2.peer_info = PeerInfo("1.2.3.4", ws_con_2.peer_info.port)

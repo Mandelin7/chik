@@ -5,16 +5,16 @@ from typing import Dict, List, Tuple
 import pytest
 from blspy import G2Element
 
-from chia.clvm.spend_sim import CostLogger, sim_and_client
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.types.spend_bundle import SpendBundle
-from chia.util.errors import Err
-from chia.wallet.puzzles.load_clvm import load_clvm
-from chia.wallet.util.merkle_utils import build_merkle_tree, build_merkle_tree_from_binary_tree, simplify_merkle_proof
+from chik.clvm.spend_sim import CostLogger, sim_and_client
+from chik.types.blockchain_format.coin import Coin
+from chik.types.blockchain_format.program import Program
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.coin_spend import CoinSpend
+from chik.types.mempool_inclusion_status import MempoolInclusionStatus
+from chik.types.spend_bundle import SpendBundle
+from chik.util.errors import Err
+from chik.wallet.puzzles.load_clvm import load_clvm
+from chik.wallet.util.merkle_utils import build_merkle_tree, build_merkle_tree_from_binary_tree, simplify_merkle_proof
 
 GRAFTROOT_MOD = load_clvm("graftroot_dl_offers.clsp")
 

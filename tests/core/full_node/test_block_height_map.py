@@ -5,12 +5,12 @@ from typing import Optional
 
 import pytest
 
-from chia.full_node.block_height_map import BlockHeightMap, SesCache
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.blockchain_format.sub_epoch_summary import SubEpochSummary
-from chia.util.db_wrapper import DBWrapper2
-from chia.util.files import write_file_async
-from chia.util.ints import uint8
+from chik.full_node.block_height_map import BlockHeightMap, SesCache
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.blockchain_format.sub_epoch_summary import SubEpochSummary
+from chik.util.db_wrapper import DBWrapper2
+from chik.util.files import write_file_async
+from chik.util.ints import uint8
 from tests.util.db_connection import DBConnection
 
 
