@@ -119,8 +119,8 @@ if ($p)
 
 Write-Output ""
 Write-Output "Chik blockchain .\Install.ps1 complete."
-Write-Output "For assistance join us on Keybase in the #support chat channel:"
-Write-Output "https://keybase.io/team/chik_network.public"
+Write-Output "For assistance join us on Discord in the #support chat channel:"
+Write-Output "https://discord.gg/VXRjXBsXn3"
 Write-Output ""
 Write-Output "Try the Quick Start Guide to running chik-blockchain:"
 Write-Output "https://github.com/Chik-Network/chik-blockchain/wiki/Quick-Start-Guide"

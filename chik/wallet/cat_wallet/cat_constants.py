@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 CHIK_CAT = {
-    "asset_id": "f4714b401018304bce5b7d48d67f943a4c71b7a4b186db5ea138bafb4d6cd60a",
-    "name": "Chik-CAT!",
-    "symbol": "SUNY",
+    "asset_id": "7ebf855de6eb146db5602f0456d2f0cbe750d57f821b6f91a8592ee9f1d4cf31",
+    "name": "Chik CAT",
+    "symbol": "CCAT",
 }
 
 STABLY_USDS = {
@@ -10,21 +12,7 @@ STABLY_USDS = {
     "symbol": "USDS",
 }
 
-orfinkat = {
-    "asset_id": "9731463686b47572d144d43007480e1a213505918d78436b0f22f51365f9eec1",
-    "name": "orfinkat",
-    "symbol": "CACT",
-}
-
-MONKEY = {
-    "asset_id": "2f23b6d88850cbf0644af602c68ad0fcf3c91ea64b3ea78cb098f736aafbeee1",
-    "name": "Monkey",
-    "symbol": "MONK",
-}
-
 DEFAULT_CATS = {
     CHIK_CAT["asset_id"]: CHIK_CAT,
     STABLY_USDS["asset_id"]: STABLY_USDS,
-    orfinkat["asset_id"]: orfinkat,
-    MONKEY["asset_id"]: MONKEY,
 }

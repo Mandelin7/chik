@@ -191,6 +191,14 @@ if [ ! "$CI" ]; then
   git submodule update
   cd chik-blockchain-gui
 
+  if [ "$SUBMODULE_BRANCH" ];
+  then
+    git fetch --all
+    git reset --hard "$SUBMODULE_BRANCH"
+    echo ""
+    echo "Building the GUI with branch $SUBMODULE_BRANCH"
+    echo ""
+  fi
 
   # Work around for inconsistent `npm` exec path issue
   # https://github.com/Chik-Network/chik-blockchain/pull/10460#issuecomment-1054492495

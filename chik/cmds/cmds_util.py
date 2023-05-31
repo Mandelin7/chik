@@ -59,18 +59,25 @@ async def validate_client_connection(
     rpc_client: RpcClient,
     node_type: str,
     rpc_port: int,
+    root_path: Path,
+    fingerprint: Optional[int],
+    login_to_wallet: bool,
     consume_errors: bool = True,
-) -> bool:
+) -> Tuple[Optional[int], bool]:
     connected: bool = True
     try:
         await rpc_client.healthz()
+        if type(rpc_client) == WalletRpcClient and login_to_wallet:
+            fingerprint = await get_wallet(root_path, rpc_client, fingerprint)
+            if fingerprint is None:
+                connected = False
     except ClientConnectorError:
         if not consume_errors:
             raise
         connected = False
         print(f"Connection error. Check if {node_type.replace('_', ' ')} rpc is running at {rpc_port}")
         print(f"This is normal if {node_type.replace('_', ' ')} is still starting up")
-    return connected
+    return fingerprint, connected
 
 
 @asynccontextmanager
@@ -78,8 +85,10 @@ async def get_any_service_client(
     client_type: Type[_T_RpcClient],
     rpc_port: Optional[int] = None,
     root_path: Path = DEFAULT_ROOT_PATH,
+    fingerprint: Optional[int] = None,
+    login_to_wallet: bool = True,
     consume_errors: bool = True,
-) -> AsyncIterator[Tuple[Optional[_T_RpcClient], Dict[str, Any]]]:
+) -> AsyncIterator[Tuple[Optional[_T_RpcClient], Dict[str, Any], Optional[int]]]:
     """
     Yields a tuple with a RpcClient for the applicable node type a dictionary of the node's configuration,
     and a fingerprint if applicable. However, if connecting to the node fails then we will return None for
@@ -98,12 +107,15 @@ async def get_any_service_client(
     # select node client type based on string
     node_client = await client_type.create(self_hostname, uint16(rpc_port), root_path, config)
     try:
-        # check if we can connect to node
-        connected = await validate_client_connection(node_client, node_type, rpc_port, consume_errors)
+        # check if we can connect to node, and if we can then validate
+        # fingerprint access (if wallet), otherwise return fingerprint and set connected to False
+        fingerprint, connected = await validate_client_connection(
+            node_client, node_type, rpc_port, root_path, fingerprint, login_to_wallet, consume_errors
+        )
         if connected:
-            yield node_client, config
+            yield node_client, config, fingerprint
         else:
-            yield None, config
+            yield None, config, fingerprint
     except Exception as e:  # this is only here to make the errors more user-friendly.
         if not consume_errors:
             raise
@@ -213,12 +225,11 @@ async def execute_with_wallet(
     extra_params: Dict[str, Any],
     function: Callable[[Dict[str, Any], WalletRpcClient, int], Awaitable[None]],
 ) -> None:
-    async with get_any_service_client(WalletRpcClient, wallet_rpc_port) as (wallet_client, _):
-        if wallet_client is None:
-            return
-
-        new_fp = await get_wallet(DEFAULT_ROOT_PATH, wallet_client, fingerprint)
-        if new_fp is None:
-            return
-
-        await function(extra_params, wallet_client, new_fp)
+    async with get_any_service_client(WalletRpcClient, wallet_rpc_port, fingerprint=fingerprint) as (
+        wallet_client,
+        _,
+        new_fp,
+    ):
+        if wallet_client is not None:
+            assert new_fp is not None  # wallet only sanity check
+            await function(extra_params, wallet_client, new_fp)

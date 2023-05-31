@@ -128,6 +128,7 @@ class WSChikConnection:
         log: logging.Logger,
         is_outbound: bool,
         received_message_callback: Optional[ConnectionCallback],
+        peer_host: str,
         close_callback: Optional[ConnectionClosedCallbackProtocol],
         peer_id: bytes32,
         inbound_rate_limit_percent: int,
@@ -139,7 +140,7 @@ class WSChikConnection:
         peername = ws._writer.transport.get_extra_info("peername")
 
         if peername is None:
-            raise ValueError(f"Was not able to get peername for {peer_id}")
+            raise ValueError(f"Was not able to get peername from {peer_host}")
 
         if is_outbound:
             request_nonce = uint16(0)
@@ -155,7 +156,7 @@ class WSChikConnection:
             local_port=server_port,
             local_capabilities_for_handshake=local_capabilities_for_handshake,
             local_capabilities=known_active_capabilities(local_capabilities_for_handshake),
-            peer_info=PeerInfo(peername[0], peername[1]),
+            peer_info=PeerInfo(peer_host, peername[1]),
             peer_node_id=peer_id,
             log=log,
             close_callback=close_callback,

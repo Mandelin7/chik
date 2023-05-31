@@ -29,6 +29,8 @@ log = logging.getLogger(__name__)
 # integers, which we rely on for computing fee per cost as well as the fee sum
 MEMPOOL_ITEM_FEE_LIMIT = 2**50
 
+SQLITE_NO_GENERATED_COLUMNS: bool = sqlite3.sqlite_version_info < (3, 31, 0)
+
 
 class MempoolRemoveReason(Enum):
     CONFLICT = 1
@@ -63,20 +65,21 @@ class Mempool:
         with self._db_conn:
             # name means SpendBundle hash
             # assert_height may be NIL
+            generated = ""
+            if not SQLITE_NO_GENERATED_COLUMNS:
+                generated = " GENERATED ALWAYS AS (CAST(fee AS REAL) / cost) VIRTUAL"
             # the seq field indicates the order of items being added to the
             # mempool. It's used as a tie-breaker for items with the same fee
             # rate
-            # TODO: In the future, for the "fee_per_cost" field, opt for
-            # "GENERATED ALWAYS AS (CAST(fee AS REAL) / cost) VIRTUAL"
             self._db_conn.execute(
-                """CREATE TABLE tx(
+                f"""CREATE TABLE tx(
                 name BLOB,
                 cost INT NOT NULL,
                 fee INT NOT NULL,
                 assert_height INT,
                 assert_before_height INT,
                 assert_before_seconds INT,
-                fee_per_cost REAL,
+                fee_per_cost REAL{generated},
                 seq INTEGER PRIMARY KEY AUTOINCREMENT)
                 """
             )
@@ -137,20 +140,20 @@ class Mempool:
             val = cursor.fetchone()[0]
             return CLVMCost(uint64(0) if val is None else uint64(val))
 
-    def all_items(self) -> Iterator[MempoolItem]:
+    def all_spends(self) -> Iterator[MempoolItem]:
         with self._db_conn:
             cursor = self._db_conn.execute("SELECT * FROM tx")
             for row in cursor:
                 yield self._row_to_item(row)
 
-    def all_item_ids(self) -> List[bytes32]:
+    def all_spend_ids(self) -> List[bytes32]:
         with self._db_conn:
             cursor = self._db_conn.execute("SELECT name FROM tx")
             return [bytes32(row[0]) for row in cursor]
 
     # TODO: move "process_mempool_items()" into this class in order to do this a
     # bit more efficiently
-    def items_by_feerate(self) -> Iterator[MempoolItem]:
+    def spends_by_feerate(self) -> Iterator[MempoolItem]:
         with self._db_conn:
             cursor = self._db_conn.execute("SELECT * FROM tx ORDER BY fee_per_cost DESC, seq ASC")
             for row in cursor:
@@ -162,31 +165,20 @@ class Mempool:
             val = cursor.fetchone()
             return 0 if val is None else int(val[0])
 
-    def get_item_by_id(self, item_id: bytes32) -> Optional[MempoolItem]:
+    def get_spend_by_id(self, spend_bundle_id: bytes32) -> Optional[MempoolItem]:
         with self._db_conn:
-            cursor = self._db_conn.execute("SELECT * FROM tx WHERE name=?", (item_id,))
+            cursor = self._db_conn.execute("SELECT * FROM tx WHERE name=?", (spend_bundle_id,))
             row = cursor.fetchone()
             return None if row is None else self._row_to_item(row)
 
     # TODO: we need a bulk lookup function like this too
-    def get_items_by_coin_id(self, spent_coin_id: bytes32) -> List[MempoolItem]:
+    def get_spends_by_coin_id(self, spent_coin_id: bytes32) -> List[MempoolItem]:
         with self._db_conn:
             cursor = self._db_conn.execute(
                 "SELECT * FROM tx WHERE name in (SELECT tx FROM spends WHERE coin_id=?)",
                 (spent_coin_id,),
             )
             return [self._row_to_item(row) for row in cursor]
-
-    def get_items_by_coin_ids(self, spent_coin_ids: List[bytes32]) -> List[MempoolItem]:
-        items: List[MempoolItem] = []
-        for coin_ids in chunks(spent_coin_ids, SQLITE_MAX_VARIABLE_NUMBER):
-            args = ",".join(["?"] * len(coin_ids))
-            with self._db_conn:
-                cursor = self._db_conn.execute(
-                    f"SELECT * FROM tx WHERE name IN (SELECT tx FROM spends WHERE coin_id IN ({args}))", tuple(coin_ids)
-                )
-                items.extend(self._row_to_item(row) for row in cursor)
-        return items
 
     def get_min_fee_rate(self, cost: int) -> float:
         """
@@ -334,22 +326,35 @@ class Mempool:
                 to_remove = [bytes32(row[0]) for row in cursor]
                 self.remove_from_pool(to_remove, MempoolRemoveReason.POOL_FULL)
 
-            # TODO: In the future, for the "fee_per_cost" field, opt for
-            # "GENERATED ALWAYS AS (CAST(fee AS REAL) / cost) VIRTUAL"
-            self._db_conn.execute(
-                "INSERT INTO "
-                "tx(name,cost,fee,assert_height,assert_before_height,assert_before_seconds,fee_per_cost) "
-                "VALUES(?, ?, ?, ?, ?, ?, ?)",
-                (
-                    item.name,
-                    item.cost,
-                    item.fee,
-                    item.assert_height,
-                    item.assert_before_height,
-                    item.assert_before_seconds,
-                    item.fee / item.cost,
-                ),
-            )
+            if SQLITE_NO_GENERATED_COLUMNS:
+                self._db_conn.execute(
+                    "INSERT INTO "
+                    "tx(name,cost,fee,assert_height,assert_before_height,assert_before_seconds,fee_per_cost) "
+                    "VALUES(?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        item.name,
+                        item.cost,
+                        item.fee,
+                        item.assert_height,
+                        item.assert_before_height,
+                        item.assert_before_seconds,
+                        item.fee / item.cost,
+                    ),
+                )
+            else:
+                self._db_conn.execute(
+                    "INSERT INTO "
+                    "tx(name,cost,fee,assert_height,assert_before_height,assert_before_seconds) "
+                    "VALUES(?, ?, ?, ?, ?, ?)",
+                    (
+                        item.name,
+                        item.cost,
+                        item.fee,
+                        item.assert_height,
+                        item.assert_before_height,
+                        item.assert_before_seconds,
+                    ),
+                )
 
             all_coin_spends = [(s.coin_id, item.name) for s in item.npc_result.conds.spends]
             self._db_conn.executemany("INSERT INTO spends VALUES(?, ?)", all_coin_spends)
@@ -377,7 +382,7 @@ class Mempool:
         spend_bundles: List[SpendBundle] = []
         additions: List[Coin] = []
         log.info(f"Starting to make block, max cost: {self.mempool_info.max_block_clvm_cost}")
-        for item in self.items_by_feerate():
+        for item in self.spends_by_feerate():
             if not item_inclusion_filter(item.name):
                 continue
             log.info("Cumulative cost: %d, fee per cost: %0.4f", cost_sum, item.fee_per_cost)

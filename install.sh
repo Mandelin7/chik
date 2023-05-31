@@ -356,8 +356,8 @@ fi
 
 echo ""
 echo "Chik blockchain install.sh complete."
-echo "For assistance join us on Keybase in the #support chat channel:"
-echo "https://keybase.io/team/chik_network.public"
+echo "For assistance join us on Discord in the #support chat channel:"
+echo "https://discord.gg/VXRjXBsXn3"
 echo ""
 echo "Try the Quick Start Guide to running chik-blockchain:"
 echo "https://github.com/Chik-Network/chik-blockchain/wiki/Quick-Start-Guide"

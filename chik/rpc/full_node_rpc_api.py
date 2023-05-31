@@ -724,12 +724,12 @@ class FullNodeRpcApi:
         }
 
     async def get_all_mempool_tx_ids(self, _: Dict[str, Any]) -> EndpointResult:
-        ids = list(self.service.mempool_manager.mempool.all_item_ids())
+        ids = list(self.service.mempool_manager.mempool.all_spend_ids())
         return {"tx_ids": ids}
 
     async def get_all_mempool_items(self, _: Dict[str, Any]) -> EndpointResult:
         spends = {}
-        for item in self.service.mempool_manager.mempool.all_items():
+        for item in self.service.mempool_manager.mempool.all_spends():
             spends[item.name.hex()] = item.to_json_dict()
         return {"mempool_items": spends}
 
