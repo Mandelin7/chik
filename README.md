@@ -4,7 +4,7 @@
 
 For more information, see our website and downloads at <a href="https://www.chiknetwork.com">Chik Network</a>.
 <p>You can learn more in the Chik Wiki: <a href="https://github.com/Chik-Network/chik-blockchain/wiki/Chik-Blockchain-Wiki">Quick Start Guide</a></p>
-<p>Please check out the Chik Discord Channel: (https://discord.gg/VXRjXBsXn3).</p>
+<p>Please check out the Chik Discord Channel: (https://discord.gg/SNbcMMvNBE).</p>
 
 <p>Full Node List Here:<a href="https://alltheblocks.net/chik/peers" rel="nofollow"> Full Node IP's</a></p>
 <p>Introducer Port: 9678</p>
