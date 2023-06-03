@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 CHIK_CAT = {
-    "asset_id": "7ebf855de6eb146db5602f0456d2f0cbe750d57f821b6f91a8592ee9f1d4cf31",
-    "name": "Chik CAT",
-    "symbol": "CCAT",
+    "asset_id": "5ceb7442d9168f0fc0d459011f39129d8fd137f1900e9895fd791351cb105030",
+    "name": "Tiny Chik Token",
+    "symbol": "TCT",
 }
 
 STABLY_USDS = {
