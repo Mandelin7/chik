@@ -3,10 +3,14 @@ from __future__ import annotations
 from typing import Callable, Tuple
 
 import pytest
+from packaging.version import Version
 
+from chik.cmds.init_funcs import chik_full_version_str
 from chik.full_node.full_node_api import FullNodeAPI
+from chik.protocols.shared_protocol import protocol_version
 from chik.server.server import ChikServer
 from chik.simulator.block_tools import BlockTools
+from chik.simulator.setup_nodes import SimulatorsAndWalletsServices
 from chik.types.peer_info import PeerInfo
 from chik.util.ints import uint16
 from tests.connection_utils import connect_and_get_peer
@@ -35,3 +39,16 @@ async def test_connection_string_conversion(
     converted = method(peer)
     print(converted)
     assert len(converted) < 1000
+
+
+@pytest.mark.asyncio
+async def test_connection_versions(
+    self_hostname: str, one_wallet_and_one_simulator_services: SimulatorsAndWalletsServices
+) -> None:
+    [full_node_service], [wallet_service], _ = one_wallet_and_one_simulator_services
+    wallet_node = wallet_service._node
+    await wallet_node.server.start_client(PeerInfo(self_hostname, uint16(full_node_service._api.server._port)), None)
+    connection = wallet_node.server.all_connections[full_node_service._node.server.node_id]
+    assert connection.protocol_version == Version(protocol_version)
+    assert connection.version == Version(chik_full_version_str())
+    assert connection.get_version() == chik_full_version_str()

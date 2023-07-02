@@ -13,12 +13,10 @@ from chik.server.rate_limit_numbers import rate_limits as rl_numbers
 from chik.server.rate_limits import RateLimiter
 from chik.server.server import ChikServer
 from chik.server.ws_connection import WSChikConnection
-from chik.simulator.block_tools import test_constants
 from chik.types.peer_info import PeerInfo
 from chik.util.ints import uint16
 from tests.conftest import node_with_params
 
-constants = test_constants
 rl_v2 = [Capability.BASE, Capability.BLOCK_HEADERS, Capability.RATE_LIMITS_V2]
 rl_v1 = [Capability.BASE]
 node_with_params_b = node_with_params

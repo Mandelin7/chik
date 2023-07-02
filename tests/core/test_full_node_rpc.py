@@ -12,7 +12,7 @@ from chik.full_node.signage_point import SignagePoint
 from chik.protocols import full_node_protocol
 from chik.rpc.full_node_rpc_client import FullNodeRpcClient
 from chik.server.outbound_message import NodeType
-from chik.simulator.block_tools import get_signage_point, test_constants
+from chik.simulator.block_tools import get_signage_point
 from chik.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
 from chik.simulator.time_out_assert import time_out_assert
 from chik.simulator.wallet_tools import WalletTool
@@ -59,7 +59,7 @@ class TestRpc:
             assert len(await client.get_unfinished_block_headers()) == 0
             assert len((await client.get_block_records(0, 100))) == 0
             for block in blocks:
-                if is_overflow_block(test_constants, block.reward_chain_block.signage_point_index):
+                if is_overflow_block(bt.constants, block.reward_chain_block.signage_point_index):
                     finished_ss = block.finished_sub_slots[:-1]
                 else:
                     finished_ss = block.finished_sub_slots
@@ -347,10 +347,10 @@ class TestRpc:
             # Creates a signage point based on the last block
             peak_2 = second_blockchain.get_peak()
             sp: SignagePoint = get_signage_point(
-                test_constants,
+                bt.constants,
                 blockchain,
                 peak_2,
-                peak_2.ip_sub_slot_total_iters(test_constants),
+                peak_2.ip_sub_slot_total_iters(bt.constants),
                 uint8(4),
                 [],
                 peak_2.sub_slot_iters,

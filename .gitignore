@@ -157,7 +157,7 @@ MANIFEST
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
-.spec
+*.spec
 
 # Installer logs
 pip-log.txt
@@ -261,6 +261,7 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+mypy.ini
 
 # Pyre type checker
 .pyre/

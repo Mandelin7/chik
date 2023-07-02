@@ -18,6 +18,7 @@ from chik.util.streamable import Streamable, streamable
 from chik.util.ws_message import WsRpcMessage, create_payload_dict
 
 
+@dataclasses.dataclass
 class PaginatedRequestData(Protocol):
     @property
     def node_id(self) -> bytes32:

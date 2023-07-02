@@ -6,7 +6,6 @@ import pytest
 
 from chik.consensus.blockchain import AddBlockResult
 from chik.protocols import full_node_protocol
-from chik.simulator.block_tools import test_constants
 from chik.types.blockchain_format.vdf import VDFProof
 from chik.types.weight_proof import WeightProof
 from chik.util.generator_tools import get_block_header
@@ -48,7 +47,7 @@ class TestWalletBlockchain:
 
         async with DBConnection(1) as db_wrapper:
             store = await KeyValStore.create(db_wrapper)
-            chain = await WalletBlockchain.create(store, test_constants)
+            chain = await WalletBlockchain.create(store, bt.constants)
 
             assert (await chain.get_peak_block()) is None
             assert chain.get_latest_timestamp() == 0

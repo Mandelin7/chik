@@ -17,7 +17,9 @@ from chik.util.lock import Lockfile
 
 compile_clvm_py = None
 
-recompile_requested = (os.environ.get("CHIK_DEV_COMPILE_CLVM_ON_IMPORT", "") != "") or ("pytest" in sys.modules)
+recompile_requested = (
+    (os.environ.get("CHIK_DEV_COMPILE_CLVM_ON_IMPORT", "") != "") or ("pytest" in sys.modules)
+) and os.environ.get("CHIK_DEV_COMPILE_CLVM_DISABLED", None) is None
 
 
 def translate_path(p_):

@@ -11,7 +11,7 @@ import pytest
 import pytest_asyncio
 from blspy import G1Element
 
-from chik.farmer.farmer_api import Farmer
+from chik.farmer.farmer import Farmer
 from chik.harvester.harvester import Harvester
 from chik.plot_sync.delta import Delta, PathListDelta, PlotListDelta
 from chik.plot_sync.receiver import Receiver

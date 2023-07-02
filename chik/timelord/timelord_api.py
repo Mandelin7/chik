@@ -6,7 +6,9 @@ from typing import Optional
 
 from chik.protocols import timelord_protocol
 from chik.rpc.rpc_server import StateChangedProtocol
-from chik.timelord.timelord import Chain, IterationType, Timelord, iters_from_block
+from chik.timelord.iters_from_block import iters_from_block
+from chik.timelord.timelord import Timelord
+from chik.timelord.types import Chain, IterationType
 from chik.util.api_decorators import api_request
 from chik.util.ints import uint64
 
@@ -29,6 +31,7 @@ class TimelordAPI:
         async with self.timelord.lock:
             if self.timelord.bluebox_mode:
                 return None
+            self.timelord.max_allowed_inactivity_time = 60
             if new_peak.reward_chain_block.weight > self.timelord.last_state.get_weight():
                 log.info("Not skipping peak, don't have. Maybe we are not the fastest timelord")
                 log.info(

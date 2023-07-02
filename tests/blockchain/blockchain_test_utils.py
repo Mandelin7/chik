@@ -1,10 +1,12 @@
-from typing import Optional, List
+from __future__ import annotations
 
-from chik.consensus.blockchain import Blockchain, AddBlockResult
+from typing import List, Optional
+
+from chik.consensus.blockchain import AddBlockResult, Blockchain
 from chik.consensus.multiprocess_validation import PreValidationResult
 from chik.types.full_block import FullBlock
 from chik.util.errors import Err
-from chik.util.ints import uint64, uint32
+from chik.util.ints import uint32, uint64
 
 
 async def check_block_store_invariant(bc: Blockchain):

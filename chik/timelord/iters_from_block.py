@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Optional, Tuple, Union
 
+from chik.consensus.constants import ConsensusConstants
 from chik.consensus.pot_iterations import calculate_ip_iters, calculate_iterations_quality, calculate_sp_iters
 from chik.types.blockchain_format.proof_of_space import verify_and_get_quality_string
 from chik.types.blockchain_format.reward_chain_block import RewardChainBlock, RewardChainBlockUnfinished
@@ -10,7 +11,7 @@ from chik.util.ints import uint64
 
 
 def iters_from_block(
-    constants,
+    constants: ConsensusConstants,
     reward_chain_block: Union[RewardChainBlock, RewardChainBlockUnfinished],
     sub_slot_iters: uint64,
     difficulty: uint64,
