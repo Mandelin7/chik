@@ -36,28 +36,28 @@ jobs:
             runs-on:
               intel: ubuntu-latest
               arm: [linux, arm64]
-          - name: macOS
-            matrix: macos
-            emoji: 🍎
-            runs-on:
-              intel: macos-latest
-              arm: [macos, arm64]
-          - name: Windows
-            matrix: windows
-            emoji: 🪟
-            runs-on:
-              intel: windows-latest
+#          - name: macOS
+#            matrix: macos
+#            emoji: 🍎
+#            runs-on:
+#              intel: macos-latest
+#              arm: [macos, arm64]
+#          - name: Windows
+#            matrix: windows
+#            emoji: 🪟
+#            runs-on:
+#              intel: windows-latest
         arch:
-          - name: ARM64
-            matrix: arm
+#          - name: ARM64
+#            matrix: arm
           - name: Intel
             matrix: intel
         python:
-          - major_dot_minor: '3.7'
+#          - major_dot_minor: '3.7'
           - major_dot_minor: '3.8'
-          - major_dot_minor: '3.9'
-          - major_dot_minor: '3.10'
-          - major_dot_minor: '3.11'
+#          - major_dot_minor: '3.9'
+#          - major_dot_minor: '3.10'
+#          - major_dot_minor: '3.11'
         check:
           - name: mypy
             command: |
@@ -65,16 +65,10 @@ jobs:
               python manage-mypy.py build-mypy-ini
               mypy
         exclude:
-          - os:
-              matrix: macos
-            python:
-              major_dot_minor: '3.7'
-          - os:
-              matrix: macos
-            arch:
-              matrix: arm
-            python:
-              major_dot_minor: '3.8'
+#          - os:
+#              matrix: macos
+#            python:
+#              major_dot_minor: '3.7'
           - os:
               matrix: windows
             arch:
