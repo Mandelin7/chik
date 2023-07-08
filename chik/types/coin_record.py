@@ -41,4 +41,3 @@ class CoinRecord(Streamable):
         if self.confirmed_block_index == 0 and self.timestamp == 0:
             confirmed_height = None
         return CoinState(self.coin, spent_h, confirmed_height)
-
