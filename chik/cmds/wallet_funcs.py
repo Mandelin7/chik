@@ -28,12 +28,12 @@ from chik.wallet.trading.offer import Offer
 from chik.wallet.trading.trade_status import TradeStatus
 from chik.wallet.transaction_record import TransactionRecord
 from chik.wallet.util.address_type import AddressType, ensure_valid_address
-from chiK.wallet.util.puzzle_decorator_type import PuzzleDecoratorType
-from chiK.wallet.util.query_filter import HashFilter, TransactionTypeFilter
-from chiK.wallet.util.transaction_type import CLAWBACK_TRANSACTION_TYPES, TransactionType
-from chiK.wallet.util.wallet_types import WalletType
-from chiK.wallet.vc_wallet.vc_store import VCProofs
-from chiK.wallet.wallet_coin_store import GetCoinRecords
+from chik.wallet.util.puzzle_decorator_type import PuzzleDecoratorType
+from chik.wallet.util.query_filter import HashFilter, TransactionTypeFilter
+from chik.wallet.util.transaction_type import CLAWBACK_TRANSACTION_TYPES, TransactionType
+from chik.wallet.util.wallet_types import WalletType
+from chik.wallet.vc_wallet.vc_store import VCProofs
+from chik.wallet.wallet_coin_store import GetCoinRecords
 
 CATNameResolver = Callable[[bytes32], Awaitable[Optional[Tuple[Optional[uint32], str]]]]
 
