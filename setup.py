@@ -118,6 +118,8 @@ kwargs = dict(
         "chik.wallet",
         "chik.wallet.db_wallet",
         "chik.wallet.puzzles",
+        "chik.wallet.puzzles.clawback",
+        "chik.wallet.puzzles.prefarm",
         "chik.wallet.cat_wallet",
         "chik.wallet.did_wallet",
         "chik.wallet.nft_wallet",

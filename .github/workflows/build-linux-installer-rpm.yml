@@ -48,18 +48,9 @@ jobs:
       run: bash build_scripts/clean-runner.sh || true
 
     - name: Set Env
-      if: github.event_name == 'release' && github.event.action == 'published'
-      run: |
-        PRE_RELEASE=$(jq -r '.release.prerelease' "$GITHUB_EVENT_PATH")
-        RELEASE_TAG=$(jq -r '.release.tag_name' "$GITHUB_EVENT_PATH")
-        echo "RELEASE=true" >>$GITHUB_ENV
-        echo "PRE_RELEASE=$PRE_RELEASE" >>$GITHUB_ENV
-        echo "RELEASE_TAG=$RELEASE_TAG" >>$GITHUB_ENV
-        if [ $PRE_RELEASE = false ]; then
-          echo "FULL_RELEASE=true" >>$GITHUB_ENV
-        else
-          echo "FULL_RELEASE=false" >>$GITHUB_ENV
-        fi
+      uses: Chik-Network/actions/setjobenv@main
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - uses: Chik-Network/actions/enforce-semver@main
       if: env.FULL_RELEASE == 'true'
@@ -74,56 +65,51 @@ jobs:
         echo "CHIK_INSTALLER_VERSION=$(python3 ./build_scripts/installer-version.py)" >>$GITHUB_OUTPUT
         deactivate
 
-      # Get the most recent release from chia-plotter-madmax
-    - uses: actions/github-script@v6
-      id: 'latest-madmax'
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        result-encoding: string
-        script: |
-          const release = await github.rest.repos.getLatestRelease({
-            owner: 'Chia-Network',
-            repo: 'chia-plotter-madmax',
-          });
-          return release.data.tag_name;
+    - name: Test for secrets access
+      id: check_secrets
+      shell: bash
+      run: |
+        unset HAS_AWS_SECRET
+        unset HAS_GLUE_SECRET
+
+        if [ -n "$AWS_SECRET" ]; then HAS_AWS_SECRET='true' ; fi
+        echo HAS_AWS_SECRET=${HAS_AWS_SECRET} >>$GITHUB_OUTPUT
+
+        if [ -n "$GLUE_ACCESS_TOKEN" ]; then HAS_GLUE_SECRET='true' ; fi
+        echo HAS_GLUE_SECRET=${HAS_GLUE_SECRET} >>$GITHUB_OUTPUT
+      env:
+        AWS_SECRET: "${{ secrets.INSTALLER_UPLOAD_KEY }}"
+        GLUE_ACCESS_TOKEN: "${{ secrets.GLUE_ACCESS_TOKEN }}"
 
     - name: Get latest madmax plotter
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        LATEST_MADMAX=$(gh api repos/Chik-Network/chik-plotter-madmax/releases/latest --jq 'select(.prerelease == false) | .tag_name')
         mkdir "$GITHUB_WORKSPACE/madmax"
-        wget -O "$GITHUB_WORKSPACE/madmax/chik_plot" https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}-x86-64
-        wget -O "$GITHUB_WORKSPACE/madmax/chik_plot_k34" https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}-x86-64
+        gh release download -R Chik-Network/chik-plotter-madmax $LATEST_MADMAX -p 'chik_plot-*-x86-64' -O $GITHUB_WORKSPACE/madmax/chik_plot
+        gh release download -R Chik-Network/chik-plotter-madmax $LATEST_MADMAX -p 'chik_plot_k34-*-x86-64' -O $GITHUB_WORKSPACE/madmax/chik_plot_k34
         chmod +x "$GITHUB_WORKSPACE/madmax/chik_plot"
         chmod +x "$GITHUB_WORKSPACE/madmax/chik_plot_k34"
 
-      # Get the most recent release from bladebit
-    - uses: actions/github-script@v6
-      if: '!github.event.release.prerelease'
-      id: 'latest-bladebit'
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        result-encoding: string
-        script: |
-          const release = await github.rest.repos.getLatestRelease({
-            owner: 'Chia-Network',
-            repo: 'bladebit',
-          });
-          return release.data.tag_name;
-
     - name: Get latest bladebit plotter
       if: '!github.event.release.prerelease'
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        LATEST_BLADEBIT=$(gh api repos/Chik-Network/bladebit/releases/latest --jq 'select(.prerelease == false) | .tag_name')
         mkdir "$GITHUB_WORKSPACE/bladebit"
-        wget -O /tmp/bladebit.tar.gz https://github.com/Chia-Network/bladebit/releases/download/${{ steps.latest-bladebit.outputs.result }}/bladebit-${{ steps.latest-bladebit.outputs.result }}-centos-x86-64.tar.gz
-        tar -xvzf /tmp/bladebit.tar.gz -C $GITHUB_WORKSPACE/bladebit
+        gh release download -R Chik-Network/bladebit $LATEST_BLADEBIT -p '*-centos-x86-64.tar.gz' -O - | tar -xz -C $GITHUB_WORKSPACE/bladebit
         chmod +x "$GITHUB_WORKSPACE/bladebit/bladebit"
 
     - name: Get latest prerelease bladebit plotter
       if: env.PRE_RELEASE == 'true'
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        PRERELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chia-Network/bladebit/releases" | jq -r 'map(select(.prerelease)) | first.assets[] | select(.browser_download_url | endswith("centos-x86-64.tar.gz")).browser_download_url')
+        LATEST_PRERELEASE=$(gh api repos/Chik-Network/bladebit/releases --jq 'map(select(.prerelease)) | first | .tag_name')
         mkdir "$GITHUB_WORKSPACE/bladebit"
-        wget -O /tmp/bladebit.tar.gz $PRERELEASE_URL
-        tar -xvzf /tmp/bladebit.tar.gz -C $GITHUB_WORKSPACE/bladebit
+        gh release download -R Chik-Network/bladebit $LATEST_PRERELEASE -p '*centos-x86-64.tar.gz' -O - | tar -xz -C $GITHUB_WORKSPACE/bladebit
         chmod +x "$GITHUB_WORKSPACE/bladebit/bladebit"
 
     - uses: ./.github/actions/install
@@ -131,9 +117,26 @@ jobs:
         python-version: ${{ matrix.python-version }}
         development: true
 
-    - uses: chia-network/actions/activate-venv@main
+    - uses: chik-network/actions/activate-venv@main
 
-    - name: Build GUI
+    - name: Prepare GUI cache
+      id: gui-ref
+      run: |
+        gui_ref=$(git submodule status chik-blockchain-gui | sed -e 's/^ //g' -e 's/ chik-blockchain-gui.*$//g')
+        echo "${gui_ref}"
+        echo "GUI_REF=${gui_ref}" >>$GITHUB_OUTPUT
+        echo "rm -rf ./chik-blockchain-gui"
+        rm -rf ./chik-blockchain-gui
+
+    - name: Cache GUI
+      uses: actions/cache@v3
+      id: cache-gui
+      with:
+        path: ./chik-blockchain-gui
+        key: ${{ runner.os }}-rpm-chik-blockchain-gui-${{ steps.gui-ref.outputs.GUI_REF }}
+
+    - if: steps.cache-gui.outputs.cache-hit != 'true'
+      name: Build GUI
       continue-on-error: false
       run: |
         cd ./build_scripts
@@ -152,6 +155,92 @@ jobs:
       with:
         name: chik-installers-linux-rpm-intel
         path: ${{ github.workspace }}/build_scripts/final_installer/
+
+    - name: Configure AWS Credentials
+      if: steps.check_secrets.outputs.HAS_AWS_SECRET
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.INSTALLER_UPLOAD_KEY }}
+        aws-secret-access-key: ${{ secrets.INSTALLER_UPLOAD_SECRET }}
+        aws-region: ap-southeast-1
+
+    - name: Upload to s3
+      if: steps.check_secrets.outputs.HAS_AWS_SECRET
+      env:
+          CHIK_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIK_INSTALLER_VERSION }}
+      run: |
+          GIT_SHORT_HASH=$(echo "${GITHUB_SHA}" | cut -c1-8)
+          CHIK_DEV_BUILD=${CHIK_INSTALLER_VERSION}-$GIT_SHORT_HASH
+          echo "CHIK_DEV_BUILD=$CHIK_DEV_BUILD" >>$GITHUB_ENV
+          ls $GITHUB_WORKSPACE/build_scripts/final_installer/
+          aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm s3://download.chiknetwork.com/dev/chik-blockchain-${CHIK_DEV_BUILD}-1.x86_64.rpm
+          aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm s3://download.chiknetwork.com/dev/chik-blockchain-cli-${CHIK_DEV_BUILD}-1.x86_64.rpm
+
+    - name: Create Checksums
+      if: env.FULL_RELEASE == 'true' || github.ref == 'refs/heads/main'
+      env:
+        CHIK_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIK_INSTALLER_VERSION }}
+      run: |
+        ls $GITHUB_WORKSPACE/build_scripts/final_installer/
+        sha256sum $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm > $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm.sha256
+        sha256sum $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm > $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm.sha256
+        ls $GITHUB_WORKSPACE/build_scripts/final_installer/
+
+    - name: Create .rpm torrent
+      if: env.FULL_RELEASE == 'true'
+      env:
+        CHIK_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIK_INSTALLER_VERSION }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        py3createtorrent -f -t udp://tracker.opentrackr.org:1337/announce $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm -o $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm.torrent --webseed https://download.chiknetwork.com/install/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm
+        py3createtorrent -f -t udp://tracker.opentrackr.org:1337/announce $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm -o $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm.torrent --webseed https://download.chiknetwork.com/install/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm
+        gh release upload $RELEASE_TAG $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm.torrent
+
+    - name: Upload Dev Installer
+      if: steps.check_secrets.outputs.HAS_AWS_SECRET && github.ref == 'refs/heads/main'
+      env:
+        CHIK_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIK_INSTALLER_VERSION }}
+      run: |
+        aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm s3://download.chiknetwork.com/latest-dev/chik-blockchain-1.x86_64_latest_dev.rpm
+        aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm.sha256 s3://download.chiknetwork.com/latest-dev/chik-blockchain-1.x86_64_latest_dev.rpm.sha256
+        aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm s3://download.chiknetwork.com/latest-dev/chik-blockchain-cli-1.x86_64_latest_dev.rpm
+        aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm.sha256 s3://download.chiknetwork.com/latest-dev/chik-blockchain-cli-1.x86_64_latest_dev.rpm.sha256
+
+    - name: Upload Release Files
+      if: steps.check_secrets.outputs.HAS_AWS_SECRET && env.FULL_RELEASE == 'true'
+      env:
+        CHIK_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIK_INSTALLER_VERSION }}
+      run: |
+        aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm s3://download.chiknetwork.com/install/
+        aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm.sha256 s3://download.chiknetwork.com/install/
+        aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm.torrent s3://download.chiknetwork.com/torrents/
+        aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm s3://download.chiknetwork.com/install/
+        aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm.sha256 s3://download.chiknetwork.com/install/
+        aws s3 cp $GITHUB_WORKSPACE/build_scripts/final_installer/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm.torrent s3://download.chiknetwork.com/torrents/
+
+    - name: Get tag name
+      if: startsWith(github.ref, 'refs/tags/')
+      id: tag-name
+      run: |
+          echo "TAG_NAME=$(echo ${{ github.ref }} | cut -d'/' -f 3)" >>$GITHUB_OUTPUT
+          echo "REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f 2)" >>$GITHUB_OUTPUT
+
+    - name: Upload release artifacts
+      if: env.RELEASE == 'true'
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CHIK_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIK_INSTALLER_VERSION }}
+      run: |
+        gh release upload \
+          $RELEASE_TAG \
+          build_scripts/final_installer/chik-blockchain-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm \
+          build_scripts/final_installer/chik-blockchain-cli-${CHIK_INSTALLER_VERSION}-1.x86_64.rpm
+
+
+    - name: Mark installer complete
+      if: steps.check_secrets.outputs.HAS_GLUE_SECRET && env.FULL_RELEASE == 'true'
+      run: |
+          curl -s -XPOST -H "Authorization: Bearer ${{ secrets.GLUE_ACCESS_TOKEN }}" --data '{"chik_ref": "${{ steps.tag-name.outputs.TAG_NAME }}"}' ${{ secrets.GLUE_API_URL }}/api/v1/${{ steps.tag-name.outputs.REPO_NAME }}/${{ steps.tag-name.outputs.TAG_NAME }}/success/build-linux-rpm
 
     - name: Remove working files to exclude from cache
       run: |
