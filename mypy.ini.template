@@ -2,7 +2,7 @@
 files = benchmarks,build_scripts,chik,tests,tools,*.py
 ignore_missing_imports = True
 show_error_codes = True
-warn_unused_ignores = False
+warn_unused_ignores = True
 
 disallow_any_generics = True
 disallow_subclassing_any = True
@@ -12,7 +12,7 @@ disallow_incomplete_defs = True
 check_untyped_defs = True
 disallow_untyped_decorators = True
 no_implicit_optional = True
-warn_return_any = False
+warn_return_any = True
 no_implicit_reexport = True
 strict_equality = True
 warn_redundant_casts = True
