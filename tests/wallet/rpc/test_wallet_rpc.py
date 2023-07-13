@@ -1667,7 +1667,7 @@ async def test_get_coin_records_rpc_failures(
         with pytest.raises(ValueError, match=name):
             await client.get_coin_records(request)
 
-    # Type validation is handled via `Streamable.from_json_dict�� but the below should make at least sure it triggers.
+    # Type validation is handled via `Streamable.from_json_dict´ but the below should make at least sure it triggers.
     for field, value in {
         "offset": "invalid",
         "limit": "invalid",
