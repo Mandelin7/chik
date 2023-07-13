@@ -195,7 +195,7 @@ jobs:
         if [ -n "$SECRET" ]; then HAS_SECRET='true' ; fi
         echo HAS_SECRET=${HAS_SECRET} >> $GITHUB_OUTPUT
       env:
-        SECRET: "${{ secrets.test_pypi_password }}"
+        SECRET: "${{ secrets.pypi_password }}"
 
     - uses: ./.github/actions/install
       with:

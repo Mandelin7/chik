@@ -78,7 +78,7 @@ jobs:
         if [ -n "$GLUE_ACCESS_TOKEN" ]; then HAS_GLUE_SECRET='true' ; fi
         echo HAS_GLUE_SECRET=${HAS_GLUE_SECRET} >>$GITHUB_OUTPUT
       env:
-        AWS_SECRET: "${{ secrets.INSTALLER_UPLOAD_KEY }}"
+        AWS_SECRET: "${{ secrets.INSTALLER_UPLOAD_KEY2 }}"
         GLUE_ACCESS_TOKEN: "${{ secrets.GLUE_ACCESS_TOKEN }}"
 
     - name: Get latest madmax plotter
