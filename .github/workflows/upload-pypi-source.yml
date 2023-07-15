@@ -60,9 +60,10 @@ jobs:
           # - major_dot_minor: '3.11'
         check:
           - name: mypy
+            env:
+              CHIK_MANAGE_MYPY_CHECK_EXCLUSIONS: "true"
             command: |
               echo "MYPY VERSION IS: $(mypy --version)"
-              echo CHIK_MANAGE_MYPY_CHECK_EXCLUSIONS='true' >>$GITHUB_OUTPUT
               python manage-mypy.py build-mypy-ini
               mypy
         exclude:
