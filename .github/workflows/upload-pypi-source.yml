@@ -62,9 +62,7 @@ jobs:
           - name: mypy
             command: |
               echo "MYPY VERSION IS: $(mypy --version)"
-              echo "CHIK_MANAGE_MYPY_CHECK_EXCLUSIONS=$CHIK_MANAGE_MYPY_CHECK_EXCLUSIONS"
-              echo "CHIA_MANAGE_MYPY_CHECK_EXCLUSIONS=$CHIA_MANAGE_MYPY_CHECK_EXCLUSIONS"
-              python manage-mypy.py build-mypy-ini check-exclusions=True
+              python manage-mypy.py build-mypy-ini --check-exclusions
               mypy
         exclude:
           - os:
