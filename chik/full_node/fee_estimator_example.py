@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 from chik.full_node.fee_estimate import FeeEstimateV2
 from chik.full_node.fee_estimation import FeeBlockInfo, FeeMempoolInfo, MempoolItemInfo
 from chik.full_node.fee_estimator_interface import FeeEstimatorInterface
-from chik.types.clvm_cost import CLVMCost
+from chik.types.klvm_cost import KLVMCost
 from chik.types.fee_rate import FeeRateV2
 from chik.util.ints import uint64
 
@@ -39,13 +39,13 @@ class FeeEstimatorExample(FeeEstimatorInterface):
     def estimate_fee_rate(self, *, time_offset_seconds: int) -> FeeRateV2:
         return FeeRateV2(example_fee_rate_function(time_offset_seconds))
 
-    def mempool_size(self) -> CLVMCost:
+    def mempool_size(self) -> KLVMCost:
         """Report last seen mempool size"""
-        return CLVMCost(uint64(0))
+        return KLVMCost(uint64(0))
 
-    def mempool_max_size(self) -> CLVMCost:
+    def mempool_max_size(self) -> KLVMCost:
         """Report current mempool max size (cost)"""
-        return CLVMCost(uint64(0))
+        return KLVMCost(uint64(0))
 
     def request_fee_estimates(self, request_times: List[uint64]) -> List[FeeEstimateV2]:
         estimates = [self.estimate_fee_rate(time_offset_seconds=t) for t in request_times]

@@ -10,8 +10,8 @@ from multiprocessing.context import BaseContext
 from typing import Awaitable, Callable, Dict, List, Optional, Set, Tuple, TypeVar
 
 from blspy import GTElement
-from chia_rs import ELIGIBLE_FOR_DEDUP
-from chiabip158 import PyBIP158
+from chik_rs import ELIGIBLE_FOR_DEDUP
+from chikbip158 import PyBIP158
 
 from chik.consensus.block_record import BlockRecordProtocol
 from chik.consensus.constants import ConsensusConstants
@@ -25,7 +25,7 @@ from chik.full_node.mempool_check_conditions import get_name_puzzle_conditions, 
 from chik.full_node.pending_tx_cache import ConflictTxCache, PendingTxCache
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.sized_bytes import bytes32, bytes48
-from chik.types.clvm_cost import CLVMCost
+from chik.types.klvm_cost import KLVMCost
 from chik.types.coin_record import CoinRecord
 from chik.types.fee_rate import FeeRate
 from chik.types.mempool_inclusion_status import MempoolInclusionStatus
@@ -51,11 +51,11 @@ MEMPOOL_MIN_FEE_INCREASE = uint64(10000000)
 
 # TODO: once the 1.8.0 soft-fork has activated, we don't really need to pass
 # the constants through here
-def validate_clvm_and_signature(
+def validate_klvm_and_signature(
     spend_bundle_bytes: bytes, max_cost: int, constants: ConsensusConstants, height: uint32
 ) -> Tuple[Optional[Err], bytes, Dict[bytes32, bytes]]:
     """
-    Validates CLVM and aggregate signature for a spendbundle. This is meant to be called under a ProcessPoolExecutor
+    Validates KLVM and aggregate signature for a spendbundle. This is meant to be called under a ProcessPoolExecutor
     in order to validate the heavy parts of a transaction in a different thread. Returns an optional error,
     the NPCResult and a cache of the new pairings validated (if not error)
     """
@@ -179,12 +179,12 @@ class MempoolManager:
         self.nonzero_fee_minimum_fpc = 5
 
         BLOCK_SIZE_LIMIT_FACTOR = 0.5
-        self.max_block_clvm_cost = uint64(self.constants.MAX_BLOCK_COST_CLVM * BLOCK_SIZE_LIMIT_FACTOR)
-        self.mempool_max_total_cost = int(self.constants.MAX_BLOCK_COST_CLVM * self.constants.MEMPOOL_BLOCK_BUFFER)
+        self.max_block_klvm_cost = uint64(self.constants.MAX_BLOCK_COST_KLVM * BLOCK_SIZE_LIMIT_FACTOR)
+        self.mempool_max_total_cost = int(self.constants.MAX_BLOCK_COST_KLVM * self.constants.MEMPOOL_BLOCK_BUFFER)
 
         # Transactions that were unable to enter mempool, used for retry. (they were invalid)
-        self._conflict_cache = ConflictTxCache(self.constants.MAX_BLOCK_COST_CLVM * 1, 1000)
-        self._pending_cache = PendingTxCache(self.constants.MAX_BLOCK_COST_CLVM * 1, 1000)
+        self._conflict_cache = ConflictTxCache(self.constants.MAX_BLOCK_COST_KLVM * 1, 1000)
+        self._pending_cache = PendingTxCache(self.constants.MAX_BLOCK_COST_KLVM * 1, 1000)
         self.seen_cache_size = 10000
         if single_threaded:
             self.pool = InlineExecutor()
@@ -198,11 +198,11 @@ class MempoolManager:
 
         # The mempool will correspond to a certain peak
         self.peak: Optional[BlockRecordProtocol] = None
-        self.fee_estimator: FeeEstimatorInterface = create_bitcoin_fee_estimator(self.max_block_clvm_cost)
+        self.fee_estimator: FeeEstimatorInterface = create_bitcoin_fee_estimator(self.max_block_klvm_cost)
         mempool_info = MempoolInfo(
-            CLVMCost(uint64(self.mempool_max_total_cost)),
+            KLVMCost(uint64(self.mempool_max_total_cost)),
             FeeRate(uint64(self.nonzero_fee_minimum_fpc)),
-            CLVMCost(uint64(self.max_block_clvm_cost)),
+            KLVMCost(uint64(self.max_block_klvm_cost)),
         )
         self.mempool: Mempool = Mempool(mempool_info, self.fee_estimator)
 
@@ -283,9 +283,9 @@ class MempoolManager:
 
         err, cached_result_bytes, new_cache_entries = await asyncio.get_running_loop().run_in_executor(
             self.pool,
-            validate_clvm_and_signature,
+            validate_klvm_and_signature,
             new_spend_bytes,
-            self.max_block_clvm_cost,
+            self.max_block_klvm_cost,
             self.constants,
             self.peak.height,
         )
@@ -314,7 +314,7 @@ class MempoolManager:
 
         Args:
             new_spend: spend bundle to validate and add
-            npc_result: result of running the clvm transaction in a fake block
+            npc_result: result of running the klvm transaction in a fake block
             spend_name: hash of the spend bundle data, passed in as an optimization
 
         Returns:
@@ -366,7 +366,7 @@ class MempoolManager:
 
         Args:
             new_spend: spend bundle to validate
-            npc_result: result of running the clvm transaction in a fake block
+            npc_result: result of running the klvm transaction in a fake block
             spend_name: hash of the spend bundle data, passed in as an optimization
             first_added_height: The block height that `new_spend`  first entered this node's mempool.
                 Used to estimate how long a spend has taken to be included on the chain.
@@ -451,7 +451,7 @@ class MempoolManager:
         if cost == 0:
             return Err.UNKNOWN, None, []
 
-        if cost > self.max_block_clvm_cost:
+        if cost > self.max_block_klvm_cost:
             return Err.BLOCK_COST_EXCEEDS_MAX, None, []
 
         # this is not very likely to happen, but it's here to ensure SQLite
@@ -528,7 +528,7 @@ class MempoolManager:
         log.log(
             logging.DEBUG if duration < 2 else logging.WARNING,
             f"add_spendbundle {spend_name} took {duration:0.2f} seconds. "
-            f"Cost: {cost} ({round(100.0 * cost/self.constants.MAX_BLOCK_COST_CLVM, 3)}% of max block cost)",
+            f"Cost: {cost} ({round(100.0 * cost/self.constants.MAX_BLOCK_COST_KLVM, 3)}% of max block cost)",
         )
 
         return None, potential, [item.name for item in conflicts]

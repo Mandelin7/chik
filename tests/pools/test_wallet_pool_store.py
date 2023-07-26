@@ -5,7 +5,7 @@ from secrets import token_bytes
 from typing import Dict, List, Optional
 
 import pytest
-from clvm_tools import binutils
+from klvm_tools import binutils
 
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program

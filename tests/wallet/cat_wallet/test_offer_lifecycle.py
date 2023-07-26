@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional
 import pytest
 from blspy import G2Element
 
-from chik.clvm.spend_sim import sim_and_client
+from chik.klvm.spend_sim import sim_and_client
 from chik.types.announcement import Announcement
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program
@@ -317,7 +317,7 @@ class TestOfferLifecycle:
                 [real_blue_spend_replaced, *[spend for spend in valid_spend.coin_spends if spend != real_blue_spend]],
                 G2Element(),
             )
-            with pytest.raises(ValueError, match="clvm raise"):
+            with pytest.raises(ValueError, match="klvm raise"):
                 valid_spend.additions()
 
             # Test (de)serialization

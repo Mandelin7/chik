@@ -29,7 +29,7 @@ class KeyTool(dict):
     def signature_for_solution(self, coin_spend: CoinSpend, additional_data: bytes) -> AugSchemeMPL:
         signatures = []
         conditions_dict = conditions_dict_for_solution(
-            coin_spend.puzzle_reveal, coin_spend.solution, test_constants.MAX_BLOCK_COST_CLVM
+            coin_spend.puzzle_reveal, coin_spend.solution, test_constants.MAX_BLOCK_COST_KLVM
         )
         for public_key, message in pkm_pairs_for_conditions_dict(
             conditions_dict, coin_spend.coin.name(), additional_data

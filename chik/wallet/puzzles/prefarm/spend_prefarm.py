@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 
 from blspy import G2Element
-from clvm_tools import binutils
+from klvm_tools import binutils
 
 from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
 from chik.rpc.full_node_rpc_client import FullNodeRpcClient

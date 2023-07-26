@@ -29,7 +29,7 @@ for setuptools_scm/PEP 440 reasons.
 - Update `--fee` options to indicate units are in XCK
 - Made the CLI instructions for `--fix-ssl-permissions` more user friendly
 - Check all peers when subscribing/tracking to new DL singleton
-- Updated `chiavdf` to `1.0.9`
+- Updated `chikvdf` to `1.0.9`
 
 ### Fixed
 - Fix `chik wallet make_offer` short-option collision on `-r` (Fixes #14874) (Thanks @yyolk)
@@ -71,7 +71,7 @@ for setuptools_scm/PEP 440 reasons.
 - Handle trade coins in the `try` block of `new_coin_state`
 - Add benchmark that tests the mempool over a long time
 - Enable soft-fork2 conditions (incl. ASSERT_BEFORE)
-- Update condition codes constants in clvm include file
+- Update condition codes constants in klvm include file
 - Improve coin state retry wait logic and retry store test
 - Improve balance caching
 - Update Wallet command line help for key fingerprints
@@ -81,13 +81,13 @@ for setuptools_scm/PEP 440 reasons.
 - Limit expiring transactions
 - Return fee estimates as integer mojos
 - Activate the soft-fork and soft-fork2 earlier on testnet10
-- Bump chia_rs to 0.2.7
+- Bump chik_rs to 0.2.7
 - Lower MAX_FUTURE_TIME to 2 minutes with the 1.8.0 soft-fork activation
 - List the columns for `INSERT` into `coin_record`
 
 ### Fixed
 - Disconnect untrusted peers if we find a trusted synced one
-- Only compile CLVM if source newer than hex
+- Only compile KLVM if source newer than hex
 - Fixed windows issues with passphrase prompt on CLI by flushing prompt (Fixes #14889)
 - Fix removal while iterating over connections set
 - Fix the mempool fee rate calculation
@@ -103,7 +103,7 @@ for setuptools_scm/PEP 440 reasons.
 - Rework config peer resolving and connection handling
 - Fix, simplify, and test `TransactionRecord.is_valid`
 - Check for directory existence before creating offer
-- Fix manage_clvm.py hash building and std libraries
+- Fix manage_klvm.py hash building and std libraries
 - Resolve introducer right before the connection attempt (Fixed #14888)
 - Async DNS lookups
 - Move assignments of `WalletStateManager._sync_target`
@@ -130,7 +130,7 @@ for setuptools_scm/PEP 440 reasons.
 - Optimized counting of NFTs during removal by leveraging SQLite
 - Offer CLI command help now shows `--fee` units as XCK
 - Optimized offer code by limiting `additions` recomputation
-- `chia_rs` updated to 0.2.4
+- `chik_rs` updated to 0.2.4
 - Improve the help text for the `chik peer` and `chik peer -a` commands
 - Remove redundant checks for minting coin and reserve fee
 - `nft_get_nfts` performance improvements by shifting paging to SQLite
@@ -176,8 +176,8 @@ for setuptools_scm/PEP 440 reasons.
 
 ### Changed
 
-- bump `chia_rs` dependency to `0.2.0`
-- Update version of `clvm_tools_rs` to `0.1.30`
+- bump `chik_rs` dependency to `0.2.0`
+- Update version of `klvm_tools_rs` to `0.1.30`
 - Use better check that we are on mainnet when deciding to use default Chik DNS server
 - Remove conflicting TXs before adding SpendBundle to Mempool in `add_spend_bundle`
 - Try each Chik DNS Server in list before trying introducers
@@ -305,11 +305,11 @@ for setuptools_scm/PEP 440 reasons.
 - RPC incompatibility: `/get_routes` and `/healthz` now return a boolean for success (previously was a string)
 - New Windows installer created with `electron-builder`
 - Blsspy updated to 1.0.16
-- Chiavdf updated to 1.0.7
-- Chiapos updated to 1.0.11
-- Clvm_tools updated to 0.4.5
-- Chia_rs updated to 0.1.14
-- Clvm-tools-rs updated to 0.1.24
+- Chikvdf updated to 1.0.7
+- Chikpos updated to 1.0.11
+- Klvm_tools updated to 0.4.5
+- Chik_rs updated to 0.1.14
+- Klvm-tools-rs updated to 0.1.24
 - Aiohttp updated to 3.8.3
 - Colorlog updated to 6.7.0
 - Concurrent-log-handler updated to 0.9.20
@@ -345,16 +345,16 @@ for setuptools_scm/PEP 440 reasons.
 - Dropped unused `chik_minor_release_number`
 - Just `raise`, not `raise e` when reraising
 - Optimized `simple_solution_generator()`
-- Allow developers to easily use standard Chik `clvm` puzzles and libraries
+- Allow developers to easily use standard Chik `klvm` puzzles and libraries
 - Skipped validating `GTElement` in mempool
 - Improved logging for `chik plotters version` errors
-- Performance improvements in `subscribe_to_phs` using CoinState from chia_rs
+- Performance improvements in `subscribe_to_phs` using CoinState from chik_rs
 - Performance improvements in wallet syncing by doing bulk coin record lookups
 - Performance improvements in wallet syncing by caching the last derivation path
 - Performance improvements in offer parsing by implementing a more efficient Program.uncurry()
-- Performance improvements in puzzle parsing by using rust parser (`chia_rs`) for Program.from_bytes()
+- Performance improvements in puzzle parsing by using rust parser (`chik_rs`) for Program.from_bytes()
 - Performance improvements in wallet by caching the uncurried puzzle in UncurriedPuzzle class
-- Implement generator_for_single_coin() in python instead of `clvm`
+- Implement generator_for_single_coin() in python instead of `klvm`
 - Optimize get_block_store by not parsing the full block
 - Avoid creating a list and enable short circuit behavior in `bundle_suitable_for_compression()`
 - Performance improvements when dealing with lots of trades (offers) by using a lookup table and not loading all trades from disk upfront
@@ -365,13 +365,13 @@ for setuptools_scm/PEP 440 reasons.
 - Significant scalability improvements in NFT handling
 - Minter DID now shown in output of `chik wallet nft get_info` and in GUI
 - Treehash optimization for DID wallet
-- Performance improvements by using `get_puzzle_and_solution_for_coin()` from `chia_rs`
+- Performance improvements by using `get_puzzle_and_solution_for_coin()` from `chik_rs`
 - Adds handling for daemon not sending `initial_target_state` (thanks @bolshoytoster) (#10058)
 - Reduced log noise during wallet syncing
 - Run `get_puzzle_and_solution_for_coin` and `get_block_header` expensive API requests in separate thread
 - Do not trigger the pending tx handler in some cases. Eliminates multiple ALREADY_INCLUDING_TRANSACTION errors for some operations, notably claiming self-pooling rewards
 - Defined a shared API for all wallet via a WalletProtocol class
-- Recompress CLVM generators
+- Recompress KLVM generators
 - Removed unnecessary logging during plot creation
 - Made `IP` section in connections table 1 character wider to handle IPV6
 - Deprecated `chik plotters install` command
@@ -415,7 +415,7 @@ for setuptools_scm/PEP 440 reasons.
 - Properly catch and handle errors during shutdown while syncing
 - Fixed proof lookup and plot caching with bladebit plots that have dropped entries (#13084)
 - Fixed issues with accepting Datalayer offers where the offer inclusions has matching key/value data for both maker and taker inclusions
-- Fixed issues where ChikLisp was compiled during import requiring write access to the directory (#11257) (thanks @lourkeur). To force compilation, developers can set environment variable `CHIK_DEV_COMPILE_CLVM_ON_IMPORT`
+- Fixed issues where ChikLisp was compiled during import requiring write access to the directory (#11257) (thanks @lourkeur). To force compilation, developers can set environment variable `CHIK_DEV_COMPILE_KLVM_ON_IMPORT`
 - Removed tracking of dropped transactions `dropped_tx` (thanks @roseiliend)
 - Fixed a breaking change in `get_puzzle_and_solution` RPC
 
@@ -470,7 +470,7 @@ for setuptools_scm/PEP 440 reasons.
 - Added minimum coin amount to various RPC calls
 - Added new full_node RPC called `get_block_spends` - Get spends for block using transaction generator
 - Support for remembering the last used wallet key
-- Documented deserialization length limitations (8191 bytes) in CLVM ROM. We recommend using a local version of the chiklisp code when necessary
+- Documented deserialization length limitations (8191 bytes) in KLVM ROM. We recommend using a local version of the chiklisp code when necessary
 
 ### Changed
 
@@ -512,7 +512,7 @@ for setuptools_scm/PEP 440 reasons.
 - Don't convert `ConsensusConstants` to/from JSON
 - Move some class methods out of `Streamable`
 - Request header blocks, and new rate limits
-- Replaced the python implementation of `Coin` with the Rust native `Coin` from `chia_rs`
+- Replaced the python implementation of `Coin` with the Rust native `Coin` from `chik_rs`
 - Watchdog==2.1.9 for bad file descriptor avoidance
 - Be specific about `*args` in `RpcServer` state changed methods
 - Make WalletUserStore.create_wallet() raise on failure, and return non-optional
@@ -542,8 +542,8 @@ for setuptools_scm/PEP 440 reasons.
 - Wallet network messages now have higher priority than Node network messages
 - Wallet now checks the mempool before adding new transactions to the queue
 - Implemented new context manager for DB access (DBWrapper2) that supports nested transactions, improved support for concurrency, and simplified exception handling
-- Upgraded `clvm-tools-rs` to `0.1.19`
-- Upgraded `clvm_tools` to `0.4.5`
+- Upgraded `klvm-tools-rs` to `0.1.19`
+- Upgraded `klvm_tools` to `0.4.5`
 - Simplify wallet transaction store
 - Remove unused `_clear_database()` functions
 - Optimized wallet DB queries using `execute_fetchall`
@@ -583,7 +583,7 @@ for setuptools_scm/PEP 440 reasons.
 - Replace existing simulator config & Fix simulator
 - Fix attribute error on `FullNode.simulator_transaction_callback`
 - Fix passphrase hint
-- Bump clvm_tools_rs for bug fix
+- Bump klvm_tools_rs for bug fix
 - Fix NFT > CAT Royalty splitting bug
 - Fixed `mint_nft`
 - Fix no keys loaded error by making KeychainProxy automatically reconnect when a connection is lost
@@ -651,13 +651,13 @@ for setuptools_scm/PEP 440 reasons.
 ### Changed
 
 - New coin selection algorithm based on bitcoin knapsack. Previously chik selected the largest coin
-- Updated chiapos to 1.0.10
-- Updated chiavdf to 1.0.6
+- Updated chikpos to 1.0.10
+- Updated chikvdf to 1.0.6
 - Updated blspy to 1.0.13
 - Updated setproctitle to 1.2.3
 - Updated PyYAML to 6.0
 - Updated pyinstaller to 5.0
-- Bump clvm_tools_rs version to 0.1.9 for clvm stepper and add a test
+- Bump klvm_tools_rs version to 0.1.9 for klvm stepper and add a test
 - Modest speedup of syncing by batching coin lookups
 - Cmds: Use the new `plot_count` of `get_pool_state` in `plotnft show`
 - Set mempool size back to the original size at launch
@@ -767,13 +767,13 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 - CATs now have a link to Taildatabase.com to look up the Asset ID
 - Ongoing improvements to the internal test framework for speed and reliability.
 - Significant harvester protocol update: You will need to update your farmer and all your harvesters as this is a breaking change in the harvester protocol. The new protocol solves many scaling issues. In particular, the protocol supports sending delta changes to the farmer - so for example, adding plots to a farm results in only the new plots being reported. We recommend you update your farmer first.
-- Updated clvm_tools to 0.4.4
-- Updated clvm_tools_rs to 0.1.7
-- Changed code to use by default the Rust implementation of clvm_tools (clvm_tools_rs)
+- Updated klvm_tools to 0.4.4
+- Updated klvm_tools_rs to 0.1.7
+- Changed code to use by default the Rust implementation of klvm_tools (klvm_tools_rs)
 - Consolidated socket library to aiohttp and removed websockets dependency
 - During node startup, missing blocks in the DB will throw an exception
 - Updated cryptography to 36.0.2
-- The rust implementation of CLVM is now called `chia_rs` instead of `clvm_rs`.
+- The rust implementation of KLVM is now called `chik_rs` instead of `klvm_rs`.
 - Updated code to use improved rust interface `run_generator2`
 - Code improvements to prefer connecting to a local trusted node over untrusted nodes
 
@@ -795,7 +795,7 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 - Checked for requesting items when creating an offer
 - Minor output formatting/enhancements for `chik wallet show`
 - Fixed typo and index issues in wallet database
-- Used the rust clvm version instead of python in more places
+- Used the rust klvm version instead of python in more places
 - Fixed trailing bytes shown in CAT asset ID row when using `chik wallet show`
 - Maintain all chain state during reorg until the new fork has been fully validated
 - Improved performance of `get_coin_records_by_names` by using proper index (Thanks @roseiliend)
@@ -877,7 +877,7 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 - New sorting pattern for offer history - Open/pending offers sorted on top ordered by creation date > confirmation block height > trade id, and then Confirmed and Cancelled offers sorted by the same order.
 - When plotting multiple plots with the GUI, new items are taken from the top of the list instead of the bottom.
 - CA certificate store update.
-- VDF, chiapos, and blspy workflows updated to support python 3.10 wheels.
+- VDF, chikpos, and blspy workflows updated to support python 3.10 wheels.
 - We now store peers and peer information in a serialized format instead of sqlite. The new files are called peers.dat and wallet_peers.dat. New settings peers_file_path and wallet_peers_file_path added to config.yaml.
 - CLI option chik show will display the currently selected network (mainnet or testnet).
 - CLI option chik plots check will display the Pool Contract Address for Portable (PlotNFT) plots.
@@ -889,8 +889,8 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 - Switch to using npm ci from npm install in the GUI install scripts.
 - Improved sync performance of the full node by doing BLS validation in separate processes.
 - Default log rotation was changed to 50MiB from 20MiB - added config.yaml setting log_maxbytesrotation to configure this.
-- Thanks to @cross for an optimization to chiapos to use rename instead of copy if the tmp2 and final files are on the same filesystem.
-- Updated to use chiapos 1.0.9.
+- Thanks to @cross for an optimization to chikpos to use rename instead of copy if the tmp2 and final files are on the same filesystem.
+- Updated to use chikpos 1.0.9.
 - Updated to use blspy 1.0.8.
 - Implemented a limit to the number of PlotNFTs a user can create - with the limit set to 20. This is to prevent users from incorrectly creating multiple PlotNFTs. This limit can be overridden for those users who have specific use cases that require more than 20 PlotNFTs.
 - Removed the option to display "All" rows per page on the transactions page of the GUI.
@@ -911,7 +911,7 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 - Thanks to @risner for fixes related to using colorlog.
 - Fixed issues in reading the pool_list from config if set to null.
 - Fixed display info in CLI chik show -c when No Info should be displayed.
-- Thanks to @madMAx43v3r for fixes in chiapos related to a possible race condition when multiple threads call Verifier::ValidateProof.
+- Thanks to @madMAx43v3r for fixes in chikpos related to a possible race condition when multiple threads call Verifier::ValidateProof.
 - Thanks to @PastaPastaPasta for some compiler warning fixes in bls-signatures.
 - Thanks to @random-zebra for fixing a bug in the bls-signature copy assignment operator.
 - Thanks to @lourkeur for fixes in blspy related to pybind11 2.8+.
@@ -955,7 +955,7 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 ### Changed
 
 - Improved the wallet GUI's startup loading time by loading the default private key's fingerprint.
-- Upgraded from clvm_rs 0.1.14 to 0.1.15.
+- Upgraded from klvm_rs 0.1.14 to 0.1.15.
 
 ### Fixed
 
@@ -972,12 +972,12 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 
 ## 1.2.10 Chik blockchain 2021-10-25
 
-We have some great improvements in this release: We launched our migration of keys to a common encrypted keyring.yaml file, and we secure this with an optional passphrase in both GUI and CLI. We've added a passphrase hint in case you forget your passphrase. More info on our [wiki](https://github.com/Chik-Network/chik-blockchain/wiki/Passphrase-Protected-Chik-Keys-and-Key-Storage-Migration). We also launched a new Chiklisp compiler in clvm_tools_rs which substantially improves compile time for Chiklisp developers. We also addressed a widely reported issue in which a system failure, such as a power outage, would require some farmers to sync their full node from zero. This release also includes several other improvements and fixes.
+We have some great improvements in this release: We launched our migration of keys to a common encrypted keyring.yaml file, and we secure this with an optional passphrase in both GUI and CLI. We've added a passphrase hint in case you forget your passphrase. More info on our [wiki](https://github.com/Chik-Network/chik-blockchain/wiki/Passphrase-Protected-Chik-Keys-and-Key-Storage-Migration). We also launched a new Chiklisp compiler in klvm_tools_rs which substantially improves compile time for Chiklisp developers. We also addressed a widely reported issue in which a system failure, such as a power outage, would require some farmers to sync their full node from zero. This release also includes several other improvements and fixes.
 
 ### Added
 
 - Added support for keyring migration from keychain, and the addition of passphrase support. Learn more at our [wiki](https://github.com/Chik-Network/chik-blockchain/wiki/Passphrase-Protected-Chik-Keys-and-Key-Storage-Migration).
-- Enabled experimental use of a new Chiklisp compiler in clvm_tools_rs in chik-blockchain, which is off by default, and substantially improves compile time.
+- Enabled experimental use of a new Chiklisp compiler in klvm_tools_rs in chik-blockchain, which is off by default, and substantially improves compile time.
 - Added Windows PowerShell scripts to support installation from source.
 - Added a test to check that we don't reorg subslots unless there is a new peak.
 - Added harvester info to farmer logging.
@@ -1040,7 +1040,7 @@ We have some great improvements in this release: We launched our migration of ke
 - Bumped sortedcontainers to version 2.4.0.
 - Dropped some redundant code in plotting/manager.py
 - Updated some hooks: Update `flake8` to 3.9.2, `pre-commit-hooks` to 4.0.1, `black` to 21.8b0
-- Bump clvm_rs to 0.1.14.
+- Bump klvm_rs to 0.1.14.
 - Added tests for invalid list terminators in conditions.
 - Updated blspy to 1.0.6.
 - Made a change to allow the host to be configurable for the timelord launcher.
@@ -1052,7 +1052,7 @@ We have some great improvements in this release: We launched our migration of ke
 - A change to logging to only log warnings when more than 10 seconds has passed, to reduce the number of warning logs.
 - Improved and fixed some outdated messages in CLI. Thanks @jack60612 for the assist!
 - We previously added a Rust condition checker, to replace our existing Python-based condition checker. In this release, we're removing the old Python code.
-- Several clvm_rs updates to support our upcoming Chik Asset Token (CAT) standard.
+- Several klvm_rs updates to support our upcoming Chik Asset Token (CAT) standard.
 
 ### Fixed
 
@@ -1141,7 +1141,7 @@ submissions. Thanks to @RuiZhe for Chinese, Traditional; @HansCZ for Czech;
 - Fixed a failure to create a keychain_proxy for local keychains.
 - Thanks to @mgraczyk for fixing type annotation in sync_store.
 - Thanks to @darkverbito for fixing an issue on initial creation of a coloured coin where code always falls into default else clause due to lack of type conversion.
-- Fixed NPM publish in clvm_rs.
+- Fixed NPM publish in klvm_rs.
 - Thanks to @skweee for his investigation work on fixing mempool TX cache cost, where the cost of the mempool TX cache (for spend bundles that can't be included in a block yet) would not be reset when the cache was emptied.
 
 ## 1.2.3 Chik blockchain 2021-07-26
@@ -1162,7 +1162,7 @@ submissions. Thanks to @RuiZhe for Chinese, Traditional; @HansCZ for Czech;
 ### Changed
 
 - Updated blspy to 1.0.5.
-- Updated chiapos to 1.0.4.
+- Updated chikpos to 1.0.4.
 - Included all Chiklisp files in source distribution.
 - Removed left-over debug logging from test_wallet_pool_store.
 - Made changes to allow us to use the name coin_spend everywhere in our code, without changing it in the API requests, both outgoing and incoming. Enables us to decide at a later date when to cut over completely to the coin_spend name.
@@ -1228,15 +1228,15 @@ OG plots made before this release can continue to be farmed side by side with th
 ### Changed
 
 - We have made a host of changes to the GUI to support pooling and to improve the wallet experience.
-- We updated chiapos to version 1.0.3. This adds parallel reads to GetFullProof. Thanks to @marcoabreu ! We now print target/final directory early in the logs refs and log process ID. Thanks to @grayfallstown ! We are now using Gulrak 1.5.6.
-@683280 optimized code in phase1.hpp. @jespino and @mrhacky started migrating to flags instead of booleans parameters for `show_progress` and `nobitfield`. If you are providing third-party tools you may need to make adjustments if relying on the chiapos log.
-- Updated chiavdf to version 1.0.2 to fix certain tests.
+- We updated chikpos to version 1.0.3. This adds parallel reads to GetFullProof. Thanks to @marcoabreu ! We now print target/final directory early in the logs refs and log process ID. Thanks to @grayfallstown ! We are now using Gulrak 1.5.6.
+@683280 optimized code in phase1.hpp. @jespino and @mrhacky started migrating to flags instead of booleans parameters for `show_progress` and `nobitfield`. If you are providing third-party tools you may need to make adjustments if relying on the chikpos log.
+- Updated chikvdf to version 1.0.2 to fix certain tests.
 - Windows builds now rely upon Python 3.9 which obviates the fix in 1.1.7.
 - We are now using miniupnpc version 2.2.2 so that we can support Python 3.9 on Windows.
-- We updated to clvm 0.9.6 and clvm_rs 0.1.8. CLVMObject now lazily converts python types to CLVM types as elements are inspected in clvm. cvlm_rs now returns python objects rather than a serialized object.
+- We updated to klvm 0.9.6 and klvm_rs 0.1.8. KLVMObject now lazily converts python types to KLVM types as elements are inspected in klvm. cvlm_rs now returns python objects rather than a serialized object.
 - We now have rudimentary checks to makes sure that fees are less than the amount being spent.
 - The harvester API no longer relies upon time:time with thanks to @x1957.
-- We have increased the strictness of validating Chiklisp in the mempool and clvm.
+- We have increased the strictness of validating Chiklisp in the mempool and klvm.
 - Thanks to @ruslanskorb for improvements to the human-readable forms in the CLI.
 - Thanks to @etr2460 for improvements to the plotting progress bar in the GUI and enhancements to human-readable sizes.
 - @dkackman changed the way that configuration was found on startup.
@@ -1304,7 +1304,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - Optimized Streamable parsing by avoiding extra post-init checks, making parsing block records from database up to 40% faster.
 - Made the serialization of Coin follow the normal protocol of implementing stream().
 - Minor improvements to add_spendbundle and weight proofs.
-- We now use version 1.0.2 of chiapos. We now reopen files on read or write failure with thanks to @mreid-moz! We also prevent chiapos prover crashing for more bad plots.
+- We now use version 1.0.2 of chikpos. We now reopen files on read or write failure with thanks to @mreid-moz! We also prevent chikpos prover crashing for more bad plots.
 - Disabled deletion of running plot for Windows users as the crash/lockup bug has returned.
 - We more clearly prohibit root from installing/running the GUI.
 - Thanks to @sargonas for improvements to the template for creating Issues.
@@ -1491,13 +1491,13 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 ### Fixed
 
 - An incorrect merge brought in unreleased features and broke `chik keys`.
-- Omitted from the 1.0.2 changelog, we fixed one crash in harvester with the release of chiapos 1.0.0 as well.
+- Omitted from the 1.0.2 changelog, we fixed one crash in harvester with the release of chikpos 1.0.0 as well.
 
 ## 1.0.2 Chik Blockchain 2021-03-30
 
 ### Added
 
-- We have released version 1.0.0 of [chiapos](https://github.com/Chik-Network/chiapos). This includes a 20% speed increase for bitfield plotting compared to the previous version on the same machine. In many cases this will mean that bitfield plotting is as fast or faster than non bitfield plotting.
+- We have released version 1.0.0 of [chikpos](https://github.com/Chik-Network/chikpos). This includes a 20% speed increase for bitfield plotting compared to the previous version on the same machine. In many cases this will mean that bitfield plotting is as fast or faster than non bitfield plotting.
 - @xorinox improved our support for RedHat related distributions in `install.sh`.
 - @ayaseen improved our support for RedHat related distributions in `install-timelord.sh`.
 - We have added Dutch and Polish to supported translations. Thanks @psydafke, @WesleyVH, @pieterhauwaerts, @bartlomiej.tokarzewski, @abstruso, @feel.the.code, and @Axadiw for contributions to [translations on Crowdin](https://crowdin.com/project/chik-blockchain).
@@ -1651,7 +1651,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 - Remove `chik plots "-s" "--stripe_size"` and the strip size setting in the Advanced section of the GUI. We now always use the best default of 64K for the GUI and cli.
 - `chik keys add` takes secret words a prompt on the command line or stdin instead of command line arguments for security.
-- Version 1.0.1 of chiavdf was added. This brought MPIR on Windows to the most recent release. Additionally we removed inefficient ConvertIntegerToBytes() and ConvertBytesToInt() functions, use GMP library's mpz_export/mpz_import for big integers and simple helper functions for built-in integer types. The latter are taken from chiavdf. We now require compressed forms to be encoded canonically when deserializing. This should prevent potential grinding attacks where some non-canonical encodings of a compressed form could be used to change its hash and thus the next challenges derived from it. Canonically encoded compressed forms must be reduced and must produce the same string when deserialized and serialized again.
+- Version 1.0.1 of chikvdf was added. This brought MPIR on Windows to the most recent release. Additionally we removed inefficient ConvertIntegerToBytes() and ConvertBytesToInt() functions, use GMP library's mpz_export/mpz_import for big integers and simple helper functions for built-in integer types. The latter are taken from chikvdf. We now require compressed forms to be encoded canonically when deserializing. This should prevent potential grinding attacks where some non-canonical encodings of a compressed form could be used to change its hash and thus the next challenges derived from it. Canonically encoded compressed forms must be reduced and must produce the same string when deserialized and serialized again.
 - Version 1.0 of our BLS signature library is included. We brought Relic, gmp and MPIR up to their most recent releases. We again thank the Dash team for their fixes and improvements.
 - We now hand build Apple Silicon native binary wheels for all chik-blockchain dependencies and host them at [https://pypi.chia.net/simple](https://pypi.chia.net/simple). We are likely to hand build a MacOS ARM64 dmg available and certainly will for 1.0. You can install natively on M1 now with the `git clone` developer method today. Just make sure Python 3.9 is installed. `python3 --version` works.
 - The GUI now shows you which network you are connected to on the Full Node page. It will also wait patiently for the green flag to drop on a network launch.
@@ -1664,7 +1664,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - There are new timestamp consensus rules. A block N must have a greater timestamp than block N-1. Also, a block's timestamp cannot be more than 5 minutes in the future. Note that we have decided that work factor difficulty resets are now going to be 24 hours on mainnet but are still shorter on testnet.
 - A List[Tuple[uint16, str]] is added to the peer network handshake. These are the capabilities that the node supports, to add new features to the protocol in an easy - soft fork - manner. The message_id is now before the data in each message.
 - Peer gossip limits were set.
-- Generators have been re-worked in CLVM. We added a chiklisp deserialization puzzle and improved the low-level generator. We reduce the accepted atom size to 1MB during ChikLisp native deserialization.
+- Generators have been re-worked in KLVM. We added a chiklisp deserialization puzzle and improved the low-level generator. We reduce the accepted atom size to 1MB during ChikLisp native deserialization.
 - When processing mempool transactions, Coin IDs are now calculated from parent coin ID and amount
 - We implemented rate limiting for full node. This can and will lead to short term bans of certain peers that didn't behave in expected ways. This is ok and normal, but strong defense against many DDOS attacks.
 - `requirements-dev.txt` has been removed in favor of the CI actions and test scripts.
@@ -1698,7 +1698,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - We have added Romanian to the GUI translations. Thank you to @bicilis on [Crowdin](https://crowdin.com/project/chik-blockchain). We also added a couple of additional target languages. Klingon anyone?
 - `chik wallet` now takes get_address to get a new wallet receive address from the CLI.
 - `chik plots check` will list out all the failed plot filenames at the end of the report. Thanks for the PR go to @eFishCent.
-- Chiklisp and the clvm have had the standard puzzle updated and we replaced `((c P A))` with `(a P A)`.
+- Chiklisp and the klvm have had the standard puzzle updated and we replaced `((c P A))` with `(a P A)`.
 
 ## Changed
 
@@ -1708,14 +1708,14 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - We have updated the display of peer nodes and moved adding a peer to it's own pop up in the GUI.
 - Block searching in the GUI has been improved.
 - @jespino added i18n support and refactored how locales are loaded in the GUI. Additionally he moved more strings into the translation infrastructure for translators.
-- In chiavdf we changed n-Wesolowski proofs to include B instead of y in segments. Proof segments now have the form (iters, B, proof) instead of (iters, y, proof). This reduces proof segment size from 208 to 141 bytes.
-- The new chiavdf proof format is not compatible with the old one, however zero-Wesolowski proofs are not affected as they have zero proof segments and consist only of (y, proof).
-- We made two HashPrime optimizations in chiavdf. This forces numbers being tested for primality to be odd and avoids an unnecessary update of the sprout vector by stopping after the first non-zero value. This is a breaking change as it changes the prime numbers generated from a given seed. We believe this is the final breaking change for chiavdf.
-- chiabip158 was set to a gold 1.0 version.
-- Comments to Chiklisp and clvm source have been updated for all of the Chiklisp changes over the proceeding three weeks.
+- In chikvdf we changed n-Wesolowski proofs to include B instead of y in segments. Proof segments now have the form (iters, B, proof) instead of (iters, y, proof). This reduces proof segment size from 208 to 141 bytes.
+- The new chikvdf proof format is not compatible with the old one, however zero-Wesolowski proofs are not affected as they have zero proof segments and consist only of (y, proof).
+- We made two HashPrime optimizations in chikvdf. This forces numbers being tested for primality to be odd and avoids an unnecessary update of the sprout vector by stopping after the first non-zero value. This is a breaking change as it changes the prime numbers generated from a given seed. We believe this is the final breaking change for chikvdf.
+- chikbip158 was set to a gold 1.0 version.
+- Comments to Chiklisp and klvm source have been updated for all of the Chiklisp changes over the proceeding three weeks.
 - And thanks yet again to @jespino for a host of PRs to add more detailed typing to various components in chik-blockchain.
 - aiohttp was updated to 3.7.4 to address a low severity [security issue](https://github.com/advisories/GHSA-v6wp-4m6f-gcjg).
-- calccrypto/uint128_t was updated in the Windows chiapos implementation. Chiapos required some changes its build process to support MacOS ARM64.
+- calccrypto/uint128_t was updated in the Windows chikpos implementation. Chikpos required some changes its build process to support MacOS ARM64.
 
 ### Fixed
 
@@ -1752,7 +1752,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 ### Changed
 
-- All chiklisp opcodes have been renumbered. This should be the last major breaking change for chiklisp and the clvm. There are a couple minor enhancements still needed for mainnet launch, but they may or may not require minor breaking changes. We will be restarting testnet chains on a mostly weekly basis either way.
+- All chiklisp opcodes have been renumbered. This should be the last major breaking change for chiklisp and the klvm. There are a couple minor enhancements still needed for mainnet launch, but they may or may not require minor breaking changes. We will be restarting testnet chains on a mostly weekly basis either way.
 - Node batch syncing performance was increased, and it now avoids re-validating blocks that node had already validated.
 - The entire CLI has been ported to [Click](https://click.palletsprojects.com/en/7.x/). Huge thanks to @jespino for the big assist and @unparalleled-js for the [recommendation and the initial start](https://github.com/Chik-Network/chik-blockchain/issues/464). This will make building out the CLI much easier. There are some subtle changes and some shortcuts are not there anymore. `chik -h` and `chik SUBCOMMAND -h` can be your guide.
 - We have upgraded Electron to 11.3 to support Apple Silicon. There are still one or two issues in our build chain for Apple Silicon but we should have an M1 native build shortly.
@@ -1795,7 +1795,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 ### Added
 
-- This is the first release in our release candidate series. There are still a few things that will change at the edges but the blockchain, clvm, and chiklisp are in release form. We have one major change to chiklisp/clvm that we have chosen to schedule for the next release as in this release we're breaking the way q/quote works. We also have one more revision to the VDF that will decrease the sizes of the proofs of time. We expect a few more releases in the release candidate series.
+- This is the first release in our release candidate series. There are still a few things that will change at the edges but the blockchain, klvm, and chiklisp are in release form. We have one major change to chiklisp/klvm that we have chosen to schedule for the next release as in this release we're breaking the way q/quote works. We also have one more revision to the VDF that will decrease the sizes of the proofs of time. We expect a few more releases in the release candidate series.
 - Installers will now be of the pattern ChikSetup-0.2.1.exe. `0.2` is release candidate and the final `.1` is the first release candidate.
 - Use 'chik wallet get_transactions' in the command line to see your transactions.
 - 'chik wallet show' now shows your wallet's height.
@@ -1820,7 +1820,7 @@ all fields that referred to sub blocks are changed to blocks.
 
 ### Fixed
 
-- We updated chiapos to hopefully address some harvester crashes when moving plot files.
+- We updated chikpos to hopefully address some harvester crashes when moving plot files.
 - Many of the cards on the Farming page have had bugs addressed including last block farmed, block rewards, and user fees.
 - Improved validation of overflow blocks.
 
@@ -1829,14 +1829,14 @@ all fields that referred to sub blocks are changed to blocks.
 ### Added
 
 - The Beta 27 chain is a hard fork. All TXCK from previous releases has been reset on this chain. Your keys and plots of k=32 or larger continue to work just fine on this new chain.
-- We now use the rust version of clvm, clvm_rs, in preference to validate transactions. We have additionally published binary wheels or clvm_rs for all four platforms and all three supported python versions. The rust version is approximately 50 times faster than the python version used to validate on chain transactions in previous versions.
-- We have moved to compressed quadratic forms for VDFs. Using compressed representation of quadratic forms reduces their serialized size from 130 to 100 bytes (for forms with 1024-bit discriminant). This shrinks the size of VDF outputs and VDF proofs, and it's a breaking change as the compressed representation is not compatible with the older uncompressed (a, b) representation. Compressed forms are also used in calls to chiavdf and in timelord's communication with VDF clients. The form compression algorithm is based on ["Trustless Groups of Unknown Order with Hyperelliptic Curves"](https://eprint.iacr.org/2020/196) by Samuel Dobson, Steven D. Galbraith and Benjamin Smith.
+- We now use the rust version of klvm, klvm_rs, in preference to validate transactions. We have additionally published binary wheels or klvm_rs for all four platforms and all three supported python versions. The rust version is approximately 50 times faster than the python version used to validate on chain transactions in previous versions.
+- We have moved to compressed quadratic forms for VDFs. Using compressed representation of quadratic forms reduces their serialized size from 130 to 100 bytes (for forms with 1024-bit discriminant). This shrinks the size of VDF outputs and VDF proofs, and it's a breaking change as the compressed representation is not compatible with the older uncompressed (a, b) representation. Compressed forms are also used in calls to chikvdf and in timelord's communication with VDF clients. The form compression algorithm is based on ["Trustless Groups of Unknown Order with Hyperelliptic Curves"](https://eprint.iacr.org/2020/196) by Samuel Dobson, Steven D. Galbraith and Benjamin Smith.
 - Last Attempted Proof on the Farm tab of the GUI now shows hours:minutes:seconds instead of just hours:minutes. This makes it much easier to see that your farmer is responding to recent challenges at a glance.
 - You can now send and receive transactions with the command line. Try `chik wallet -h` to learn more. Also, `chik wallet` now requires a third argument of `show`, therefor you will use `chik wallet show` to see your wallet balance.
 - We have added the [Crowdin](https://crowdin.com/) translation platform to [chik blockchain gui](https://crowdin.com/project/chik-blockchain). We are still getting it fully set up, but helping to translate the GUI is going to be much easier.
 - Full Node > Connections in the GUI now shows the peak sub block height your connected peers believe they are at. A node syncing from you will not be at the true peak sub block height until it gets into sync.
 - `chik init -c [directory]` will create new TLS certificates signed by your CA located in `[directory]`. Use this feature to configure a new remote harvester. Type `chik init -h` to get instructions. Huge thanks to a very efficient @eFishCent for this quick and thorough pull request.
-- We build both MacOS x86_64 and MacOS universal wheels for chiapos, chiavdf, blpsy, and chiabip158 in Python 3.9. The universal build allows M1 Macs to run these dependencies in ARM64 native mode.
+- We build both MacOS x86_64 and MacOS universal wheels for chikpos, chikvdf, blpsy, and chikbip158 in Python 3.9. The universal build allows M1 Macs to run these dependencies in ARM64 native mode.
 - On first run in the GUI (or when there are no plot directories) there is now an "Add Plot Directories" on the Farm tab also.
 
 ### Changed
@@ -1875,7 +1875,7 @@ all fields that referred to sub blocks are changed to blocks.
 
 ### Changed
 
-- Significant improvements have been made to how the full node handles the mempool. This generally cuts CPU usage of node by 2x or more. Part of this increase is that we have temporarily limited the size of transactions. If you want to test sending a transaction you should keep the value of your transaction below 20 TXCK as new consensus will cause you to use a lot of inputs. This will be returned to the expected level as soon as the integration of [clvm rust](https://github.com/Chik-Network/clvm_rs) is complete.
+- Significant improvements have been made to how the full node handles the mempool. This generally cuts CPU usage of node by 2x or more. Part of this increase is that we have temporarily limited the size of transactions. If you want to test sending a transaction you should keep the value of your transaction below 20 TXCK as new consensus will cause you to use a lot of inputs. This will be returned to the expected level as soon as the integration of [klvm rust](https://github.com/Chik-Network/klvm_rs) is complete.
 - We have changed the way TLS between nodes and between chik services work. Each node now has two certificate authorities. One is a public, shared CA that signs the TLS certificates that every node uses to connect to other nodes on 9678 or 59678. You now also have a self generated private CA that must sign e.g. farmer and harvester's certificates. To run a remote harvester you need a new harvester key that is then signed by your private CA. We know this is not easy for remote harvester in this release but will address it quickly.
 - We have changed the way we compile the proof of space plotter and added one additional optimization. On many modern processors this will mean that using the plotter with the `-e` flag will be 2-3% faster than the Beta 17 plotter on the same CPU. We have found this to be very sensitive to different CPUs but are now confident that, at worst, the Beta 24 plotter with `-e` will be the same speed as Beta 17 if not slightly faster on the same hardware. Huge thanks to @xorinox for meticulously tracking down and testing this.
 - If a peer is not responsive during sync, node will disconnect it.
@@ -1894,7 +1894,7 @@ all fields that referred to sub blocks are changed to blocks.
 - Plot filename is now back in the Plots table of the GUI.
 - There was a bug in adding a sub block to weight proofs and an issue in the weight proof index.
 - Over time the node would think that there were no peers attached with peak sub block heights higher than 0.
-- There was a potential bug in Python 3.9.0 that required us to update blspy, chiapos, chiavdf, and chiabip158.
+- There was a potential bug in Python 3.9.0 that required us to update blspy, chikpos, chikvdf, and chikbip158.
 - An off by one issue could cause syncing to ask for 1 sub block when it should ask for e.g. 32.
 - Short sync and backtrack sync both had various issues.
 - There was an edge case in bip158 handling.
@@ -1923,9 +1923,9 @@ all fields that referred to sub blocks are changed to blocks.
 
 ### Changed
 
-- On starting full node, the weight proof cache does not attempt to load all sub blocks. Startup times are noticeably improved though there remains a hesitation when validating the mempool. Our clvm Rust implementation, which will likely ship in the next release, will drop example processing times from 180 to 3 seconds.
+- On starting full node, the weight proof cache does not attempt to load all sub blocks. Startup times are noticeably improved though there remains a hesitation when validating the mempool. Our klvm Rust implementation, which will likely ship in the next release, will drop example processing times from 180 to 3 seconds.
 - Changes to weight proofs and sub block storage and cacheing required a new database schema. This will require a re-sync or obtaining a synced blockchain_v23.db.
-- clvm bytecode is now generated and confirmed that the checked-in clvm and ChikLisp code matches the CI compiled code.
+- klvm bytecode is now generated and confirmed that the checked-in klvm and ChikLisp code matches the CI compiled code.
 - We have removed the '-r' flag from `chik` as it was being overridden in most cases by the `-r` for restart flag to `chik start`. Use `chik --root-path` instead.
 - `chik -h` now recommends `chik netspace -d 192` which is approximately one hours worth of sub blocks. Use `-d 1000` to get the same estimate of netspace as the RPC and GUI.
 - `chik show -c` now displays in MiB and the GUI has been changed to MiB to match.
@@ -1986,7 +1986,7 @@ all fields that referred to sub blocks are changed to blocks.
 ### Fixed
 
 - Weight proofs were failing to verify contributing to a chain stall. This release gets things moving again but nodes are using too much CPU and can pause/lag at times. This may resolve as people upgrade to Beta 21.
-- A toxic combination of transaction limits set too high and a non performant clvm kept the chain stalled. A faster rust implementation of clvm is already nearing completion.
+- A toxic combination of transaction limits set too high and a non performant klvm kept the chain stalled. A faster rust implementation of klvm is already nearing completion.
 - `chik netspace -s` would not correctly look up the start block height by block hash. Additionally netspace now flips to PiB above 1024 TiB. To compare netspace to `chik show` of the GUI use `chik netspace -d 1000` as `chik netspace` defaults to `-d 192` which is one hour.
 
 ## [1.0beta20] aka Beta 1.20 - 2021-01-14
@@ -2025,7 +2025,7 @@ all fields that referred to sub blocks are changed to blocks.
 - The GUI now warns if you attempt to create a plot smaller than k=32.
 - Added Chinese language localization (zh-cn). A big thank you to @goomario for their pull request!
 - You can now specify which private key to use for `chik plots create`. After obtaining the fingerprint from `chik keys show`, try `chik plots create -a FINGERPRINT`. Thanks to @eFishCent for this pull request!
-- We use a faster hash to prime function for chiavdf from the current release of gmp-6.2.1 which we have upgraded chiavdf and blspy to support.
+- We use a faster hash to prime function for chikvdf from the current release of gmp-6.2.1 which we have upgraded chikvdf and blspy to support.
 - There is a new cli command - `chik configure`. This allows you to update certain configuration details like log level in config.yaml from the command line. This is particularly useful in containerization and linux automation. Try `chik configure -h`. Note that if chik services are running and you issue this command you will have to restart them for changes to take effect but you can use this command in the venv when no services are running or call it directly by path in the venv without activating the venv. Expect the options for this command to expand.
 - We now fully support Python 3.9.
 
@@ -2045,13 +2045,13 @@ all fields that referred to sub blocks are changed to blocks.
 - All appropriate Chiklisp smart transactions have been updated to use aggsig_me.
 - Full node should be more aggressive about finding other peers.
 - Peer disconnect messages are now set to log level INFO down from WARNING.
-- chiavdf now allows passing in input to a VDF for new consensus.
+- chikvdf now allows passing in input to a VDF for new consensus.
 - sha256tree has been removed from Chiklisp.
 - `chik show -s` has been refactored to support the new consensus.
 - `chik netspace` has been refactored for new consensus.
-- aiohttp, clvm-tools, colorlog, concurrent-log-handler, keyring, cryptography, and sortedcontainers have been upgraded to their current versions.
+- aiohttp, klvm-tools, colorlog, concurrent-log-handler, keyring, cryptography, and sortedcontainers have been upgraded to their current versions.
 - Tests now place a cache of blocks and plots in the ~/.chik/ directory to speed up total testing time.
-- Changes were made to chiapos to correctly support the new bitfiled backpropogation on FreeBSD and OpenBSD. With the exception of needing to work around python cryptography as outlined on the wiki, FreeBSD and OpenBSD should be able to compile and run chik-blockchain.
+- Changes were made to chikpos to correctly support the new bitfiled backpropogation on FreeBSD and OpenBSD. With the exception of needing to work around python cryptography as outlined on the wiki, FreeBSD and OpenBSD should be able to compile and run chik-blockchain.
 - With the change to new consensus many components of the chain and local database are not yet stored optimally. Startup and sync times may be slower than usual so please be patient. This will improve next release.
 - Errata: Coinbase amount is missing from the GUI Block view.
 - Eratta: wallet Backup, and Fly-sync on the wallet are currently not working.
@@ -2069,8 +2069,8 @@ all fields that referred to sub blocks are changed to blocks.
 ### Added
 
 - F1 generation in the plotter is now fully parallel for a small speedup.
-- We have bitfield optimized phase 2 of plotting. There is only about a 1% increase in speed from this change but there is a 12% decrease in writes with a penalty of 3% more reads. More details in [PR 120](https://github.com/Chik-Network/chiapos/pull/120). Note that some sorts in phase 2 and phase 3 will now appear "out of order" and that is now expected behavior.
-- Partial support for Python 3.9. That includes new versions of Chik dependencies like chiabip158.
+- We have bitfield optimized phase 2 of plotting. There is only about a 1% increase in speed from this change but there is a 12% decrease in writes with a penalty of 3% more reads. More details in [PR 120](https://github.com/Chik-Network/chikpos/pull/120). Note that some sorts in phase 2 and phase 3 will now appear "out of order" and that is now expected behavior.
+- Partial support for Python 3.9. That includes new versions of Chik dependencies like chikbip158.
 
 ### Changed
 
@@ -2111,11 +2111,11 @@ all fields that referred to sub blocks are changed to blocks.
 ### Changed
 
 - The entire GUI has been refactored for code quality and performance.
-- Updated to chiapos 0.12.32. This update significantly speeds up the F1/first table plot generation. It also now can log disk usage while plotting and generate graphs. More details in the [chiapos release notes](https://github.com/Chik-Network/chiapos/releases/tag/0.12.32).
+- Updated to chikpos 0.12.32. This update significantly speeds up the F1/first table plot generation. It also now can log disk usage while plotting and generate graphs. More details in the [chikpos release notes](https://github.com/Chik-Network/chikpos/releases/tag/0.12.32).
 - Node losing or not connecting to another peer node (which is entirely normal behaviour) is now logged at INFO and not WARNING. Your logs will be quieter.
 - Both the GUI and CLI now default to putting the second temporary directory files into the specified temporary directory.
 - SSL Certificate handling was refactored along with Consensus constants, service launching, and internal configuration management.
-- Updated to clvm 0.5.3. This fixed a bug in the `point_add` operator, that was causing taproot issues. This also removed the `SExp.is_legit_list` function. There were significant refactoring of various smart transactions for simplicity and efficiency.
+- Updated to klvm 0.5.3. This fixed a bug in the `point_add` operator, that was causing taproot issues. This also removed the `SExp.is_legit_list` function. There were significant refactoring of various smart transactions for simplicity and efficiency.
 - WalletTool was generally removed.
 - Deprecated pep517.build for the new standard `python -m build --sdist --outdir dist .`
 
@@ -2123,7 +2123,7 @@ all fields that referred to sub blocks are changed to blocks.
 
 - A bug in bls-singatures/blspy could cause a stack overflow if too many signatures were verified at once. This caused the block of death at 11997 of the Beta 15 chain. Updated to 0.2.4 to address the issue.
 - GUI Wallet now correctly updates around reorgs.
-- chiapos 0.12.32 fixed a an out of bounds read that could crash the plotter. It also contains a fix to better handle the case of drive letters on Windows.
+- chikpos 0.12.32 fixed a an out of bounds read that could crash the plotter. It also contains a fix to better handle the case of drive letters on Windows.
 - Node would fail to start on Windows Server 2016 with lots of cores. This [python issue explains]( https://bugs.python.org/issue26903) the problem.
 
 ### Known Issues
@@ -2139,7 +2139,7 @@ all fields that referred to sub blocks are changed to blocks.
 ### Changed
 
 - The development tool WalletTool was refactored out.
-- Update to clvm 0.5.3.
+- Update to klvm 0.5.3.
 - As k=30 and k=31 are now ruled out for mainnet, the GUI defaults to a plot size of k=32.
 
 ### Fixed
@@ -2156,11 +2156,11 @@ all fields that referred to sub blocks are changed to blocks.
 - The rate limited wallet library now supports coin aggregation for adding additional funds after the time of creation.
 - Fees are now used in all applicable rate limited wallet calls
 - New parameters for plotting: -r (number of threads) -s (stripe size) -u (number of buckets) in cli and GUI
-- chiavdf now has full IFMA optimizations for processors that support it.
+- chikvdf now has full IFMA optimizations for processors that support it.
 
 ### Changed
 
-- Multithreading support in chiapos, as well as a new algorithm which is faster and does 70% less IO. This is a significant improvement in speed, much lower total writing, and configurability for different hardware environments.
+- Multithreading support in chikpos, as well as a new algorithm which is faster and does 70% less IO. This is a significant improvement in speed, much lower total writing, and configurability for different hardware environments.
 - Default -b changed to 3072 to improve performance
 - The correct amount of memory is used for plotting
 - `sh install.sh` was upgraded so that on Ubuntu it will install any needed OS dependencies.
@@ -2174,9 +2174,9 @@ all fields that referred to sub blocks are changed to blocks.
 
 - Temporary space required for each k size was updated with more accurate estimates.
 - Tables in the README.MD were not rendering correctly on Pypi. Thanks again @altendky.
-- Chiapos issue where memory was spiking and increasing
+- Chikpos issue where memory was spiking and increasing
 - Fixed working space estimates so they are exact
-- Log all errors in chiapos
+- Log all errors in chikpos
 - Fixed a bug that was causing Bluebox vdfs to fail.
 
 ## [1.0beta13] aka Beta 1.13 - 2020-09-15
@@ -2211,7 +2211,7 @@ all fields that referred to sub blocks are changed to blocks.
 - We have ruled out k=30 for mainnet minimum plot size. k=31 may still make mainnet. k=32 and larger will be viable on mainnet.
 - We moved to react-styleguidist to develop reusable components in isolation and better document the UI. Thanks to @embiem for this pull request.
 - Coloured coins have been updated to simplify them, remove 'a', and stop using an 'auditor'.
-- clvm has been significantly changed to support the new coloured coins implementation.
+- klvm has been significantly changed to support the new coloured coins implementation.
 - Bumped cryptography to 3.1. Cryptography is now publishing ARM64 binary wheels to PyPi so Raspberry Pi installs should be even easier.
 - `chik init` now automatically discovers previous releases in each new release.
 
@@ -2256,7 +2256,7 @@ all fields that referred to sub blocks are changed to blocks.
 
 - Wallet addresses and other key related elements are now expressed in Chech32 which is the Chik implementation of [Bech32](https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki). All of your old wallet addresses will be replaced with the new Chech32 addresses. The only thing you can't do is send test chik between 1.8/1.9 and 1.10 software. Anyone who upgrades to 1.10 will keep their transactions and balances of test chik from the earlier two releases however.
 - We added a first few enhancements to plotting speed. For a k=30 on a ramdisk with `-b 64 GiB` it results in an 11% speedup in overall plotting speed and a 23% improvement in phase 1 speed. Many more significant increases in plotting speed are in the works.
-- The proof of space document in chiapos has been updated to the new format and edited for clarity. Additionally GitHub actions now has the on demand ability to create the PDF version.
+- The proof of space document in chikpos has been updated to the new format and edited for clarity. Additionally GitHub actions now has the on demand ability to create the PDF version.
 - Relic has upstreamed our changes required for the IETF BLS standard. We now build directly from the Relic repository for all but Windows and will be migrating Windows in the next release.
 - Minor improvements to the Coloured Coin wallet were integrated in advance of an upcoming re-factor.
 - Smart wallet backup was upgraded to encrypt and sign the contents of the backup.
@@ -2266,10 +2266,10 @@ all fields that referred to sub blocks are changed to blocks.
 - Proof of space plotting now correctly calculates the total working space used in the `-t` directory.
 - `chik show -w` now displays a message when balances cannot be displayed instead of throwing an error. Thanks to @freddiecoleman for this fix!
 - Fix issue with shutting down full node (full node processes remained open, and caused a spinner when launching Chik)
-- Various code review alerts for comparing to a wider type in chiapos were fixed. Additionally, unused code was removed from chiapos
+- Various code review alerts for comparing to a wider type in chikpos were fixed. Additionally, unused code was removed from chikpos
 - Benchmarking has been re-enabled in bls-signatures.
 - Various node security vulnerabilities were addressed.
-- Updated keyring, various GitHub actions, colorlog, cbor2, and clvm_tools.
+- Updated keyring, various GitHub actions, colorlog, cbor2, and klvm_tools.
 
 ## [1.0beta9] aka Beta 1.9 - 2020-07-27
 
@@ -2341,7 +2341,7 @@ specify so you'll have to add any subfolders you want to also contain plots.
 - The UI now asks for confirmation before closing and shows shutdown progress.
 - UI now tries to shut down servers gracefully before exiting, and also closes
 the daemon before starting.
-- The various sub repositories (chiapos, chiavdf, etc.) now build ARM64 binary
+- The various sub repositories (chikpos, chikvdf, etc.) now build ARM64 binary
 wheels for Linux with Python 3.8. This makes installing on Ubuntu 20.04 lts on
 a Raspberry Pi 3 or 4 easy.
 - Ci's check to see if they have secret access and attempt to fail cleanly so
@@ -2386,7 +2386,7 @@ farmer and full node protocols.
 other chains.
 - Keys are now derived with the EIP 2334 (m/12381/9678/a/b).
 - Removed the ability to pass in sk_seed to plotting, to increase security.
-- Linux builds of chiavdf and blspy now use a fresh build of gmp 6.2.1.
+- Linux builds of chikvdf and blspy now use a fresh build of gmp 6.2.1.
 
 ### Fixed
 
@@ -2463,7 +2463,7 @@ relic. We will make a patch available for these systems shortly.
 - We added total network storage space estimation to the node RPC at the `/get_network_space` endpoint instead of only being available in the cli. The RPC endpoint takes two block header hashes and estimates space between those header hashes.
 - Logs now autorotate. Once the debug.log reaches 20MB it is compressed and archived keeping 7 historical 20MB logs.
 - We now have a CHANGELOG.md that adheres closely to the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) standard. We merged in the version history and updated some previous release notes to capture items important to the change log. We are modifying our release process to accumulate changes at the top of the change log and then copy those to the release notes at the time of the release.
-- We added [lgtm](https://lgtm.com/) source analysis on pull request to the chik-blockchain, chiapos, chiavdf, chiabip158, and bls-library repositories to add some automated security analysis to our ci.
+- We added [lgtm](https://lgtm.com/) source analysis on pull request to the chik-blockchain, chikpos, chikvdf, chikbip158, and bls-library repositories to add some automated security analysis to our ci.
 
 ### Changed
 
@@ -2476,7 +2476,7 @@ relic. We will make a patch available for these systems shortly.
   current LCA. Optionally you can use the `-b` flag to start the calculation from a different block
   height. Use `-d` to specify the delta number of blocks back into history to estimate over from either LCA or your `-b` block height.
 - The Full node RPC response formats have been changed. All API calls now return a dict with success, and an additional value, for example {"success": True, "block": block}.
-- chiapos is now easier to compile with MSVC.
+- chikpos is now easier to compile with MSVC.
 - create plots now takes in an optional sk_seed, it is no longer read in from keys.yaml. If not passed in, it is randomly generated. The -i argument can now only be used when you provide an sk_seed.
 - Moved to PyYAML 5.3.1 which prevents arbitrary code execution during python/object/new constructor.
 - Moved to Python cryptography 2.9.2 which deprecates OpenSSL 1.0.1 and now relies upon OpenSSL 1.1.1g.
@@ -2511,11 +2511,11 @@ relic. We will make a patch available for these systems shortly.
 - Coloured coins now have a prefix to help identify them. When sending transactions, the new prefix is incompatible with older clients.
 - The user interface now refers to chik coins with their correct currency code of XCK.
 - The next release will now be in the dev branch instead of the e.g. beta-1.5. Additionally we are enforcing linear merge into dev and prefer rebase merges or partial squash merges of particularly chatty commit histories.
-- Building the sub reposities (chiapos, chiavdf, blslibrary) now requires CMake 3.14+.
+- Building the sub reposities (chikpos, chikvdf, blslibrary) now requires CMake 3.14+.
 
 ### Fixed
 
-- There was a regression in Chik Proof of Space ([chiapos](https://github.com/Chik-Network/chiapos)) that came from our efforts to speed up plotting on Windows native. Now k>=32 plots work correctly. We made additional bug fixes and corrected limiting small k size generation.
+- There was a regression in Chik Proof of Space ([chikpos](https://github.com/Chik-Network/chikpos)) that came from our efforts to speed up plotting on Windows native. Now k>=32 plots work correctly. We made additional bug fixes and corrected limiting small k size generation.
 - There was a bug in Timelord handling that could stop all VDF progress.
 
 ### Deprecated
@@ -2621,13 +2621,13 @@ relic. We will make a patch available for these systems shortly.
 - We have revamped the chik management command line. To start a farmer all you have to do is start the venv with `. ./activate` and then type `chik-start-farmer &`. The [README.md](https://github.com/Chik-Network/chik-blockchain/blob/main/README.md) has been updated to reflect the new commands.
 - We have moved all node to node communication to TLS 1.3 by default. For now, all TLS is unauthenticated but certain types of over the wire node to node communications will have the ability to authenticate both by certificate and by inter protocol signature. Encrypting over the wire by default stops casual snooping of transaction origination, light wallet to trusted node communication, and harvester-farmer-node communication for example. This leaves only the mempool and the chain itself open to casual observation by the public and the various entities around the world.
 - Configuration directories have been moved to a default location of HomeDirectory/.chik/release/config, plots/ db/, wallet/ etc. This can be overridden by `export CHIK_ROOT=~/.chik` for example which would then put the plots directory in `HomeDirectory/.chik/plots`.
-- The libraries chik-pos, chik-fast-vdf, and chik-bip-158 have been moved to their own repositories: [chiapos](https://github.com/Chik-Network/chiapos), [chiavdf](https://github.com/Chik-Network/chiavdf), and [chaibip158](https://github.com/Chik-Network/chiabip158). They are brought in by chik-blockchain at install time. Our BLS signature library remains at [bls-signatures](https://github.com/Chik-Network/bls-signatures).
-- The install process now brings in chiapos, chiavdf, etc from Pypi where they are auto published via GitHub Actions ci using cibuildwheel. Check out `.github/workflows/build.yml` for build methods in each of the sub repositories.
+- The libraries chik-pos, chik-fast-vdf, and chik-bip-158 have been moved to their own repositories: [chikpos](https://github.com/Chik-Network/chikpos), [chikvdf](https://github.com/Chik-Network/chikvdf), and [chaibip158](https://github.com/Chik-Network/chikbip158). They are brought in by chik-blockchain at install time. Our BLS signature library remains at [bls-signatures](https://github.com/Chik-Network/bls-signatures).
+- The install process now brings in chikpos, chikvdf, etc from Pypi where they are auto published via GitHub Actions ci using cibuildwheel. Check out `.github/workflows/build.yml` for build methods in each of the sub repositories.
 - `chik-regenerate-keys` has been renamed `chik-generate-keys`.
 - setproctitle is now an optional install dependency that we will continue to install in the default install methods.
 - The project now defaults to `venv` without the proceeding . to better match best practices.
 - Developer requirements were separated from the actual requirements.
-- `install-timelord.sh` has been pulled out from `install.sh`. This script downloads the source python package for chiavdf and compiles it locally for timelords. vdf_client can be included or excluded to make building normal user wheels easier.
+- `install-timelord.sh` has been pulled out from `install.sh`. This script downloads the source python package for chikvdf and compiles it locally for timelords. vdf_client can be included or excluded to make building normal user wheels easier.
 
 ### Removed
 
@@ -2654,7 +2654,7 @@ relic. We will make a patch available for these systems shortly.
 - There is a new restart_harvester.sh in scripts/ to easily restart a harvester when you want to add a newly completed plot to the farm without restarting farmer, fullnode, timelord, etc.
 - Harvesters now log errors if they encounter a malformed or corrupted plot file. Again thanks @xorinox.
 - New AJAX based full node UI. To access go to [http://127.0.0.1:9789/index.html](http://127.0.0.1:9789/index.html) with any modern web browser on the same machine as the full node.
-- If you want to benchmark your CPU as a VDF you can use vdf_bench square_asm 500000 for the assembly optimized test or just vdf_bench square 500000 for the plain C++ code path. This tool is found in lib/chiavdf/fast_vdf/.
+- If you want to benchmark your CPU as a VDF you can use vdf_bench square_asm 500000 for the assembly optimized test or just vdf_bench square 500000 for the plain C++ code path. This tool is found in lib/chikvdf/fast_vdf/.
 - Improvements to shutting down services in all of the scripts in scripts/. Another @xorinox HT.
 
 ### Changed

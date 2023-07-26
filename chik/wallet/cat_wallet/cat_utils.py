@@ -23,8 +23,8 @@ ANYONE_CAN_SPEND_PUZZLE = Program.to(1)  # simply return the conditions
 
 def empty_program() -> Program:
     # ignoring hint error here for:
-    # https://github.com/Chik-Network/clvm/pull/102
-    # https://github.com/Chik-Network/clvm/pull/106
+    # https://github.com/Chik-Network/klvm/pull/102
+    # https://github.com/Chik-Network/klvm/pull/106
     return Program.to([])  # type: ignore[no-any-return]
 
 
@@ -95,7 +95,7 @@ def next_info_for_spendable_cat(spendable_cat: SpendableCAT) -> Program:
     c = spendable_cat.coin
     list = [c.parent_coin_info, spendable_cat.inner_puzzle.get_tree_hash(), c.amount]
     # ignoring hint error here for:
-    # https://github.com/Chik-Network/clvm/pull/102
+    # https://github.com/Chik-Network/klvm/pull/102
     return Program.to(list)  # type: ignore[no-any-return]
 
 

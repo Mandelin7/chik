@@ -42,7 +42,7 @@ log = logging.getLogger(__name__)
 
 @dataclass
 class DataStore:
-    """A key/value store with the pairs being terminal nodes in a CLVM object tree."""
+    """A key/value store with the pairs being terminal nodes in a KLVM object tree."""
 
     db_wrapper: DBWrapper2
 
@@ -312,8 +312,8 @@ class DataStore:
 
     async def _insert_terminal_node(self, key: bytes, value: bytes) -> bytes32:
         # forcing type hint here for:
-        # https://github.com/Chik-Network/clvm/pull/102
-        # https://github.com/Chik-Network/clvm/pull/106
+        # https://github.com/Chik-Network/klvm/pull/102
+        # https://github.com/Chik-Network/klvm/pull/106
         node_hash: bytes32 = Program.to((key, value)).get_tree_hash()
 
         await self._insert_node(
@@ -1140,8 +1140,8 @@ class DataStore:
 
             root_node = hash_to_node[root_node.hash]
             # TODO: Remove ignore when done.
-            #       https://github.com/Chik-Network/clvm/pull/102
-            #       https://github.com/Chik-Network/clvm/pull/106
+            #       https://github.com/Chik-Network/klvm/pull/102
+            #       https://github.com/Chik-Network/klvm/pull/106
             program: Program = Program.to(root_node)
 
         return program

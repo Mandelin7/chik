@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from clvm.casts import int_from_bytes
-from clvm_tools import binutils
+from klvm.casts import int_from_bytes
+from klvm_tools import binutils
 
 from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
 from chik.types.blockchain_format.program import Program
@@ -28,7 +28,7 @@ def make_puzzle(amount: int) -> int:
     puzzle = f"(q . ((51 0x{ph1.hex()} {amount}) (51 0x{ph2.hex()} {amount})))"
     # print(puzzle)
 
-    # TODO: properly type hint clvm_tools
+    # TODO: properly type hint klvm_tools
     assembled_puzzle = binutils.assemble(puzzle)  # type: ignore[no-untyped-call]
     puzzle_prog = Program.to(assembled_puzzle)
     print("Program: ", puzzle_prog)

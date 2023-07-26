@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 import pytest
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 
 from chik.full_node.hint_store import HintStore
 from chik.simulator.wallet_tools import WalletTool

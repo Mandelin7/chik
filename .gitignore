@@ -67,7 +67,7 @@ vdf_bench
 # Attest Files
 *.attest
 
-# Compiled CLVM
+# Compiled KLVM
 main.sym
 *.recompiled
 
@@ -97,7 +97,7 @@ build/
 # https://pytest-monitor.readthedocs.io/en/latest/operating.html?highlight=.pymon#storage
 .pymon
 
-# cache for tooling such as tools/manage_clvm.py
+# cache for tooling such as tools/manage_klvm.py
 .chik_cache/
 
 #       =====                       =====

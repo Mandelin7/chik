@@ -10,7 +10,7 @@ from typing import List
 
 import pytest
 from blspy import AugSchemeMPL, G2Element
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 
 from chik.consensus.block_header_validation import validate_finished_header_block
 from chik.consensus.block_rewards import calculate_base_farmer_reward
@@ -2561,7 +2561,7 @@ class TestBodyValidation:
 
         block_generator: BlockGenerator = BlockGenerator(blocks[-1].transactions_generator, [], [])
         npc_result = get_name_puzzle_conditions(
-            block_generator, b.constants.MAX_BLOCK_COST_CLVM * 1000, mempool_mode=False, height=softfork_height
+            block_generator, b.constants.MAX_BLOCK_COST_KLVM * 1000, mempool_mode=False, height=softfork_height
         )
         err = (await b.add_block(blocks[-1], PreValidationResult(None, uint64(1), npc_result, True)))[1]
         assert err in [Err.BLOCK_COST_EXCEEDS_MAX]
@@ -2573,7 +2573,7 @@ class TestBodyValidation:
         assert Err(results[0].error) == Err.BLOCK_COST_EXCEEDS_MAX
 
     @pytest.mark.asyncio
-    async def test_clvm_must_not_fail(self, empty_blockchain, bt):
+    async def test_klvm_must_not_fail(self, empty_blockchain, bt):
         # 8
         pass
 
@@ -2619,7 +2619,7 @@ class TestBodyValidation:
         block_generator: BlockGenerator = BlockGenerator(block_2.transactions_generator, [], [])
         npc_result = get_name_puzzle_conditions(
             block_generator,
-            min(b.constants.MAX_BLOCK_COST_CLVM * 1000, block.transactions_info.cost),
+            min(b.constants.MAX_BLOCK_COST_KLVM * 1000, block.transactions_info.cost),
             mempool_mode=False,
             height=softfork_height,
         )
@@ -2643,7 +2643,7 @@ class TestBodyValidation:
         block_generator: BlockGenerator = BlockGenerator(block_2.transactions_generator, [], [])
         npc_result = get_name_puzzle_conditions(
             block_generator,
-            min(b.constants.MAX_BLOCK_COST_CLVM * 1000, block.transactions_info.cost),
+            min(b.constants.MAX_BLOCK_COST_KLVM * 1000, block.transactions_info.cost),
             mempool_mode=False,
             height=softfork_height,
         )
@@ -2667,7 +2667,7 @@ class TestBodyValidation:
         block_generator: BlockGenerator = BlockGenerator(block_2.transactions_generator, [], [])
         npc_result = get_name_puzzle_conditions(
             block_generator,
-            min(b.constants.MAX_BLOCK_COST_CLVM * 1000, block.transactions_info.cost),
+            min(b.constants.MAX_BLOCK_COST_KLVM * 1000, block.transactions_info.cost),
             mempool_mode=False,
             height=softfork_height,
         )
@@ -2675,7 +2675,7 @@ class TestBodyValidation:
         result, err, _ = await b.add_block(block_2, PreValidationResult(None, uint64(1), npc_result, False))
         assert err == Err.INVALID_BLOCK_COST
 
-        # when the CLVM program exceeds cost during execution, it will fail with
+        # when the KLVM program exceeds cost during execution, it will fail with
         # a general runtime error. The previous test tests this.
 
     @pytest.mark.asyncio

@@ -8,7 +8,7 @@ import time
 from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Set, Tuple, Type, TypeVar, cast
 
 from blspy import AugSchemeMPL, G1Element, G2Element
-from clvm.casts import int_from_bytes, int_to_bytes
+from klvm.casts import int_from_bytes, int_to_bytes
 
 import chik.wallet.singleton
 from chik.protocols.wallet_protocol import CoinState
@@ -472,7 +472,7 @@ class NFTWallet:
             conditions = conditions_dict_for_solution(
                 spend.puzzle_reveal.to_program(),
                 spend.solution.to_program(),
-                self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM,
+                self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM,
             )
             for pk, msg in pkm_pairs_for_conditions_dict(
                 conditions, spend.coin.name(), self.wallet_state_manager.constants.AGG_SIG_ME_ADDITIONAL_DATA
@@ -848,7 +848,7 @@ class NFTWallet:
             assert isinstance(transfer_info, PuzzleInfo)
             royalty_percentage_raw = transfer_info["transfer_program"]["royalty_percentage"]
             assert royalty_percentage_raw is not None
-            # clvm encodes large ints as bytes
+            # klvm encodes large ints as bytes
             if isinstance(royalty_percentage_raw, bytes):
                 royalty_percentage = int_from_bytes(royalty_percentage_raw)
             else:

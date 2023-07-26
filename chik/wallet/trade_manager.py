@@ -22,7 +22,7 @@ from chik.wallet.nft_wallet.nft_wallet import NFTWallet
 from chik.wallet.outer_puzzles import AssetType
 from chik.wallet.payment import Payment
 from chik.wallet.puzzle_drivers import PuzzleInfo, Solver
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.trade_record import TradeRecord
 from chik.wallet.trading.offer import OFFER_MOD_OLD_HASH, NotarizedPayment, Offer
 from chik.wallet.trading.trade_status import TradeStatus
@@ -34,7 +34,7 @@ from chik.wallet.util.wallet_types import WalletType
 from chik.wallet.wallet import Wallet
 from chik.wallet.wallet_coin_record import WalletCoinRecord
 
-OFFER_MOD = load_clvm_maybe_recompile("settlement_payments.clsp")
+OFFER_MOD = load_klvm_maybe_recompile("settlement_payments.clsp")
 
 
 class TradeManager:

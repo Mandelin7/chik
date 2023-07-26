@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from typing import List, Optional, Tuple, Union
 
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 
 from chik.full_node.generator import create_compressed_generator
 from chik.types.blockchain_format.program import Program
@@ -69,7 +69,7 @@ def match_standard_transaction_at_any_index(generator_body: bytes) -> Optional[T
     """Return (start, end) of match, or None if pattern could not be found"""
 
     # We intentionally match the entire puzzle, not just the prefix that we will use,
-    # in case we later want to convert the template generator into a tree of CLVM
+    # in case we later want to convert the template generator into a tree of KLVM
     # Objects before operating on it
     m = STANDARD_TRANSACTION_PUZZLE_PATTERN.search(generator_body.hex())
     if m:

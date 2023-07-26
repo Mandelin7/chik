@@ -4,9 +4,9 @@ from typing import List, Optional, Tuple
 
 import pytest
 from blspy import AugSchemeMPL, G2Element, PrivateKey
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 
-from chik.clvm.spend_sim import CostLogger, SimClient, SpendSim, sim_and_client
+from chik.klvm.spend_sim import CostLogger, SimClient, SpendSim, sim_and_client
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.sized_bytes import bytes32
@@ -23,8 +23,8 @@ from chik.wallet.cat_wallet.cat_utils import (
 from chik.wallet.lineage_proof import LineageProof
 from chik.wallet.puzzles.cat_loader import CAT_MOD
 from chik.wallet.puzzles.tails import DelegatedLimitations, EverythingWithSig, GenesisById, GenesisByPuzhash
-from tests.clvm.benchmark_costs import cost_of_spend_bundle
-from tests.clvm.test_puzzles import secret_exponent_for_index
+from tests.klvm.benchmark_costs import cost_of_spend_bundle
+from tests.klvm.test_puzzles import secret_exponent_for_index
 
 acs = Program.to(1)
 acs_ph = acs.get_tree_hash()
@@ -447,7 +447,7 @@ class TestCATLifecycle:
             await sim.farm_block(cat_ph)
 
             # Test eve spend
-            # We don't sign any message data because CLVM 0 translates to b'' apparently
+            # We don't sign any message data because KLVM 0 translates to b'' apparently
             starting_coin: Coin = (await sim_client.get_coin_records_by_puzzle_hash(cat_ph))[0].coin
             signature: G2Element = AugSchemeMPL.sign(
                 sk, (starting_coin.name() + sim.defaults.AGG_SIG_ME_ADDITIONAL_DATA)

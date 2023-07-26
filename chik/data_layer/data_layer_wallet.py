@@ -7,7 +7,7 @@ from operator import attrgetter
 from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Set, Tuple, cast
 
 from blspy import G1Element, G2Element
-from clvm.EvalError import EvalError
+from klvm.EvalError import EvalError
 from typing_extensions import final
 
 from chik.consensus.block_record import BlockRecord
@@ -857,7 +857,7 @@ class DataLayerWallet:
             root: bytes32
             inner_puzzle_hash: bytes32
 
-            conditions = puzzle.run_with_cost(self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM, solution)[
+            conditions = puzzle.run_with_cost(self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM, solution)[
                 1
             ].as_python()
             found_singleton: bool = False
@@ -1081,7 +1081,7 @@ class DataLayerWallet:
             [coin_spend],
             self.standard_wallet.secret_key_store.secret_key_for_public_key,
             self.wallet_state_manager.constants.AGG_SIG_ME_ADDITIONAL_DATA,
-            self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM,
+            self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM,
         )
 
     def get_name(self) -> str:

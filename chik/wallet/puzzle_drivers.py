@@ -3,16 +3,16 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from clvm.casts import int_from_bytes
-from clvm.SExp import SExp
-from clvm_tools.binutils import assemble, type_for_atom
+from klvm.casts import int_from_bytes
+from klvm.SExp import SExp
+from klvm_tools.binutils import assemble, type_for_atom
 from ir.Type import Type
 
 from chik.types.blockchain_format.program import Program
 
 """
 The following two classes act as wrapper classes around dictionaries of strings.
-Values in the dictionary are assumed to be strings in CLVM format (0x for bytes, etc.)
+Values in the dictionary are assumed to be strings in KLVM format (0x for bytes, etc.)
 When you access a value in the dictionary, it will be deserialized to a str, int, bytes, or Program appropriately.
 """
 

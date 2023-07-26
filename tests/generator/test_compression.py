@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from typing import Any, List
 
 import pytest
-from clvm import SExp
-from clvm.serialize import sexp_from_stream
-from clvm_tools import binutils
+from klvm import SExp
+from klvm.serialize import sexp_from_stream
+from klvm_tools import binutils
 
 from chik.full_node.bundle_tools import (
     bundle_suitable_for_compression,
@@ -25,21 +25,21 @@ from chik.types.generator_types import BlockGenerator, CompressorArg
 from chik.types.spend_bundle import SpendBundle
 from chik.util.byte_types import hexstr_to_bytes
 from chik.util.ints import uint32
-from chik.wallet.puzzles.load_clvm import load_clvm
+from chik.wallet.puzzles.load_klvm import load_klvm
 from tests.core.make_block_generator import make_spend_bundle
 from tests.generator.test_rom import run_generator
 
-TEST_GEN_DESERIALIZE = load_clvm("test_generator_deserialize.clsp", package_or_requirement="chik.wallet.puzzles")
-DESERIALIZE_MOD = load_clvm("chiklisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles")
+TEST_GEN_DESERIALIZE = load_klvm("test_generator_deserialize.clsp", package_or_requirement="chik.wallet.puzzles")
+DESERIALIZE_MOD = load_klvm("chiklisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles")
 
-DECOMPRESS_PUZZLE = load_clvm("decompress_puzzle.clsp", package_or_requirement="chik.wallet.puzzles")
-DECOMPRESS_CSE = load_clvm("decompress_coin_spend_entry.clsp", package_or_requirement="chik.wallet.puzzles")
+DECOMPRESS_PUZZLE = load_klvm("decompress_puzzle.clsp", package_or_requirement="chik.wallet.puzzles")
+DECOMPRESS_CSE = load_klvm("decompress_coin_spend_entry.clsp", package_or_requirement="chik.wallet.puzzles")
 
-DECOMPRESS_CSE_WITH_PREFIX = load_clvm(
+DECOMPRESS_CSE_WITH_PREFIX = load_klvm(
     "decompress_coin_spend_entry_with_prefix.clsp", package_or_requirement="chik.wallet.puzzles"
 )
-DECOMPRESS_BLOCK = load_clvm("block_program_zero.clsp", package_or_requirement="chik.wallet.puzzles")
-TEST_MULTIPLE = load_clvm("test_multiple_generator_input_arguments.clsp", package_or_requirement="chik.wallet.puzzles")
+DECOMPRESS_BLOCK = load_klvm("block_program_zero.clsp", package_or_requirement="chik.wallet.puzzles")
+TEST_MULTIPLE = load_klvm("test_multiple_generator_input_arguments.clsp", package_or_requirement="chik.wallet.puzzles")
 
 Nil = Program.from_bytes(b"\x80")
 

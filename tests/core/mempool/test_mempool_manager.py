@@ -5,8 +5,8 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional, Set, Tuple
 
 import pytest
 from blspy import G1Element, G2Element
-from chia_rs import ELIGIBLE_FOR_DEDUP
-from chiabip158 import PyBIP158
+from chik_rs import ELIGIBLE_FOR_DEDUP
+from chikbip158 import PyBIP158
 
 from chik.consensus.constants import ConsensusConstants
 from chik.consensus.cost_calculator import NPCResult
@@ -966,7 +966,7 @@ async def test_create_bundle_from_mempool_on_max_cost() -> None:
     # Create a spend bundle with a big enough cost that gets it close to the limit
     await make_and_send_big_cost_sb(coins[0])
     # Create a second spend bundle with a relatively smaller cost.
-    # Combined with the first spend bundle, we'd exceed the maximum block clvm cost
+    # Combined with the first spend bundle, we'd exceed the maximum block klvm cost
     conditions = [[ConditionOpcode.CREATE_COIN, IDENTITY_PUZZLE_HASH, coins[1].amount - 2]]
     sb2, _, res = await generate_and_add_spendbundle(mempool_manager, conditions, coins[1])
     assert res[1] == MempoolInclusionStatus.SUCCESS
@@ -976,7 +976,7 @@ async def test_create_bundle_from_mempool_on_max_cost() -> None:
     agg, additions = result
     # The second spend bundle has a higher FPC so it should get picked first
     assert agg == sb2
-    # The first spend bundle hits the maximum block clvm cost and gets skipped
+    # The first spend bundle hits the maximum block klvm cost and gets skipped
     assert additions == [Coin(coins[1].name(), IDENTITY_PUZZLE_HASH, coins[1].amount - 2)]
     assert agg.removals() == [coins[1]]
 

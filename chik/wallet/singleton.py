@@ -4,13 +4,13 @@ from typing import Optional
 
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.sized_bytes import bytes32
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.util.curry_and_treehash import calculate_hash_of_quoted_mod_hash, curry_and_treehash
 
-SINGLETON_TOP_LAYER_MOD = load_clvm_maybe_recompile("singleton_top_layer_v1_1.clsp")
+SINGLETON_TOP_LAYER_MOD = load_klvm_maybe_recompile("singleton_top_layer_v1_1.clsp")
 SINGLETON_TOP_LAYER_MOD_HASH = SINGLETON_TOP_LAYER_MOD.get_tree_hash()
 SINGLETON_TOP_LAYER_MOD_HASH_QUOTED = calculate_hash_of_quoted_mod_hash(SINGLETON_TOP_LAYER_MOD_HASH)
-SINGLETON_LAUNCHER_PUZZLE = load_clvm_maybe_recompile("singleton_launcher.clsp")
+SINGLETON_LAUNCHER_PUZZLE = load_klvm_maybe_recompile("singleton_launcher.clsp")
 SINGLETON_LAUNCHER_PUZZLE_HASH = SINGLETON_LAUNCHER_PUZZLE.get_tree_hash()
 
 

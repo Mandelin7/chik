@@ -64,10 +64,10 @@ async def test_fee_increase() -> None:
     async with DBConnection(db_version=2) as db_wrapper:
         coin_store = await CoinStore.create(db_wrapper)
         mempool_manager = MempoolManager(coin_store.get_coin_record, test_constants)
-        assert test_constants.MAX_BLOCK_COST_CLVM == mempool_manager.constants.MAX_BLOCK_COST_CLVM
+        assert test_constants.MAX_BLOCK_COST_KLVM == mempool_manager.constants.MAX_BLOCK_COST_KLVM
         btc_fee_estimator: BitcoinFeeEstimator = mempool_manager.mempool.fee_estimator  # type: ignore
         fee_tracker = btc_fee_estimator.get_tracker()
-        estimator = SmartFeeEstimator(fee_tracker, uint64(test_constants.MAX_BLOCK_COST_CLVM))
+        estimator = SmartFeeEstimator(fee_tracker, uint64(test_constants.MAX_BLOCK_COST_KLVM))
         random = Random(x=1)
         for i in range(300, 700):
             i = uint32(i)
@@ -99,6 +99,6 @@ async def test_fee_increase() -> None:
         med_estimate = result.estimates[1].estimated_fee_rate
         long_estimate = result.estimates[2].estimated_fee_rate
 
-        assert short_estimate.mojos_per_clvm_cost == uint64(fee_tracker.buckets[3] / 1000)
-        assert med_estimate.mojos_per_clvm_cost == uint64(fee_tracker.buckets[3] / 1000)
-        assert long_estimate.mojos_per_clvm_cost == uint64(0)
+        assert short_estimate.mojos_per_klvm_cost == uint64(fee_tracker.buckets[3] / 1000)
+        assert med_estimate.mojos_per_klvm_cost == uint64(fee_tracker.buckets[3] / 1000)
+        assert long_estimate.mojos_per_klvm_cost == uint64(0)

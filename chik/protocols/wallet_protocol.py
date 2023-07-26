@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
-import chia_rs
+import chik_rs
 
 from chik.full_node.fee_estimate import FeeEstimateGroup
 from chik.types.blockchain_format.coin import Coin
@@ -20,8 +20,8 @@ Note: When changing this file, also change protocol_message_types.py, and the pr
 """
 
 
-CoinState = chia_rs.CoinState
-RespondToPhUpdates = chia_rs.RespondToPhUpdates
+CoinState = chik_rs.CoinState
+RespondToPhUpdates = chik_rs.RespondToPhUpdates
 
 
 @streamable

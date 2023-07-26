@@ -4,7 +4,7 @@ import time
 from secrets import token_bytes
 
 from blspy import AugSchemeMPL, PrivateKey
-from clvm_tools import binutils
+from klvm_tools import binutils
 
 from chik.consensus.default_constants import DEFAULT_CONSTANTS
 from chik.simulator.wallet_tools import WalletTool
@@ -33,13 +33,13 @@ def float_to_str(f):
 
 def run_and_return_cost_time(chiklisp):
     start = time.time()
-    clvm_loop = "((c (q ((c (f (a)) (c (f (a)) (c (f (r (a))) (c (f (r (r (a))))"
+    klvm_loop = "((c (q ((c (f (a)) (c (f (a)) (c (f (r (a))) (c (f (r (r (a))))"
     " (q ()))))))) (c (q ((c (i (f (r (a))) (q (i (q 1) ((c (f (a)) (c (f (a))"
     " (c (- (f (r (a))) (q 1)) (c (f (r (r (a)))) (q ()))))))"
     " ((c (f (r (r (a)))) (q ()))))) (q (q ()))) (a)))) (a))))"
-    loop_program = Program.to(binutils.assemble(clvm_loop))
-    clvm_loop_solution = f"(1000 {chiklisp})"
-    solution_program = Program.to(binutils.assemble(clvm_loop_solution))
+    loop_program = Program.to(binutils.assemble(klvm_loop))
+    klvm_loop_solution = f"(1000 {chiklisp})"
+    solution_program = Program.to(binutils.assemble(klvm_loop_solution))
 
     cost, sexp = loop_program.run_with_cost(solution_program, INFINITE_COST)
 
@@ -59,7 +59,7 @@ def benchmark_all_operators():
     multiply = "(* (q 1000000000) (q 1000000000))"
     greater = "(> (q 1000000000) (q 1000000000))"
     equal = "(= (q 1000000000) (q 1000000000))"
-    if_clvm = "(i (= (q 1000000000) (q 1000000000)) (q 1000000000) (q 1000000000))"
+    if_klvm = "(i (= (q 1000000000) (q 1000000000)) (q 1000000000) (q 1000000000))"
     sha256tree = "(sha256 (q 1000000000))"
     pubkey_for_exp = "(pubkey_for_exp (q 1))"
     point_add = "(point_add"
@@ -71,7 +71,7 @@ def benchmark_all_operators():
     multiply_cost, multiply_time = run_and_return_cost_time(multiply)
     greater_cost, greater_time = run_and_return_cost_time(greater)
     equal_cost, equal_time = run_and_return_cost_time(equal)
-    if_cost, if_time = run_and_return_cost_time(if_clvm)
+    if_cost, if_time = run_and_return_cost_time(if_klvm)
     sha256tree_cost, sha256tree_time = run_and_return_cost_time(sha256tree)
     pubkey_for_exp_cost, pubkey_for_exp_time = run_and_return_cost_time(pubkey_for_exp)
 
@@ -100,8 +100,8 @@ def benchmark_all_operators():
 
 if __name__ == "__main__":
     """
-    Naive way to calculate cost ratio between vByte and CLVM cost unit.
-    AggSig has assigned cost of 20vBytes, simple CLVM program is benchmarked against it.
+    Naive way to calculate cost ratio between vByte and KLVM cost unit.
+    AggSig has assigned cost of 20vBytes, simple KLVM program is benchmarked against it.
     """
     wallet_tool = WalletTool(DEFAULT_CONSTANTS)
     benchmark_all_operators()
@@ -125,15 +125,15 @@ if __name__ == "__main__":
 
     # Run Puzzle 1000 times
     puzzle_start = time.time()
-    clvm_cost = 0
+    klvm_cost = 0
     for i in range(0, 1000):
         cost_run, sexp = puzzles[i].run_with_cost(solutions[i], INFINITE_COST)
-        clvm_cost += cost_run
+        klvm_cost += cost_run
 
     puzzle_end = time.time()
     puzzle_time = puzzle_end - puzzle_start
     print(f"Puzzle_time is: {puzzle_time}")
-    print(f"Puzzle cost sum is: {clvm_cost}")
+    print(f"Puzzle cost sum is: {klvm_cost}")
 
     private_key = master_sk_to_wallet_sk(secret_key, uint32(0))
     public_key = private_key.get_g1()
@@ -153,10 +153,10 @@ if __name__ == "__main__":
     print(f"Aggsig Cost: {agg_sig_cost}")
     print(f"Aggsig time is: {agg_sig_time}")
 
-    # clvm_should_cost = agg_sig_cost * puzzle_time / agg_sig_time
-    clvm_should_cost = (agg_sig_cost * puzzle_time) / agg_sig_time
-    print(f"Puzzle should cost: {clvm_should_cost}")
-    constant = clvm_should_cost / clvm_cost
+    # klvm_should_cost = agg_sig_cost * puzzle_time / agg_sig_time
+    klvm_should_cost = (agg_sig_cost * puzzle_time) / agg_sig_time
+    print(f"Puzzle should cost: {klvm_should_cost}")
+    constant = klvm_should_cost / klvm_cost
     format = float_to_str(constant)
     print(f"Constant factor: {format}")
-    print(f"CLVM RATIO MULTIPLIER: {1/constant}")
+    print(f"KLVM RATIO MULTIPLIER: {1/constant}")

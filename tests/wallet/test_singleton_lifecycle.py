@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 import pytest
 from blspy import G2Element
-from clvm_tools import binutils
+from klvm_tools import binutils
 
 from chik.types.announcement import Announcement
 from chik.types.blockchain_format.coin import Coin
@@ -14,14 +14,14 @@ from chik.types.coin_spend import CoinSpend
 from chik.types.condition_opcodes import ConditionOpcode
 from chik.types.spend_bundle import SpendBundle
 from chik.util.ints import uint64
-from chik.wallet.puzzles.load_clvm import load_clvm
+from chik.wallet.puzzles.load_klvm import load_klvm
 from tests.core.full_node.test_conditions import check_spend_bundle_validity, initial_blocks
 
-SINGLETON_MOD = load_clvm("singleton_top_layer.clsp")
-LAUNCHER_PUZZLE = load_clvm("singleton_launcher.clsp")
-P2_SINGLETON_MOD = load_clvm("p2_singleton.clsp")
-POOL_MEMBER_MOD = load_clvm("pool_member_innerpuz.clsp")
-POOL_WAITINGROOM_MOD = load_clvm("pool_waitingroom_innerpuz.clsp")
+SINGLETON_MOD = load_klvm("singleton_top_layer.clsp")
+LAUNCHER_PUZZLE = load_klvm("singleton_launcher.clsp")
+P2_SINGLETON_MOD = load_klvm("p2_singleton.clsp")
+POOL_MEMBER_MOD = load_klvm("pool_member_innerpuz.clsp")
+POOL_WAITINGROOM_MOD = load_klvm("pool_waitingroom_innerpuz.clsp")
 
 LAUNCHER_PUZZLE_HASH = LAUNCHER_PUZZLE.get_tree_hash()
 SINGLETON_MOD_HASH = SINGLETON_MOD.get_tree_hash()

@@ -50,8 +50,8 @@ class ConsensusConstants:
     MEMPOOL_BLOCK_BUFFER: int
     # Max coin amount uint(1 << 64). This allows coin amounts to fit in 64 bits. This is around 18M chik.
     MAX_COIN_AMOUNT: int
-    # Max block cost in clvm cost units
-    MAX_BLOCK_COST_CLVM: int
+    # Max block cost in klvm cost units
+    MAX_BLOCK_COST_KLVM: int
     # Cost per byte of generator program
     COST_PER_BYTE: int
 

@@ -6,7 +6,7 @@ from typing import Optional, cast
 
 from bitstring import BitArray
 from blspy import AugSchemeMPL, G1Element, PrivateKey
-from chiapos import Verifier
+from chikpos import Verifier
 
 from chik.consensus.constants import ConsensusConstants
 from chik.types.blockchain_format.sized_bytes import bytes32

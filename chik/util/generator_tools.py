@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Iterator, List, Optional, Tuple
 
-from chiabip158 import PyBIP158
+from chikbip158 import PyBIP158
 
 from chik.consensus.cost_calculator import NPCResult
 from chik.types.blockchain_format.coin import Coin

@@ -5,7 +5,7 @@ import logging
 import random
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from chia_rs import compute_merkle_set_root
+from chik_rs import compute_merkle_set_root
 
 from chik.consensus.constants import ConsensusConstants
 from chik.full_node.full_node_api import FullNodeAPI

@@ -4,7 +4,7 @@ import collections
 import logging
 from typing import Awaitable, Callable, Dict, List, Optional, Set, Tuple, Union
 
-from chiabip158 import PyBIP158
+from chikbip158 import PyBIP158
 
 from chik.consensus.block_record import BlockRecord
 from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
@@ -201,15 +201,15 @@ async def validate_block_body(
         assert npc_result is not None
         cost = npc_result.cost
 
-        # 7. Check that cost <= MAX_BLOCK_COST_CLVM
+        # 7. Check that cost <= MAX_BLOCK_COST_KLVM
         log.debug(
-            f"Cost: {cost} max: {constants.MAX_BLOCK_COST_CLVM} "
-            f"percent full: {round(100 * (cost / constants.MAX_BLOCK_COST_CLVM), 2)}%"
+            f"Cost: {cost} max: {constants.MAX_BLOCK_COST_KLVM} "
+            f"percent full: {round(100 * (cost / constants.MAX_BLOCK_COST_KLVM), 2)}%"
         )
-        if cost > constants.MAX_BLOCK_COST_CLVM:
+        if cost > constants.MAX_BLOCK_COST_KLVM:
             return Err.BLOCK_COST_EXCEEDS_MAX, None
 
-        # 8. The CLVM program must not return any errors
+        # 8. The KLVM program must not return any errors
         if npc_result.error is not None:
             return Err(npc_result.error), None
 
@@ -318,7 +318,7 @@ async def validate_block_body(
                 assert curr_block_generator is not None and curr.transactions_info is not None
                 curr_npc_result = get_name_puzzle_conditions(
                     curr_block_generator,
-                    min(constants.MAX_BLOCK_COST_CLVM, curr.transactions_info.cost),
+                    min(constants.MAX_BLOCK_COST_KLVM, curr.transactions_info.cost),
                     mempool_mode=False,
                     height=curr.height,
                     constants=constants,

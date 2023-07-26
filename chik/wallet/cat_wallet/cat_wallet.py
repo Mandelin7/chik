@@ -298,12 +298,12 @@ class CATWallet:
             # will only matter once the wallet generates transactions relying on
             # new conditions, and we can change this by then
             result: NPCResult = get_name_puzzle_conditions(
-                program, self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM, mempool_mode=True, height=uint32(0)
+                program, self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM, mempool_mode=True, height=uint32(0)
             )
             self.cost_of_single_tx = result.cost
             self.log.info(f"Cost of a single tx for CAT wallet: {self.cost_of_single_tx}")
 
-        max_cost = self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM / 2  # avoid full block TXs
+        max_cost = self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM / 2  # avoid full block TXs
         current_cost = 0
         total_amount = 0
         total_coin_count = 0
@@ -509,7 +509,7 @@ class CATWallet:
                 conditions = conditions_dict_for_solution(
                     spend.puzzle_reveal.to_program(),
                     spend.solution.to_program(),
-                    self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM,
+                    self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM,
                 )
                 synthetic_pk = synthetic_secret_key.get_g1()
                 for pk, msg in pkm_pairs_for_conditions_dict(

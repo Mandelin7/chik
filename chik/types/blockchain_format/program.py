@@ -3,11 +3,11 @@ from __future__ import annotations
 import io
 from typing import Any, Callable, Dict, Set, Tuple
 
-from chia_rs import run_chia_program, tree_hash
-from clvm import SExp
-from clvm.casts import int_from_bytes
-from clvm.EvalError import EvalError
-from clvm.serialize import sexp_from_stream, sexp_to_stream
+from chik_rs import run_chik_program, tree_hash
+from klvm import SExp
+from klvm.casts import int_from_bytes
+from klvm.EvalError import EvalError
+from klvm.serialize import sexp_from_stream, sexp_to_stream
 
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.util.byte_types import hexstr_to_bytes
@@ -36,7 +36,7 @@ class Program(SExp):
         # the first argument is the buffer we want to parse. This effectively
         # leverages the rust parser and LazyNode, making it a lot faster to
         # parse serialized programs into a python compatible structure
-        cost, ret = run_chia_program(
+        cost, ret = run_chik_program(
             b"\x01",
             blob,
             50,
@@ -90,7 +90,7 @@ class Program(SExp):
         ```
 
         This is a convenience method intended for use in the wallet or command-line hacks where
-        it would be easier to morph elements of an existing clvm object tree than to rebuild
+        it would be easier to morph elements of an existing klvm object tree than to rebuild
         one from scratch.
 
         Note that `Program` objects are immutable. This function returns a new object; the
@@ -110,18 +110,18 @@ class Program(SExp):
 
     def run_with_cost(self, max_cost: int, args) -> Tuple[int, "Program"]:
         prog_args = Program.to(args)
-        cost, r = run_chia_program(self.as_bin(), prog_args.as_bin(), max_cost, 0)
+        cost, r = run_chik_program(self.as_bin(), prog_args.as_bin(), max_cost, 0)
         return cost, Program.to(r)
 
     def run(self, args) -> "Program":
         cost, r = self.run_with_cost(INFINITE_COST, args)
         return r
 
-    # Replicates the curry function from clvm_tools, taking advantage of *args
+    # Replicates the curry function from klvm_tools, taking advantage of *args
     # being a list.  We iterate through args in reverse building the code to
-    # create a clvm list.
+    # create a klvm list.
     #
-    # Given arguments to a function addressable by the '1' reference in clvm
+    # Given arguments to a function addressable by the '1' reference in klvm
     #
     # fixed_args = 1
     #

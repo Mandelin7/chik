@@ -3,8 +3,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, List, Optional, Tuple
 
-from clvm.casts import int_from_bytes
-from clvm_tools.binutils import disassemble
+from klvm.casts import int_from_bytes
+from klvm_tools.binutils import disassemble
 
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.serialized_program import SerializedProgram
@@ -13,25 +13,25 @@ from chik.util.bech32m import encode_puzzle_hash
 from chik.util.ints import uint16, uint64
 from chik.wallet.nft_wallet.nft_info import NFTCoinInfo, NFTInfo
 from chik.wallet.nft_wallet.uncurry_nft import UncurriedNFT
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import solution_for_conditions
 from chik.wallet.util.address_type import AddressType
 
 log = logging.getLogger(__name__)
-SINGLETON_TOP_LAYER_MOD = load_clvm_maybe_recompile("singleton_top_layer_v1_1.clsp")
-LAUNCHER_PUZZLE = load_clvm_maybe_recompile("singleton_launcher.clsp")
-NFT_STATE_LAYER_MOD = load_clvm_maybe_recompile("nft_state_layer.clsp")
+SINGLETON_TOP_LAYER_MOD = load_klvm_maybe_recompile("singleton_top_layer_v1_1.clsp")
+LAUNCHER_PUZZLE = load_klvm_maybe_recompile("singleton_launcher.clsp")
+NFT_STATE_LAYER_MOD = load_klvm_maybe_recompile("nft_state_layer.clsp")
 LAUNCHER_PUZZLE_HASH = LAUNCHER_PUZZLE.get_tree_hash()
 SINGLETON_MOD_HASH = SINGLETON_TOP_LAYER_MOD.get_tree_hash()
 NFT_STATE_LAYER_MOD_HASH = NFT_STATE_LAYER_MOD.get_tree_hash()
-NFT_METADATA_UPDATER = load_clvm_maybe_recompile("nft_metadata_updater_default.clsp")
-NFT_OWNERSHIP_LAYER = load_clvm_maybe_recompile("nft_ownership_layer.clsp")
+NFT_METADATA_UPDATER = load_klvm_maybe_recompile("nft_metadata_updater_default.clsp")
+NFT_OWNERSHIP_LAYER = load_klvm_maybe_recompile("nft_ownership_layer.clsp")
 NFT_OWNERSHIP_LAYER_HASH = NFT_OWNERSHIP_LAYER.get_tree_hash()
-NFT_TRANSFER_PROGRAM_DEFAULT = load_clvm_maybe_recompile(
+NFT_TRANSFER_PROGRAM_DEFAULT = load_klvm_maybe_recompile(
     "nft_ownership_transfer_program_one_way_claim_with_royalties.clsp",
 )
-STANDARD_PUZZLE_MOD = load_clvm_maybe_recompile("p2_delegated_puzzle_or_hidden_puzzle.clsp")
-INTERMEDIATE_LAUNCHER_MOD = load_clvm_maybe_recompile("nft_intermediate_launcher.clsp")
+STANDARD_PUZZLE_MOD = load_klvm_maybe_recompile("p2_delegated_puzzle_or_hidden_puzzle.clsp")
+INTERMEDIATE_LAUNCHER_MOD = load_klvm_maybe_recompile("nft_intermediate_launcher.clsp")
 
 
 def create_nft_layer_puzzle_with_curry_params(

@@ -10,9 +10,9 @@ from chik.util.hash import std_hash
 from chik.util.ints import uint64
 
 
-def coin_serialize(amount: uint64, clvm_serialize: bytes, full_serialize: bytes):
+def coin_serialize(amount: uint64, klvm_serialize: bytes, full_serialize: bytes):
     c = Coin(bytes32(b"a" * 32), bytes32(b"b" * 32), amount)
-    expected_hash = (b"a" * 32) + (b"b" * 32) + clvm_serialize
+    expected_hash = (b"a" * 32) + (b"b" * 32) + klvm_serialize
 
     expected_serialization = (b"a" * 32) + (b"b" * 32) + full_serialize
 
@@ -43,7 +43,7 @@ def test_serialization():
 
 
 @pytest.mark.parametrize(
-    "amount, clvm",
+    "amount, klvm",
     [
         (0, []),
         (1, [1]),
@@ -65,11 +65,11 @@ def test_serialization():
         (0x7FFFFFFFFFFFFFFF, [0x7F, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]),
     ],
 )
-def test_name(amount: int, clvm: List[int]) -> None:
+def test_name(amount: int, klvm: List[int]) -> None:
     H1 = bytes32(b"a" * 32)
     H2 = bytes32(b"b" * 32)
 
-    assert Coin(H1, H2, uint64(amount)).name() == std_hash(H1 + H2 + bytes(clvm))
+    assert Coin(H1, H2, uint64(amount)).name() == std_hash(H1 + H2 + bytes(klvm))
 
 
 def test_construction() -> None:

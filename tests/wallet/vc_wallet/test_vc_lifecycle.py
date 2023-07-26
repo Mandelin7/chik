@@ -5,7 +5,7 @@ from typing import List, Optional, Tuple
 import pytest
 from blspy import G2Element
 
-from chik.clvm.spend_sim import CostLogger, sim_and_client
+from chik.klvm.spend_sim import CostLogger, sim_and_client
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.sized_bytes import bytes32

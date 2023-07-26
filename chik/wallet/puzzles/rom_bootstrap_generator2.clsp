@@ -1,4 +1,4 @@
-; This is a new generator ROM that does not pass in the CLVM parser program as
+; This is a new generator ROM that does not pass in the KLVM parser program as
 ; the first argument to the generator program, but instead passes NULL.
 ; It is intended to be used once the 2.0 hard fork activates, in an attempt to
 ; simplify the consensus rules

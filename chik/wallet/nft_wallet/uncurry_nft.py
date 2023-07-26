@@ -7,12 +7,12 @@ from typing import Optional, Type, TypeVar
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.util.ints import uint16
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 
 log = logging.getLogger(__name__)
-SINGLETON_TOP_LAYER_MOD = load_clvm_maybe_recompile("singleton_top_layer_v1_1.clsp")
-NFT_MOD = load_clvm_maybe_recompile("nft_state_layer.clsp")
-NFT_OWNERSHIP_LAYER = load_clvm_maybe_recompile("nft_ownership_layer.clsp")
+SINGLETON_TOP_LAYER_MOD = load_klvm_maybe_recompile("singleton_top_layer_v1_1.clsp")
+NFT_MOD = load_klvm_maybe_recompile("nft_state_layer.clsp")
+NFT_OWNERSHIP_LAYER = load_klvm_maybe_recompile("nft_ownership_layer.clsp")
 
 _T_UncurriedNFT = TypeVar("_T_UncurriedNFT", bound="UncurriedNFT")
 

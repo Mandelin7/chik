@@ -4,7 +4,7 @@ import types
 from typing import Dict, List
 
 import pytest
-from chia_rs import Coin
+from chik_rs import Coin
 
 from chik.consensus.cost_calculator import NPCResult
 from chik.full_node.bitcoin_fee_estimator import create_bitcoin_fee_estimator
@@ -21,7 +21,7 @@ from chik.full_node.fee_tracker import FeeTracker
 from chik.full_node.mempool import Mempool, MempoolRemoveReason
 from chik.simulator.block_tools import test_constants
 from chik.simulator.wallet_tools import WalletTool
-from chik.types.clvm_cost import CLVMCost
+from chik.types.klvm_cost import KLVMCost
 from chik.types.fee_rate import FeeRate, FeeRateV2
 from chik.types.mempool_item import MempoolItem
 from chik.types.spend_bundle_conditions import Spend, SpendBundleConditions
@@ -80,13 +80,13 @@ class FeeEstimatorInterfaceIntegrationVerificationObject(FeeEstimatorInterface):
         """time_offset_seconds: number of seconds into the future for which to estimate fee"""
         return FeeRateV2(0)
 
-    def mempool_size(self) -> CLVMCost:
+    def mempool_size(self) -> KLVMCost:
         """Report last seen mempool size"""
-        return CLVMCost(uint64(0))
+        return KLVMCost(uint64(0))
 
-    def mempool_max_size(self) -> CLVMCost:
-        """Report current mempool max "size" (i.e. CLVM cost)"""
-        return CLVMCost(uint64(0))
+    def mempool_max_size(self) -> KLVMCost:
+        """Report current mempool max "size" (i.e. KLVM cost)"""
+        return KLVMCost(uint64(0))
 
     def get_mempool_info(self) -> FeeMempoolInfo:
         """Report Mempool current configuration and state"""
@@ -101,9 +101,9 @@ def test_mempool_fee_estimator_init() -> None:
 
 
 test_mempool_info = MempoolInfo(
-    max_size_in_cost=CLVMCost(uint64(5000000)),
+    max_size_in_cost=KLVMCost(uint64(5000000)),
     minimum_fee_per_cost_to_replace=FeeRate(uint64(5)),
-    max_block_clvm_cost=CLVMCost(uint64(1000000)),
+    max_block_klvm_cost=KLVMCost(uint64(1000000)),
 )
 
 

@@ -10,7 +10,7 @@ from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.coin_spend import CoinSpend
 from chik.types.condition_opcodes import ConditionOpcode
 from chik.util.ints import uint64
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.singleton import (
     SINGLETON_LAUNCHER_PUZZLE_HASH,
     SINGLETON_TOP_LAYER_MOD,
@@ -19,9 +19,9 @@ from chik.wallet.singleton import (
 )
 from chik.wallet.util.curry_and_treehash import calculate_hash_of_quoted_mod_hash, curry_and_treehash
 
-DID_INNERPUZ_MOD = load_clvm_maybe_recompile("did_innerpuz.clsp")
+DID_INNERPUZ_MOD = load_klvm_maybe_recompile("did_innerpuz.clsp")
 DID_INNERPUZ_MOD_HASH = DID_INNERPUZ_MOD.get_tree_hash()
-INTERMEDIATE_LAUNCHER_MOD = load_clvm_maybe_recompile("nft_intermediate_launcher.clsp")
+INTERMEDIATE_LAUNCHER_MOD = load_klvm_maybe_recompile("nft_intermediate_launcher.clsp")
 
 
 def create_innerpuz(

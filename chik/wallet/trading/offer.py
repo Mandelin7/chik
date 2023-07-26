@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any, BinaryIO, Dict, List, Optional, Set, Tuple, Union
 
 from blspy import G2Element
-from clvm_tools.binutils import disassemble
+from klvm_tools.binutils import disassemble
 
 from chik.consensus.default_constants import DEFAULT_CONSTANTS
 from chik.types.announcement import Announcement
@@ -26,7 +26,7 @@ from chik.wallet.outer_puzzles import (
 )
 from chik.wallet.payment import Payment
 from chik.wallet.puzzle_drivers import PuzzleInfo, Solver
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.uncurried_puzzle import UncurriedPuzzle, uncurry_puzzle
 from chik.wallet.util.puzzle_compression import (
     compress_object_with_puzzles,
@@ -34,8 +34,8 @@ from chik.wallet.util.puzzle_compression import (
     lowest_best_version,
 )
 
-OFFER_MOD_OLD = load_clvm_maybe_recompile("settlement_payments_old.clsp")
-OFFER_MOD = load_clvm_maybe_recompile("settlement_payments.clsp")
+OFFER_MOD_OLD = load_klvm_maybe_recompile("settlement_payments_old.clsp")
+OFFER_MOD = load_klvm_maybe_recompile("settlement_payments.clsp")
 OFFER_MOD_OLD_HASH = OFFER_MOD_OLD.get_tree_hash()
 OFFER_MOD_HASH = OFFER_MOD.get_tree_hash()
 ZERO_32 = bytes32([0] * 32)
@@ -90,7 +90,7 @@ class Offer:
         requested_payments: Dict[Optional[bytes32], List[Payment]],  # `None` means you are requesting XCK
         coins: List[Coin],
     ) -> Dict[Optional[bytes32], List[NotarizedPayment]]:
-        # This sort should be reproducible in CLVM with `>s`
+        # This sort should be reproducible in KLVM with `>s`
         sorted_coins: List[Coin] = sorted(coins, key=Coin.name)
         sorted_coin_list: List[List[Union[bytes32, uint64]]] = [coin_as_list(c) for c in sorted_coins]
         nonce: bytes32 = Program.to(sorted_coin_list).get_tree_hash()
@@ -141,7 +141,7 @@ class Offer:
 
         # populate the _additions cache
         adds: Dict[Coin, List[Coin]] = {}
-        max_cost = DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM
+        max_cost = DEFAULT_CONSTANTS.MAX_BLOCK_COST_KLVM
         for cs in self._bundle.coin_spends:
             # you can't spend the same coin twice in the same SpendBundle
             assert cs.coin not in adds

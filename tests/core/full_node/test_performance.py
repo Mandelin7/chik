@@ -8,7 +8,7 @@ import random
 from typing import Dict
 
 import pytest
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 
 from chik.consensus.block_record import BlockRecord
 from chik.consensus.pot_iterations import is_overflow_block

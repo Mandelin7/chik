@@ -12,7 +12,7 @@ from secrets import token_bytes
 from typing import TYPE_CHECKING, Dict, List, Optional, Set, Tuple
 
 from blspy import AugSchemeMPL, G1Element, G2Element
-from chiabip158 import PyBIP158
+from chikbip158 import PyBIP158
 
 from chik.consensus.block_creation import create_unfinished_block
 from chik.consensus.block_record import BlockRecord
@@ -1106,7 +1106,7 @@ class FullNodeAPI:
                 functools.partial(
                     get_name_puzzle_conditions,
                     block_generator,
-                    self.full_node.constants.MAX_BLOCK_COST_CLVM,
+                    self.full_node.constants.MAX_BLOCK_COST_KLVM,
                     mempool_mode=False,
                     height=request.height,
                 ),

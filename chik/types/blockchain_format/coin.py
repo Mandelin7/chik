@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List, Union
 
-from chia_rs import Coin
+from chik_rs import Coin
 
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.util.hash import std_hash

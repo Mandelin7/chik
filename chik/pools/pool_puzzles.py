@@ -4,9 +4,9 @@ import logging
 from typing import List, Optional, Tuple
 
 from blspy import G1Element
-from clvm.casts import int_from_bytes, int_to_bytes
+from klvm.casts import int_from_bytes, int_to_bytes
 
-from chik.clvm.singleton import SINGLETON_LAUNCHER
+from chik.klvm.singleton import SINGLETON_LAUNCHER
 from chik.consensus.block_rewards import calculate_pool_reward
 from chik.consensus.coinbase import pool_parent_id
 from chik.pools.pool_wallet_info import LEAVING_POOL, SELF_POOLING, PoolState
@@ -16,15 +16,15 @@ from chik.types.blockchain_format.serialized_program import SerializedProgram
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.coin_spend import CoinSpend, compute_additions
 from chik.util.ints import uint32, uint64
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.puzzles.singleton_top_layer import puzzle_for_singleton
 
 log = logging.getLogger(__name__)
 # "Full" is the outer singleton, with the inner puzzle filled in
-SINGLETON_MOD = load_clvm_maybe_recompile("singleton_top_layer.clsp")
-POOL_WAITING_ROOM_MOD = load_clvm_maybe_recompile("pool_waitingroom_innerpuz.clsp")
-POOL_MEMBER_MOD = load_clvm_maybe_recompile("pool_member_innerpuz.clsp")
-P2_SINGLETON_MOD = load_clvm_maybe_recompile("p2_singleton_or_delayed_puzhash.clsp")
+SINGLETON_MOD = load_klvm_maybe_recompile("singleton_top_layer.clsp")
+POOL_WAITING_ROOM_MOD = load_klvm_maybe_recompile("pool_waitingroom_innerpuz.clsp")
+POOL_MEMBER_MOD = load_klvm_maybe_recompile("pool_member_innerpuz.clsp")
+P2_SINGLETON_MOD = load_klvm_maybe_recompile("p2_singleton_or_delayed_puzhash.clsp")
 POOL_OUTER_MOD = SINGLETON_MOD
 
 POOL_MEMBER_HASH = POOL_MEMBER_MOD.get_tree_hash()
@@ -391,7 +391,7 @@ def solution_to_pool_state(full_spend: CoinSpend) -> Optional[PoolState]:
 
         # This is referred to as p1 in the chiklisp code
         # spend_type is absorbing money if p1 is a cons box, spend_type is escape if p1 is an atom
-        # TODO: The comment above, and in the CLVM, seems wrong
+        # TODO: The comment above, and in the KLVM, seems wrong
         extra_data = inner_solution.first()
         if isinstance(extra_data.as_python(), bytes):
             # Absorbing

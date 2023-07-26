@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Tuple
 
-from chiavdf import prove
+from chikvdf import prove
 
 from chik.consensus.constants import ConsensusConstants
 from chik.types.blockchain_format.classgroup import ClassgroupElement

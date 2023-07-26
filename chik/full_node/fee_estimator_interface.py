@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing_extensions import Protocol
 
 from chik.full_node.fee_estimation import FeeBlockInfo, FeeMempoolInfo, MempoolItemInfo
-from chik.types.clvm_cost import CLVMCost
+from chik.types.klvm_cost import KLVMCost
 from chik.types.fee_rate import FeeRateV2
 from chik.util.ints import uint32
 
@@ -29,12 +29,12 @@ class FeeEstimatorInterface(Protocol):
         """time_offset_seconds: number of seconds into the future for which to estimate fee"""
         pass
 
-    def mempool_size(self) -> CLVMCost:
+    def mempool_size(self) -> KLVMCost:
         """Report last seen mempool size"""
         pass
 
-    def mempool_max_size(self) -> CLVMCost:
-        """Report current mempool max "size" (i.e. CLVM cost)"""
+    def mempool_max_size(self) -> KLVMCost:
+        """Report current mempool max "size" (i.e. KLVM cost)"""
         pass
 
     def get_mempool_info(self) -> FeeMempoolInfo:

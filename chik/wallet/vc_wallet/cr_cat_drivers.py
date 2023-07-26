@@ -4,7 +4,7 @@ import functools
 from dataclasses import dataclass, replace
 from typing import Iterable, List, Optional, Tuple, Type, TypeVar
 
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 
 from chik.types.blockchain_format.coin import Coin, coin_as_list
 from chik.types.blockchain_format.program import Program
@@ -16,7 +16,7 @@ from chik.wallet.cat_wallet.cat_utils import construct_cat_puzzle
 from chik.wallet.lineage_proof import LineageProof
 from chik.wallet.payment import Payment
 from chik.wallet.puzzles.cat_loader import CAT_MOD
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.puzzles.singleton_top_layer_v1_1 import SINGLETON_LAUNCHER_HASH, SINGLETON_MOD_HASH
 from chik.wallet.uncurried_puzzle import UncurriedPuzzle, uncurry_puzzle
 from chik.wallet.vc_wallet.vc_drivers import (
@@ -30,13 +30,13 @@ from chik.wallet.vc_wallet.vc_drivers import (
 )
 
 # Mods
-CREDENTIAL_RESTRICTION: Program = load_clvm_maybe_recompile(
+CREDENTIAL_RESTRICTION: Program = load_klvm_maybe_recompile(
     "credential_restriction.clsp",
     package_or_requirement="chik.wallet.vc_wallet.cr_puzzles",
     include_standard_libraries=True,
 )
 CREDENTIAL_RESTRICTION_HASH: bytes32 = CREDENTIAL_RESTRICTION.get_tree_hash()
-PROOF_FLAGS_CHECKER: Program = load_clvm_maybe_recompile(
+PROOF_FLAGS_CHECKER: Program = load_klvm_maybe_recompile(
     "flag_proofs_checker.clsp",
     package_or_requirement="chik.wallet.vc_wallet.cr_puzzles",
     include_standard_libraries=True,

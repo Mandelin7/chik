@@ -3,15 +3,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable, List, Optional, Tuple, Union
 
-from clvm_tools.binutils import disassemble
+from klvm_tools.binutils import disassemble
 
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.wallet.puzzle_drivers import PuzzleInfo, Solver
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.uncurried_puzzle import UncurriedPuzzle, uncurry_puzzle
 
-OWNERSHIP_LAYER_MOD = load_clvm_maybe_recompile("nft_ownership_layer.clsp")
+OWNERSHIP_LAYER_MOD = load_klvm_maybe_recompile("nft_ownership_layer.clsp")
 
 
 def match_ownership_layer_puzzle(puzzle: UncurriedPuzzle) -> Tuple[bool, List[Program]]:

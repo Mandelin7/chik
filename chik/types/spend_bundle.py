@@ -44,7 +44,7 @@ class SpendBundle(Streamable):
         return cls(coin_spends, aggregated_signature)
 
     # TODO: this should be removed
-    def additions(self, *, max_cost: int = DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM) -> List[Coin]:
+    def additions(self, *, max_cost: int = DEFAULT_CONSTANTS.MAX_BLOCK_COST_KLVM) -> List[Coin]:
         items: List[Coin] = []
         for cs in self.coin_spends:
             coins, cost = compute_additions_with_cost(cs, max_cost=max_cost)

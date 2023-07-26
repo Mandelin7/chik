@@ -9,7 +9,7 @@ from typing import Dict, List, Optional, Tuple
 
 import pytest
 from blspy import AugSchemeMPL, G2Element, PrivateKey
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 
 from chik.consensus.pot_iterations import is_overflow_block
 from chik.full_node.bundle_tools import detect_potential_template_generator
@@ -906,7 +906,7 @@ class TestFullNodeProtocol:
 
         # these numbers reflect the capacity of the mempool. In these
         # tests MEMPOOL_BLOCK_BUFFER is 1. The other factors are COST_PER_BYTE
-        # and MAX_BLOCK_COST_CLVM
+        # and MAX_BLOCK_COST_KLVM
         assert included_tx == 23
         assert not_included_tx == 10
         assert seen_bigger_transaction_has_high_fee

@@ -19,7 +19,7 @@ from utils import (
     setup_db,
 )
 
-from benchmarks.utils import clvm_generator
+from benchmarks.utils import klvm_generator
 from chik.consensus.block_record import BlockRecord
 from chik.full_node.block_store import BlockStore
 from chik.types.blockchain_format.foliage import Foliage, FoliageBlockData, FoliageTransactionBlock, TransactionsInfo
@@ -179,7 +179,7 @@ async def run_add_block_benchmark(version: int) -> None:
                 foliage,
                 foliage_transaction_block,
                 transactions_info,
-                None if is_transaction else SerializedProgram.from_bytes(clvm_generator),  # transactions_generator
+                None if is_transaction else SerializedProgram.from_bytes(klvm_generator),  # transactions_generator
                 [],  # transactions_generator_ref_list
             )
 

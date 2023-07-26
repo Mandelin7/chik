@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import List, Tuple
 
-from clvm_tools import binutils
-from clvm_tools.clvmc import compile_clvm_text
+from klvm_tools import binutils
+from klvm_tools.klvmc import compile_klvm_text
 
 from chik.consensus.condition_costs import ConditionCost
 from chik.full_node.mempool_check_conditions import get_name_puzzle_conditions
@@ -13,14 +13,14 @@ from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.generator_types import BlockGenerator
 from chik.types.spend_bundle_conditions import ELIGIBLE_FOR_DEDUP, Spend
 from chik.util.ints import uint32
-from chik.wallet.puzzles.load_clvm import load_clvm
+from chik.wallet.puzzles.load_klvm import load_klvm
 from chik.wallet.puzzles.rom_bootstrap_generator import GENERATOR_MOD
 
 MAX_COST = int(1e15)
 COST_PER_BYTE = int(12000)
 
 
-DESERIALIZE_MOD = load_clvm("chiklisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles")
+DESERIALIZE_MOD = load_klvm("chiklisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles")
 
 
 GENERATOR_CODE = """
@@ -40,7 +40,7 @@ GENERATOR_CODE = """
 """
 
 
-COMPILED_GENERATOR_CODE = bytes(Program.to(compile_clvm_text(GENERATOR_CODE, [])))  # type: ignore[no-untyped-call]
+COMPILED_GENERATOR_CODE = bytes(Program.to(compile_klvm_text(GENERATOR_CODE, [])))  # type: ignore[no-untyped-call]
 
 FIRST_GENERATOR = Program.to(
     binutils.assemble(  # type: ignore[no-untyped-call]

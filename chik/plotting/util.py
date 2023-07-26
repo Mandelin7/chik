@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 
 from blspy import G1Element, PrivateKey
-from chiapos import DiskProver
+from chikpos import DiskProver
 from typing_extensions import final
 
 from chik.types.blockchain_format.sized_bytes import bytes32

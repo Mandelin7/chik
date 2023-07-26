@@ -5,9 +5,9 @@ from typing import Callable, List, Optional, Tuple
 
 import pytest
 from blspy import G2Element
-from chia_rs import Coin
+from chik_rs import Coin
 
-from chik.clvm.spend_sim import SimClient, SpendSim, sim_and_client
+from chik.klvm.spend_sim import SimClient, SpendSim, sim_and_client
 from chik.consensus.constants import ConsensusConstants
 from chik.consensus.default_constants import DEFAULT_CONSTANTS
 from chik.full_node.bitcoin_fee_estimator import BitcoinFeeEstimator
@@ -23,7 +23,7 @@ the_puzzle_hash = bytes32(
 )  # Program.to(1)
 
 NEW_DEFAULT_CONSTANTS: ConsensusConstants = DEFAULT_CONSTANTS.replace(
-    MAX_BLOCK_COST_CLVM=300000000, MEMPOOL_BLOCK_BUFFER=1
+    MAX_BLOCK_COST_KLVM=300000000, MEMPOOL_BLOCK_BUFFER=1
 )
 
 

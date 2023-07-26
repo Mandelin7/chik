@@ -440,7 +440,7 @@ class Blockchain(BlockchainInterface):
             block_generator: Optional[BlockGenerator] = await self.get_block_generator(block)
             assert block_generator is not None
             npc_result = get_name_puzzle_conditions(
-                block_generator, self.constants.MAX_BLOCK_COST_CLVM, mempool_mode=False, height=block.height
+                block_generator, self.constants.MAX_BLOCK_COST_KLVM, mempool_mode=False, height=block.height
             )
         tx_removals, tx_additions = tx_removals_and_additions(npc_result.conds)
         return tx_removals, tx_additions, npc_result
@@ -628,7 +628,7 @@ class Blockchain(BlockchainInterface):
     async def pre_validate_blocks_multiprocessing(
         self,
         blocks: List[FullBlock],
-        npc_results: Dict[uint32, NPCResult],  # A cache of the result of running CLVM, optional (you can use {})
+        npc_results: Dict[uint32, NPCResult],  # A cache of the result of running KLVM, optional (you can use {})
         batch_size: int = 4,
         wp_summaries: Optional[List[SubEpochSummary]] = None,
         *,

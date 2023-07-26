@@ -7,7 +7,7 @@ from enum import IntEnum
 from functools import lru_cache
 from typing import Optional
 
-from chiavdf import create_discriminant, verify_n_wesolowski
+from chikvdf import create_discriminant, verify_n_wesolowski
 
 from chik.consensus.constants import ConsensusConstants
 from chik.types.blockchain_format.classgroup import ClassgroupElement
@@ -35,7 +35,7 @@ def verify_vdf(
     discriminant_size: int,
     witness_type: uint8,
 ) -> bool:
-    # TODO: chiavdf needs hinted
+    # TODO: chikvdf needs hinted
     return verify_n_wesolowski(  # type:ignore[no-any-return]
         str(disc),
         input_el,

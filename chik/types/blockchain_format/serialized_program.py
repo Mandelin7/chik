@@ -3,8 +3,8 @@ from __future__ import annotations
 import io
 from typing import Optional, Tuple, Type, Union
 
-from chia_rs import MEMPOOL_MODE, run_chia_program, run_generator, serialized_length, tree_hash
-from clvm import SExp
+from chik_rs import MEMPOOL_MODE, run_chik_program, run_generator, serialized_length, tree_hash
+from klvm import SExp
 
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.sized_bytes import bytes32
@@ -24,7 +24,7 @@ def _serialize(node: object) -> bytes:
 
 class SerializedProgram:
     """
-    An opaque representation of a clvm program. It has a more limited interface than a full SExp
+    An opaque representation of a klvm program. It has a more limited interface than a full SExp
     """
 
     _buf: bytes = b""
@@ -87,7 +87,7 @@ class SerializedProgram:
     def run_with_cost(self, max_cost: int, *args: object) -> Tuple[int, Program]:
         return self._run(max_cost, 0, *args)
 
-    # returns an optional error code and an optional SpendBundleConditions (from chia_rs)
+    # returns an optional error code and an optional SpendBundleConditions (from chik_rs)
     # exactly one of those will hold a value
     def run_as_generator(
         self, max_cost: int, flags: int, *args: Union[Program, SerializedProgram]
@@ -130,7 +130,7 @@ class SerializedProgram:
         else:
             serialized_args += _serialize(args[0])
 
-        cost, ret = run_chia_program(
+        cost, ret = run_chik_program(
             self._buf,
             bytes(serialized_args),
             max_cost,

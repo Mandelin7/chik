@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from chik.plotters.bladebit import get_bladebit_install_info, plot_bladebit
-from chik.plotters.chiapos import get_chiapos_install_info, plot_chik
+from chik.plotters.chikpos import get_chikpos_install_info, plot_chik
 from chik.plotters.madmax import get_madmax_install_info, plot_madmax
 
 
@@ -151,7 +151,7 @@ def build_parser(subparsers, root_path, option_list, name, plotter_desc):
                 default=32,
             )
         if option is Options.NUM_BUCKETS:
-            u_default = 0 if name == "chiapos" else 256
+            u_default = 0 if name == "chikpos" else 256
             parser.add_argument(
                 "-u",
                 "--buckets",
@@ -439,7 +439,7 @@ def call_plotters(root_path: Path, args):
     plotters = argparse.ArgumentParser("chik plotters", description="Available options.")
     subparsers = plotters.add_subparsers(help="Available options", dest="plotter")
 
-    build_parser(subparsers, root_path, chik_plotter_options, "chiapos", "Create a plot with the default chik plotter")
+    build_parser(subparsers, root_path, chik_plotter_options, "chikpos", "Create a plot with the default chik plotter")
     build_parser(subparsers, root_path, madmax_plotter_options, "madmax", "Create a plot with madMAx")
 
     bladebit_parser = subparsers.add_parser("bladebit", help="Create a plot with bladebit")
@@ -470,7 +470,7 @@ def call_plotters(root_path: Path, args):
 
     if args.plotter is None:
         plotters.print_help()
-    elif args.plotter == "chiapos":
+    elif args.plotter == "chikpos":
         plot_chik(args, chik_root_path)
     elif args.plotter == "madmax":
         plot_madmax(args, chik_root_path, root_path)
@@ -483,12 +483,12 @@ def call_plotters(root_path: Path, args):
 def get_available_plotters(root_path) -> Dict[str, Any]:
     plotters_root_path: Path = get_plotters_root_path(root_path)
     plotters: Dict[str, Any] = {}
-    chiapos: Optional[Dict[str, Any]] = get_chiapos_install_info()
+    chikpos: Optional[Dict[str, Any]] = get_chikpos_install_info()
     bladebit: Optional[Dict[str, Any]] = get_bladebit_install_info(plotters_root_path)
     madmax: Optional[Dict[str, Any]] = get_madmax_install_info(plotters_root_path)
 
-    if chiapos is not None:
-        plotters["chiapos"] = chiapos
+    if chikpos is not None:
+        plotters["chikpos"] = chikpos
     if bladebit and bladebit.get("version") is not None:
         bladebit_major_version = bladebit["version"].split(".")[0]
         if bladebit_major_version == "2":
@@ -503,8 +503,8 @@ def get_available_plotters(root_path) -> Dict[str, Any]:
 
 def show_plotters_version(root_path: Path):
     info = get_available_plotters(root_path)
-    if "chiapos" in info and "version" in info["chiapos"]:
-        print(f"chiapos: {info['chiapos']['version']}")
+    if "chikpos" in info and "version" in info["chikpos"]:
+        print(f"chikpos: {info['chikpos']['version']}")
     if "bladebit" in info and "version" in info["bladebit"]:
         print(f"bladebit: {info['bladebit']['version']}")
     if "bladebit2" in info and "version" in info["bladebit2"]:

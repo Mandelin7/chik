@@ -10,13 +10,13 @@ dependencies = [
     "anyio==3.6.2",
     "boto3==1.26.131",  # AWS S3 for DL s3 plugin
     "blspy==1.0.16",  # Signature library
-    "chiavdf==1.0.9",  # timelord and vdf verification
-    "chiabip158==1.2",  # bip158-style wallet filters
-    "chiapos==1.0.11",  # proof of space
-    "clvm==0.9.7",
-    "clvm_tools==0.4.6",  # Currying, Program.to, other conveniences
-    "chia_rs==0.2.7",
-    "clvm-tools-rs==0.1.30",  # Rust implementation of clvm_tools' compiler
+    "chikvdf==1.0.10",  # timelord and vdf verification
+    "chikbip158==1.2",  # bip158-style wallet filters
+    "chikpos==1.0.11",  # proof of space
+    "klvm==0.9.7",
+    "klvm_tools==0.4.6",  # Currying, Program.to, other conveniences
+    "chik_rs==0.2.9",
+    "klvm-tools-rs==0.1.34",  # Rust implementation of klvm_tools' compiler
     "aiohttp==3.8.4",  # HTTP server for full node rpc
     "aiosqlite==0.19.0",  # asyncio wrapper for sqlite, to store blocks
     "bitstring==4.0.2",  # Binary data management library
@@ -94,7 +94,7 @@ kwargs = dict(
         "build_scripts",
         "chik",
         "chik.cmds",
-        "chik.clvm",
+        "chik.klvm",
         "chik.consensus",
         "chik.daemon",
         "chik.data_layer",
@@ -152,7 +152,7 @@ kwargs = dict(
     },
     package_data={
         "chik": ["pyinstaller.spec"],
-        "": ["*.clsp", "*.clsp.hex", "*.clvm", "*.clib", "py.typed"],
+        "": ["*.clsp", "*.clsp.hex", "*.klvm", "*.clib", "py.typed"],
         "chik.util": ["initial-*.yaml", "english.txt"],
         "chik.ssl": ["chik_ca.crt", "chik_ca.key", "dst_root_ca.pem"],
         "mozilla-ca": ["cacert.pem"],

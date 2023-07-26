@@ -596,7 +596,7 @@ class Streamable:
     3. An Optional is serialized into a 1 byte prefix of 0x00 or 0x01, and if it's one, it's followed by the
        serialization of the item.
     4. A Custom item is serialized by calling the .parse method, passing in the stream of bytes into it. An example is
-       a CLVM program.
+       a KLVM program.
 
     All of the constituents must have parse/from_bytes, and stream/__bytes__ and therefore
     be of fixed size. For example, int cannot be a constituent since it is not a fixed size,

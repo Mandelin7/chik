@@ -7,7 +7,7 @@ from time import sleep, time
 from typing import List, Optional
 
 from blspy import G1Element
-from chiapos import Verifier
+from chikpos import Verifier
 
 from chik.plotting.manager import PlotManager
 from chik.plotting.util import (

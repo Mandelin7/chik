@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Type, get_type_hi
 
 import pytest
 from blspy import G1Element
-from clvm_tools import binutils
+from klvm_tools import binutils
 from typing_extensions import Literal, get_args
 
 from chik.protocols.wallet_protocol import RespondRemovals
@@ -655,7 +655,7 @@ def test_ambiguous_deserialization_program() -> None:
     class TestClassProgram(Streamable):
         a: Program
 
-    program = Program.to(binutils.assemble("()"))  # type: ignore[no-untyped-call]  # TODO, add typing in clvm_tools
+    program = Program.to(binutils.assemble("()"))  # type: ignore[no-untyped-call]  # TODO, add typing in klvm_tools
 
     TestClassProgram.from_bytes(bytes(program))
 

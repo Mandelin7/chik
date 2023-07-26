@@ -6,7 +6,7 @@ from time import monotonic
 from typing import Dict, Optional
 
 from blspy import G2Element
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 
 from chik.consensus.cost_calculator import NPCResult
 from chik.consensus.default_constants import DEFAULT_CONSTANTS

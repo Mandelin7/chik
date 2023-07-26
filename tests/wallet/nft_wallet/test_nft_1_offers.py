@@ -26,7 +26,7 @@ from chik.wallet.trading.trade_status import TradeStatus
 from chik.wallet.uncurried_puzzle import uncurry_puzzle
 from chik.wallet.util.compute_memos import compute_memos
 
-# from clvm_tools.binutils import disassemble
+# from klvm_tools.binutils import disassemble
 
 logging.getLogger("aiosqlite").setLevel(logging.INFO)  # Too much logging on debug level
 

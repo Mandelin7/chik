@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional
 
 import pytest
-from clvm_tools.binutils import disassemble
+from klvm_tools.binutils import disassemble
 
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program
@@ -61,7 +61,7 @@ def test_cat_outer_puzzle() -> None:
         ACS,
         inner_solution,
     )
-    with pytest.raises(ValueError, match="clvm raise"):
+    with pytest.raises(ValueError, match="klvm raise"):
         double_cat_puzzle.run(solution)
 
     assert get_inner_solution(cat_driver, solution) == inner_solution

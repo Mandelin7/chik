@@ -9,9 +9,9 @@ from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.util.ints import uint16, uint32, uint64
 from chik.util.streamable import Streamable, streamable
 from chik.wallet.lineage_proof import LineageProof
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 
-LAUNCHER_PUZZLE = load_clvm_maybe_recompile("singleton_launcher.clsp")
+LAUNCHER_PUZZLE = load_klvm_maybe_recompile("singleton_launcher.clsp")
 IN_TRANSACTION_STATUS = "IN_TRANSACTION"
 DEFAULT_STATUS = "DEFAULT"
 

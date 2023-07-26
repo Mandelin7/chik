@@ -4,7 +4,7 @@ import math
 from enum import Enum
 from typing import List, Optional, Tuple
 
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.util.hash import std_hash

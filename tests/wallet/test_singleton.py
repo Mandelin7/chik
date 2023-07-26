@@ -1,18 +1,18 @@
 from __future__ import annotations
 
-from clvm_tools import binutils
+from klvm_tools import binutils
 
 from chik.types.announcement import Announcement
 from chik.types.blockchain_format.program import INFINITE_COST, Program
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.util.condition_tools import parse_sexp_to_conditions
-from chik.wallet.puzzles.load_clvm import load_clvm
+from chik.wallet.puzzles.load_klvm import load_klvm
 
-SINGLETON_MOD = load_clvm("singleton_top_layer.clsp")
-LAUNCHER_PUZZLE = load_clvm("singleton_launcher.clsp")
-P2_SINGLETON_MOD = load_clvm("p2_singleton.clsp")
-POOL_MEMBER_MOD = load_clvm("pool_member_innerpuz.clsp")
-POOL_WAITINGROOM_MOD = load_clvm("pool_waitingroom_innerpuz.clsp")
+SINGLETON_MOD = load_klvm("singleton_top_layer.clsp")
+LAUNCHER_PUZZLE = load_klvm("singleton_launcher.clsp")
+P2_SINGLETON_MOD = load_klvm("p2_singleton.clsp")
+POOL_MEMBER_MOD = load_klvm("pool_member_innerpuz.clsp")
+POOL_WAITINGROOM_MOD = load_klvm("pool_waitingroom_innerpuz.clsp")
 
 LAUNCHER_PUZZLE_HASH = LAUNCHER_PUZZLE.get_tree_hash()
 SINGLETON_MOD_HASH = SINGLETON_MOD.get_tree_hash()
@@ -53,7 +53,7 @@ def test_only_odd_coins():
     try:
         cost, result = SINGLETON_MOD.run_with_cost(INFINITE_COST, solution)
     except Exception as e:
-        assert e.args == ("clvm raise", "80")
+        assert e.args == ("klvm raise", "80")
     else:
         assert False
 
@@ -86,7 +86,7 @@ def test_only_one_odd_coin_created():
     try:
         cost, result = SINGLETON_MOD.run_with_cost(INFINITE_COST, solution)
     except Exception as e:
-        assert e.args == ("clvm raise", "80")
+        assert e.args == ("klvm raise", "80")
     else:
         assert False
     solution = Program.to(

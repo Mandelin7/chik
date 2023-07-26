@@ -6,7 +6,7 @@ from typing import List
 import pytest
 from blspy import G2Element
 
-from chik.clvm.spend_sim import CostLogger, sim_and_client
+from chik.klvm.spend_sim import CostLogger, sim_and_client
 from chik.types.announcement import Announcement
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.sized_bytes import bytes32
@@ -180,7 +180,7 @@ async def test_ownership_layer(cost_logger: CostLogger) -> None:
 
         result = await sim_client.push_tx(skip_tp_bundle)
         assert result == (MempoolInclusionStatus.FAILED, Err.GENERATOR_RUNTIME_ERROR)
-        with pytest.raises(ValueError, match="clvm raise"):
+        with pytest.raises(ValueError, match="klvm raise"):
             skip_tp_spend.puzzle_reveal.to_program().run(skip_tp_spend.solution.to_program())
 
         make_bad_announcement_spend = CoinSpend(
@@ -200,7 +200,7 @@ async def test_ownership_layer(cost_logger: CostLogger) -> None:
 
         result = await sim_client.push_tx(make_bad_announcement_bundle)
         assert result == (MempoolInclusionStatus.FAILED, Err.GENERATOR_RUNTIME_ERROR)
-        with pytest.raises(ValueError, match="clvm raise"):
+        with pytest.raises(ValueError, match="klvm raise"):
             make_bad_announcement_spend.puzzle_reveal.to_program().run(
                 make_bad_announcement_spend.solution.to_program()
             )

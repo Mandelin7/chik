@@ -102,12 +102,12 @@ class Wallet:
             # will only matter once the wallet generates transactions relying on
             # new conditions, and we can change this by then
             result: NPCResult = get_name_puzzle_conditions(
-                program, self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM, mempool_mode=True, height=uint32(0)
+                program, self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM, mempool_mode=True, height=uint32(0)
             )
             self.cost_of_single_tx = result.cost
             self.log.info(f"Cost of a single tx for standard wallet: {self.cost_of_single_tx}")
 
-        max_cost = self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM / 5  # avoid full block TXs
+        max_cost = self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM / 5  # avoid full block TXs
         current_cost = 0
         total_amount = 0
         total_coin_count = 0
@@ -470,7 +470,7 @@ class Wallet:
             coin_spends,
             self.secret_key_store.secret_key_for_public_key,
             self.wallet_state_manager.constants.AGG_SIG_ME_ADDITIONAL_DATA,
-            self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM,
+            self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM,
         )
 
     async def sign_message(
@@ -544,7 +544,7 @@ class Wallet:
             transaction,
             self.secret_key_store.secret_key_for_public_key,
             self.wallet_state_manager.constants.AGG_SIG_ME_ADDITIONAL_DATA,
-            self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM,
+            self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM,
         )
 
         now = uint64(int(time.time()))

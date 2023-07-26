@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List
 
-from clvm.casts import int_from_bytes
+from klvm.casts import int_from_bytes
 
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import INFINITE_COST

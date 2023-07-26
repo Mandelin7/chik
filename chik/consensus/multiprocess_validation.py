@@ -90,7 +90,7 @@ def batch_pre_validate_blocks(
                     assert block_generator.program == block.transactions_generator
                     npc_result = get_name_puzzle_conditions(
                         block_generator,
-                        min(constants.MAX_BLOCK_COST_CLVM, block.transactions_info.cost),
+                        min(constants.MAX_BLOCK_COST_KLVM, block.transactions_info.cost),
                         mempool_mode=False,
                         height=block.height,
                         constants=constants,
@@ -114,7 +114,7 @@ def batch_pre_validate_blocks(
                     error_int = uint16(error.code.value)
 
                 successfully_validated_signatures = False
-                # If we failed CLVM, no need to validate signature, the block is already invalid
+                # If we failed KLVM, no need to validate signature, the block is already invalid
                 if error_int is None:
                     # If this is False, it means either we don't have a signature (not a tx block) or we have an invalid
                     # signature (which also puts in an error) or we didn't validate the signature because we want to
@@ -360,8 +360,8 @@ def _run_generator(
     height: uint32,
 ) -> Optional[bytes]:
     """
-    Runs the CLVM generator from bytes inputs. This is meant to be called under a ProcessPoolExecutor, in order to
-    validate the heavy parts of a block (clvm program) in a different process.
+    Runs the KLVM generator from bytes inputs. This is meant to be called under a ProcessPoolExecutor, in order to
+    validate the heavy parts of a block (klvm program) in a different process.
     """
     try:
         unfinished_block: UnfinishedBlock = UnfinishedBlock.from_bytes(unfinished_block_bytes)
@@ -370,7 +370,7 @@ def _run_generator(
         assert block_generator.program == unfinished_block.transactions_generator
         npc_result: NPCResult = get_name_puzzle_conditions(
             block_generator,
-            min(constants.MAX_BLOCK_COST_CLVM, unfinished_block.transactions_info.cost),
+            min(constants.MAX_BLOCK_COST_KLVM, unfinished_block.transactions_info.cost),
             mempool_mode=False,
             height=height,
         )

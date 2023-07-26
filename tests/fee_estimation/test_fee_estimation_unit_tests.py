@@ -18,8 +18,8 @@ log = logging.getLogger(__name__)
 
 
 def test_interface() -> None:
-    max_block_cost_clvm = uint64(1000 * 1000)
-    estimator: FeeEstimatorInterface = create_bitcoin_fee_estimator(max_block_cost_clvm)
+    max_block_cost_klvm = uint64(1000 * 1000)
+    estimator: FeeEstimatorInterface = create_bitcoin_fee_estimator(max_block_cost_klvm)
     target_times = [0, 120, 300]
     estimates = [estimator.estimate_fee_rate(time_offset_seconds=time) for time in target_times]
     current_fee_rate = estimator.estimate_fee_rate(
@@ -27,22 +27,22 @@ def test_interface() -> None:
     )
     zero = FeeRateV2(0)
     assert estimates == [zero, zero, zero]
-    assert current_fee_rate.mojos_per_clvm_cost == 0
+    assert current_fee_rate.mojos_per_klvm_cost == 0
 
 
 def test_estimator_create() -> None:
-    max_block_cost_clvm = uint64(1000 * 1000)
-    estimator = create_bitcoin_fee_estimator(max_block_cost_clvm)
+    max_block_cost_klvm = uint64(1000 * 1000)
+    estimator = create_bitcoin_fee_estimator(max_block_cost_klvm)
     assert estimator is not None
 
 
 def test_single_estimate() -> None:
-    max_block_cost_clvm = uint64(1000 * 1000)
-    estimator = create_bitcoin_fee_estimator(max_block_cost_clvm)
+    max_block_cost_klvm = uint64(1000 * 1000)
+    estimator = create_bitcoin_fee_estimator(max_block_cost_klvm)
     height = uint32(1)
     estimator.new_block(FeeBlockInfo(height, []))
     fee_rate = estimator.estimate_fee_rate(time_offset_seconds=40 * height)
-    assert fee_rate.mojos_per_clvm_cost == 0
+    assert fee_rate.mojos_per_klvm_cost == 0
 
 
 def make_block(
@@ -57,8 +57,8 @@ def test_steady_fee_pressure() -> None:
     We submit successive blocks containing transactions with identical FeeRates.
     We expect the estimator to converge on this FeeRate value.
     """
-    max_block_cost_clvm = uint64(1000 * 1000)
-    estimator = create_bitcoin_fee_estimator(max_block_cost_clvm)
+    max_block_cost_klvm = uint64(1000 * 1000)
+    estimator = create_bitcoin_fee_estimator(max_block_cost_klvm)
     cost = uint64(5000000)
     fee = uint64(10000000)
     num_blocks_wait_in_mempool = 5
@@ -79,7 +79,7 @@ def test_steady_fee_pressure() -> None:
         est2 = estimator.estimate_fee_rate(time_offset_seconds=seconds)
         e.append(est2)
 
-    # assert est == FeeRate.create(Mojos(fee), CLVMCost(cost)) #TODO
+    # assert est == FeeRate.create(Mojos(fee), KLVMCost(cost)) #TODO
     estimates_after = [estimator.estimate_fee_rate(time_offset_seconds=40 * height) for height in range(start, end)]
     block_estimates = [estimator.estimate_fee_rate_for_block(uint32(h)) for h in range(start, end)]
 

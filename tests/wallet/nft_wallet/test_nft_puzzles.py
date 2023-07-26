@@ -3,7 +3,7 @@ from __future__ import annotations
 from secrets import token_bytes
 from typing import Tuple
 
-from clvm.casts import int_from_bytes
+from klvm.casts import int_from_bytes
 
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.sized_bytes import bytes32
@@ -15,24 +15,24 @@ from chik.wallet.nft_wallet.nft_puzzles import (
     recurry_nft_puzzle,
 )
 from chik.wallet.outer_puzzles import match_puzzle
-from chik.wallet.puzzles.load_clvm import load_clvm
+from chik.wallet.puzzles.load_klvm import load_klvm
 from chik.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import puzzle_for_pk, solution_for_conditions
 from chik.wallet.uncurried_puzzle import uncurry_puzzle
 from tests.core.make_block_generator import int_to_public_key
 
-SINGLETON_MOD = load_clvm("singleton_top_layer_v1_1.clsp")
-LAUNCHER_PUZZLE = load_clvm("singleton_launcher.clsp")
-DID_MOD = load_clvm("did_innerpuz.clsp")
-NFT_STATE_LAYER_MOD = load_clvm("nft_state_layer.clsp")
-NFT_OWNERSHIP_LAYER = load_clvm("nft_ownership_layer.clsp")
-NFT_TRANSFER_PROGRAM_DEFAULT = load_clvm("nft_ownership_transfer_program_one_way_claim_with_royalties.clsp")
+SINGLETON_MOD = load_klvm("singleton_top_layer_v1_1.clsp")
+LAUNCHER_PUZZLE = load_klvm("singleton_launcher.clsp")
+DID_MOD = load_klvm("did_innerpuz.clsp")
+NFT_STATE_LAYER_MOD = load_klvm("nft_state_layer.clsp")
+NFT_OWNERSHIP_LAYER = load_klvm("nft_ownership_layer.clsp")
+NFT_TRANSFER_PROGRAM_DEFAULT = load_klvm("nft_ownership_transfer_program_one_way_claim_with_royalties.clsp")
 LAUNCHER_PUZZLE_HASH = LAUNCHER_PUZZLE.get_tree_hash()
 NFT_STATE_LAYER_MOD_HASH = NFT_STATE_LAYER_MOD.get_tree_hash()
 SINGLETON_MOD_HASH = SINGLETON_MOD.get_tree_hash()
-OFFER_MOD = load_clvm("settlement_payments.clsp")
+OFFER_MOD = load_klvm("settlement_payments.clsp")
 
 LAUNCHER_ID = Program.to(b"launcher-id").get_tree_hash()
-NFT_METADATA_UPDATER_DEFAULT = load_clvm("nft_metadata_updater_default.clsp")
+NFT_METADATA_UPDATER_DEFAULT = load_klvm("nft_metadata_updater_default.clsp")
 
 
 def test_nft_transfer_puzzle_hashes():
@@ -176,7 +176,7 @@ def test_transfer_puzzle_builder() -> None:
     ]
     sp2_puzzle, solution = make_a_new_solution()
     p2_puzzle, ownership_puzzle = make_a_new_ownership_layer_puzzle()
-    clvm_nft_puzzle = create_nft_layer_puzzle_with_curry_params(
+    klvm_nft_puzzle = create_nft_layer_puzzle_with_curry_params(
         Program.to(metadata), NFT_METADATA_UPDATER_DEFAULT.get_tree_hash(), ownership_puzzle
     )
     puzzle = create_full_puzzle(
@@ -185,14 +185,14 @@ def test_transfer_puzzle_builder() -> None:
         NFT_METADATA_UPDATER_DEFAULT.get_tree_hash(),
         ownership_puzzle,
     )
-    clvm_puzzle_hash = get_updated_nft_puzzle(clvm_nft_puzzle, solution.at("rrf"))
+    klvm_puzzle_hash = get_updated_nft_puzzle(klvm_nft_puzzle, solution.at("rrf"))
     unft = uncurry_nft.UncurriedNFT.uncurry(*puzzle.uncurry())
     assert unft is not None
-    assert unft.nft_state_layer == clvm_nft_puzzle
+    assert unft.nft_state_layer == klvm_nft_puzzle
     assert unft.inner_puzzle == ownership_puzzle
     assert unft.p2_puzzle == p2_puzzle
     ol_puzzle = recurry_nft_puzzle(unft, solution, sp2_puzzle)
     nft_puzzle = create_nft_layer_puzzle_with_curry_params(
         Program.to(metadata), NFT_METADATA_UPDATER_DEFAULT.get_tree_hash(), ol_puzzle
     )
-    assert clvm_puzzle_hash == nft_puzzle.get_tree_hash()
+    assert klvm_puzzle_hash == nft_puzzle.get_tree_hash()

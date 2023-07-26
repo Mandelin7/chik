@@ -7,16 +7,16 @@ from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.serialized_program import SerializedProgram
 from chik.types.generator_types import BlockGenerator, CompressorArg, GeneratorBlockCacheInterface
 from chik.util.ints import uint32
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 
-DECOMPRESS_BLOCK = load_clvm_maybe_recompile("block_program_zero.clsp", package_or_requirement="chik.wallet.puzzles")
-DECOMPRESS_PUZZLE = load_clvm_maybe_recompile("decompress_puzzle.clsp", package_or_requirement="chik.wallet.puzzles")
-# DECOMPRESS_CSE = load_clvm_maybe_recompile(
+DECOMPRESS_BLOCK = load_klvm_maybe_recompile("block_program_zero.clsp", package_or_requirement="chik.wallet.puzzles")
+DECOMPRESS_PUZZLE = load_klvm_maybe_recompile("decompress_puzzle.clsp", package_or_requirement="chik.wallet.puzzles")
+# DECOMPRESS_CSE = load_klvm_maybe_recompile(
 #     "decompress_coin_spend_entry.clsp",
 #     package_or_requirement="chik.wallet.puzzles",
 # )
 
-DECOMPRESS_CSE_WITH_PREFIX = load_clvm_maybe_recompile(
+DECOMPRESS_CSE_WITH_PREFIX = load_klvm_maybe_recompile(
     "decompress_coin_spend_entry_with_prefix.clsp", package_or_requirement="chik.wallet.puzzles"
 )
 log = logging.getLogger(__name__)

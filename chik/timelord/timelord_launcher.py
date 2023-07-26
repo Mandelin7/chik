@@ -35,7 +35,7 @@ async def kill_processes(lock: asyncio.Lock):
 
 
 def find_vdf_client() -> pathlib.Path:
-    p = pathlib.Path(pkg_resources.get_distribution("chiavdf").location) / "vdf_client"
+    p = pathlib.Path(pkg_resources.get_distribution("chikvdf").location) / "vdf_client"
     if p.is_file():
         return p
     raise FileNotFoundError("can't find vdf_client binary")

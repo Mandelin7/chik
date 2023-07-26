@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 from typing import Dict, List, Optional
 
-from chia_rs import ENABLE_ASSERT_BEFORE, LIMIT_STACK, MEMPOOL_MODE, NO_RELATIVE_CONDITIONS_ON_EPHEMERAL
-from chia_rs import get_puzzle_and_solution_for_coin as get_puzzle_and_solution_for_coin_rust
-from chia_rs import run_block_generator, run_chia_program
-from clvm.casts import int_from_bytes
+from chik_rs import ENABLE_ASSERT_BEFORE, LIMIT_STACK, MEMPOOL_MODE, NO_RELATIVE_CONDITIONS_ON_EPHEMERAL
+from chik_rs import get_puzzle_and_solution_for_coin as get_puzzle_and_solution_for_coin_rust
+from chik_rs import run_block_generator, run_chik_program
+from klvm.casts import int_from_bytes
 
 from chik.consensus.constants import ConsensusConstants
 from chik.consensus.cost_calculator import NPCResult
@@ -21,9 +21,9 @@ from chik.types.generator_types import BlockGenerator
 from chik.types.spend_bundle_conditions import SpendBundleConditions
 from chik.util.errors import Err
 from chik.util.ints import uint16, uint32, uint64
-from chik.wallet.puzzles.load_clvm import load_serialized_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_serialized_klvm_maybe_recompile
 
-DESERIALIZE_MOD = load_serialized_clvm_maybe_recompile(
+DESERIALIZE_MOD = load_serialized_klvm_maybe_recompile(
     "chiklisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles"
 )
 
@@ -71,7 +71,7 @@ def get_puzzle_and_solution_for_coin(generator: BlockGenerator, coin: Coin) -> S
         puzzle, solution = get_puzzle_and_solution_for_coin_rust(
             bytes(generator.program),
             bytes(args),
-            DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM,
+            DEFAULT_CONSTANTS.MAX_BLOCK_COST_KLVM,
             coin.parent_coin_info,
             coin.amount,
             coin.puzzle_hash,
@@ -88,10 +88,10 @@ def get_spends_for_block(generator: BlockGenerator) -> List[CoinSpend]:
     args += bytes(Program.to([bytes(a) for a in generator.generator_refs]))
     args += b"\x80\x80"
 
-    _, ret = run_chia_program(
+    _, ret = run_chik_program(
         bytes(generator.program),
         bytes(args),
-        DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM,
+        DEFAULT_CONSTANTS.MAX_BLOCK_COST_KLVM,
         0,
     )
 

@@ -13,17 +13,17 @@ from chik.util.condition_tools import conditions_for_solution
 from chik.util.ints import uint64
 from chik.util.misc import VersionedBlob
 from chik.wallet.puzzles.clawback.metadata import ClawbackMetadata
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import MOD
 from chik.wallet.uncurried_puzzle import UncurriedPuzzle
 from chik.wallet.util.curry_and_treehash import calculate_hash_of_quoted_mod_hash, curry_and_treehash
 from chik.wallet.util.merkle_tree import MerkleTree
 from chik.wallet.util.wallet_types import RemarkDataType
 
-P2_1_OF_N = load_clvm_maybe_recompile("p2_1_of_n.clsp")
-P2_CURRIED_PUZZLE_MOD = load_clvm_maybe_recompile("p2_puzzle_hash.clsp")
+P2_1_OF_N = load_klvm_maybe_recompile("p2_1_of_n.clsp")
+P2_CURRIED_PUZZLE_MOD = load_klvm_maybe_recompile("p2_puzzle_hash.clsp")
 P2_CURRIED_PUZZLE_MOD_HASH_QUOTED = calculate_hash_of_quoted_mod_hash(P2_CURRIED_PUZZLE_MOD.get_tree_hash())
-AUGMENTED_CONDITION = load_clvm_maybe_recompile("augmented_condition.clsp")
+AUGMENTED_CONDITION = load_klvm_maybe_recompile("augmented_condition.clsp")
 AUGMENTED_CONDITION_HASH = AUGMENTED_CONDITION.get_tree_hash()
 log = logging.getLogger(__name__)
 
@@ -130,7 +130,7 @@ def match_clawback_puzzle(
     conditions = conditions_for_solution(
         inner_puzzle,
         inner_solution,
-        DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM // 8,
+        DEFAULT_CONSTANTS.MAX_BLOCK_COST_KLVM // 8,
     )
     metadata: Optional[ClawbackMetadata] = None
     new_puzhash: Set[bytes32] = set()

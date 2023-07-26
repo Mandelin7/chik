@@ -12,7 +12,7 @@ from typing import Callable, List, Optional, Tuple, Union
 import click
 import zstd
 from blspy import AugSchemeMPL, G1Element
-from chia_rs import MEMPOOL_MODE, SpendBundleConditions, run_block_generator
+from chik_rs import MEMPOOL_MODE, SpendBundleConditions, run_block_generator
 
 from chik.consensus.default_constants import DEFAULT_CONSTANTS
 from chik.types.block_protocol import BlockInfo
@@ -23,7 +23,7 @@ from chik.util.condition_tools import pkm_pairs
 from chik.util.full_block_utils import block_info_from_block, generator_from_block
 
 
-# returns an optional error code and an optional SpendBundleConditions (from chia_rs)
+# returns an optional error code and an optional SpendBundleConditions (from chik_rs)
 # exactly one of those will hold a value and the number of seconds it took to
 # run
 def run_gen(
@@ -34,7 +34,7 @@ def run_gen(
         err, result = run_block_generator(
             bytes(generator_program),
             block_program_args,
-            DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM,
+            DEFAULT_CONSTANTS.MAX_BLOCK_COST_KLVM,
             flags,
         )
         run_time = time() - start_time

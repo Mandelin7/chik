@@ -7,7 +7,7 @@ from secrets import token_bytes
 from typing import Dict, List, Optional, Tuple
 
 from blspy import AugSchemeMPL, G1Element, PrivateKey
-from chiapos import DiskPlotter
+from chikpos import DiskPlotter
 
 from chik.daemon.keychain_proxy import KeychainProxy, connect_to_keychain_and_validate, wrap_local_keychain
 from chik.plotting.util import Params, stream_plot_info_ph, stream_plot_info_pk

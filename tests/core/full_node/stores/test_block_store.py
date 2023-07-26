@@ -7,7 +7,7 @@ import random
 import sqlite3
 
 import pytest
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 
 from chik.consensus.blockchain import Blockchain
 from chik.consensus.default_constants import DEFAULT_CONSTANTS

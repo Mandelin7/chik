@@ -448,7 +448,7 @@ class TestDIDWallet:
                 coin, ph, info, pubkey, SpendBundle([], AugSchemeMPL.aggregate([]))
             )
         except Exception:
-            # We expect a CLVM 80 error for this test
+            # We expect a KLVM 80 error for this test
             pass
         else:
             assert False
@@ -962,7 +962,7 @@ class TestDIDWallet:
         conditions = conditions_dict_for_solution(
             spend.puzzle_reveal.to_program(),
             spend.solution.to_program(),
-            wallet.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM,
+            wallet.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM,
         )
 
         assert len(conditions[ConditionOpcode.CREATE_COIN_ANNOUNCEMENT]) == 1
@@ -1169,7 +1169,7 @@ class TestDIDWallet:
         await full_node_api.farm_blocks_to_wallet(1, wallet_1)
 
         # Node 0 sets up a DID Wallet with a backup set, but num_of_backup_ids_needed=0
-        # (a malformed solution, but legal for the clvm puzzle)
+        # (a malformed solution, but legal for the klvm puzzle)
         recovery_list = [bytes.fromhex("00" * 32)]
         async with wallet_node_0.wallet_state_manager.lock:
             did_wallet_0: DIDWallet = await DIDWallet.create_new_did_wallet(

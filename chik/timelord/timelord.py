@@ -13,7 +13,7 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple, cast
 
-from chiavdf import create_discriminant, prove
+from chikvdf import create_discriminant, prove
 
 from chik.consensus.constants import ConsensusConstants
 from chik.consensus.pot_iterations import calculate_sp_iters, is_overflow_block
@@ -152,7 +152,7 @@ class Timelord:
             self.main_loop = asyncio.create_task(self._manage_chains())
         else:
             if os.name == "nt" or slow_bluebox:
-                # `vdf_client` doesn't build on windows, use `prove()` from chiavdf.
+                # `vdf_client` doesn't build on windows, use `prove()` from chikvdf.
                 workers = self.config.get("slow_bluebox_process_count", 1)
                 self.bluebox_pool = ProcessPoolExecutor(
                     max_workers=workers,

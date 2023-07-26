@@ -63,7 +63,7 @@ get_madmax_url() {
   OS="$3" # "macos", others
   ARCH="$4" # "intel", "m1", "arm64", "x86-64"
 
-  GITHUB_BASE_URL="https://github.com/Chia-Network/chia-plotter-madmax/releases/download"
+  GITHUB_BASE_URL="https://github.com/Chik-Network/chik-plotter-madmax/releases/download"
   MADMAX_FILENAME="$(get_madmax_filename "${KSIZE}" "${MADMAX_VER}" "${OS}" "${ARCH}")"
 
   echo "${GITHUB_BASE_URL}/${MADMAX_VER}/${MADMAX_FILENAME}"

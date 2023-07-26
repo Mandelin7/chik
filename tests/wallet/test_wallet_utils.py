@@ -3,7 +3,7 @@ from __future__ import annotations
 from random import shuffle
 from typing import List, Optional, Tuple
 
-from chia_rs import Coin, CoinState
+from chik_rs import Coin, CoinState
 
 from chik.wallet.util.wallet_sync_utils import sort_coin_states
 

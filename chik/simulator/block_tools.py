@@ -16,9 +16,9 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 from blspy import AugSchemeMPL, G1Element, G2Element, PrivateKey
-from chia_rs import compute_merkle_set_root
-from chiabip158 import PyBIP158
-from clvm.casts import int_from_bytes
+from chik_rs import compute_merkle_set_root
+from chikbip158 import PyBIP158
+from klvm.casts import int_from_bytes
 
 from chik.consensus.block_creation import unfinished_block_to_full_block
 from chik.consensus.block_record import BlockRecord
@@ -1726,7 +1726,7 @@ def get_full_block_and_block_record(
 def compute_cost_test(generator: BlockGenerator, cost_per_byte: int) -> Tuple[Optional[uint16], uint64]:
     try:
         block_program_args = Program.to([[bytes(g) for g in generator.generator_refs]])
-        clvm_cost, result = GENERATOR_MOD.run_mempool_with_cost(INFINITE_COST, generator.program, block_program_args)
+        klvm_cost, result = GENERATOR_MOD.run_mempool_with_cost(INFINITE_COST, generator.program, block_program_args)
         size_cost = len(bytes(generator.program)) * cost_per_byte
         condition_cost = 0
 
@@ -1740,7 +1740,7 @@ def compute_cost_test(generator: BlockGenerator, cost_per_byte: int) -> Tuple[Op
                     condition_cost += ConditionCost.AGG_SIG.value
                 elif condition == ConditionOpcode.CREATE_COIN:
                     condition_cost += ConditionCost.CREATE_COIN.value
-        return None, uint64(clvm_cost + size_cost + condition_cost)
+        return None, uint64(klvm_cost + size_cost + condition_cost)
     except Exception:
         return uint16(Err.GENERATOR_RUNTIME_ERROR.value), uint64(0)
 

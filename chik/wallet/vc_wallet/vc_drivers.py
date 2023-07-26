@@ -11,7 +11,7 @@ from chik.util.hash import std_hash
 from chik.util.ints import uint64
 from chik.util.streamable import Streamable, streamable
 from chik.wallet.lineage_proof import LineageProof
-from chik.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.puzzles.singleton_top_layer_v1_1 import (
     SINGLETON_LAUNCHER,
     SINGLETON_LAUNCHER_HASH,
@@ -24,40 +24,40 @@ from chik.wallet.puzzles.singleton_top_layer_v1_1 import (
 from chik.wallet.uncurried_puzzle import UncurriedPuzzle, uncurry_puzzle
 
 # Mods
-EXTIGENT_METADATA_LAYER = load_clvm_maybe_recompile(
+EXTIGENT_METADATA_LAYER = load_klvm_maybe_recompile(
     "exigent_metadata_layer.clsp",
     package_or_requirement="chik.wallet.vc_wallet.vc_puzzles",
     include_standard_libraries=True,
 )
-P2_ANNOUNCED_DELEGATED_PUZZLE: Program = load_clvm_maybe_recompile(
+P2_ANNOUNCED_DELEGATED_PUZZLE: Program = load_klvm_maybe_recompile(
     "p2_announced_delegated_puzzle.clsp",
     package_or_requirement="chik.wallet.vc_wallet.vc_puzzles",
     include_standard_libraries=True,
 )
-COVENANT_LAYER: Program = load_clvm_maybe_recompile(
+COVENANT_LAYER: Program = load_klvm_maybe_recompile(
     "covenant_layer.clsp", package_or_requirement="chik.wallet.vc_wallet.vc_puzzles", include_standard_libraries=True
 )
-STD_COVENANT_PARENT_MORPHER: Program = load_clvm_maybe_recompile(
+STD_COVENANT_PARENT_MORPHER: Program = load_klvm_maybe_recompile(
     "std_parent_morpher.clsp",
     package_or_requirement="chik.wallet.vc_wallet.vc_puzzles",
     include_standard_libraries=True,
 )
-EML_TP_COVENANT_ADAPTER: Program = load_clvm_maybe_recompile(
+EML_TP_COVENANT_ADAPTER: Program = load_klvm_maybe_recompile(
     "eml_transfer_program_covenant_adapter.clsp",
     package_or_requirement="chik.wallet.vc_wallet.vc_puzzles",
     include_standard_libraries=True,
 )
-EML_DID_TP: Program = load_clvm_maybe_recompile(
+EML_DID_TP: Program = load_klvm_maybe_recompile(
     "eml_update_metadata_with_DID.clsp",
     package_or_requirement="chik.wallet.vc_wallet.vc_puzzles",
     include_standard_libraries=True,
 )
-EXTIGENT_METADATA_LAYER_COVENANT_MORPHER: Program = load_clvm_maybe_recompile(
+EXTIGENT_METADATA_LAYER_COVENANT_MORPHER: Program = load_klvm_maybe_recompile(
     "eml_covenant_morpher.clsp",
     package_or_requirement="chik.wallet.vc_wallet.vc_puzzles",
     include_standard_libraries=True,
 )
-VIRAL_BACKDOOR: Program = load_clvm_maybe_recompile(
+VIRAL_BACKDOOR: Program = load_klvm_maybe_recompile(
     "viral_backdoor.clsp", package_or_requirement="chik.wallet.vc_wallet.vc_puzzles", include_standard_libraries=True
 )
 # (mod (METADATA conditions . solution) (if solution solution (list METADATA () ())))
@@ -75,7 +75,7 @@ VIRAL_BACKDOOR_HASH: bytes32 = VIRAL_BACKDOOR.get_tree_hash()
 
 
 # Standard brick puzzle uses the mods above
-STANDARD_BRICK_PUZZLE: Program = load_clvm_maybe_recompile(
+STANDARD_BRICK_PUZZLE: Program = load_klvm_maybe_recompile(
     "standard_vc_backdoor_puzzle.clsp",
     package_or_requirement="chik.wallet.vc_wallet.vc_puzzles",
     include_standard_libraries=True,

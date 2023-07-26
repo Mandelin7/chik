@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import List
 
 from blspy import AugSchemeMPL, G1Element
-from clvm import KEYWORD_FROM_ATOM
-from clvm_tools.binutils import disassemble as bu_disassemble
+from klvm import KEYWORD_FROM_ATOM
+from klvm_tools.binutils import disassemble as bu_disassemble
 
 from chik.consensus.default_constants import DEFAULT_CONSTANTS
 from chik.types.blockchain_format.coin import Coin
@@ -45,7 +45,7 @@ def dump_coin(coin: Coin) -> str:
 def debug_spend_bundle(spend_bundle, agg_sig_additional_data=DEFAULT_CONSTANTS.AGG_SIG_ME_ADDITIONAL_DATA) -> None:
     """
     Print a lot of useful information about a `SpendBundle` that might help with debugging
-    its clvm.
+    its klvm.
     """
 
     pks = []

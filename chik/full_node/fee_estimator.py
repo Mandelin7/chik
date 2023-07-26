@@ -20,7 +20,7 @@ from chik.util.ints import uint32, uint64
 @dataclass()
 class SmartFeeEstimator:
     fee_tracker: FeeTracker
-    max_block_cost_clvm: uint64
+    max_block_cost_klvm: uint64
     log: logging.Logger = field(default_factory=lambda: logging.getLogger(__name__))
 
     def parse(self, fee_result: EstimateResult) -> float:
@@ -63,7 +63,7 @@ class SmartFeeEstimator:
         if tracking_length < 20:
             return FeeEstimateGroup(error="Not enough data", estimates=[])
 
-        if ignore_mempool is False and info.current_mempool_cost < int(info.mempool_info.max_block_clvm_cost * 0.8):
+        if ignore_mempool is False and info.current_mempool_cost < int(info.mempool_info.max_block_klvm_cost * 0.8):
             return FeeEstimateGroup(
                 error=None,
                 estimates=[
@@ -86,5 +86,5 @@ class SmartFeeEstimator:
         if fee == -1:
             return FeeEstimateV2("Not enough data", r.requested_time, FeeRateV2(0))
         else:
-            # convert from mojo / 1000 clvm_cost to mojo / 1 clvm_cost
+            # convert from mojo / 1000 klvm_cost to mojo / 1 klvm_cost
             return FeeEstimateV2(None, r.requested_time, FeeRateV2(fee / 1000))

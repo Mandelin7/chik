@@ -1198,7 +1198,7 @@ class DIDWallet:
                 conditions = conditions_dict_for_solution(
                     spend.puzzle_reveal.to_program(),
                     spend.solution.to_program(),
-                    self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM,
+                    self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM,
                 )
                 synthetic_pk = synthetic_secret_key.get_g1()
                 for pk, msg in pkm_pairs_for_conditions_dict(

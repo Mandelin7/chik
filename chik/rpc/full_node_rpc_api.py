@@ -221,7 +221,7 @@ class FullNodeRpcApi:
                     "cost_5000000": mempool_min_fee_5m,
                 },
                 "mempool_max_total_cost": mempool_max_total_cost,
-                "block_max_cost": self.service.constants.MAX_BLOCK_COST_CLVM,
+                "block_max_cost": self.service.constants.MAX_BLOCK_COST_KLVM,
                 "node_id": node_id,
             },
         }
@@ -797,7 +797,7 @@ class FullNodeRpcApi:
         estimator: FeeEstimatorInterface = self.service.mempool_manager.mempool.fee_estimator
         target_times.sort()
         estimates = [
-            estimator.estimate_fee_rate(time_offset_seconds=time).mojos_per_clvm_cost * spend_cost
+            estimator.estimate_fee_rate(time_offset_seconds=time).mojos_per_klvm_cost * spend_cost
             for time in target_times
         ]
         # The Bitcoin Fee Estimator works by observing the most common fee rates that appear
@@ -852,7 +852,7 @@ class FullNodeRpcApi:
         return {
             "estimates": estimates,
             "target_times": target_times,
-            "current_fee_rate": current_fee_rate.mojos_per_clvm_cost,
+            "current_fee_rate": current_fee_rate.mojos_per_klvm_cost,
             "mempool_size": mempool_size,
             "mempool_fees": mempool_fees,
             "num_spends": num_mempool_spends,

@@ -7,8 +7,8 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 import pytest
 from blspy import G1Element, G2Element
-from clvm.casts import int_to_bytes
-from clvm_tools import binutils
+from klvm.casts import int_to_bytes
+from klvm_tools import binutils
 
 from chik.consensus.condition_costs import ConditionCost
 from chik.consensus.cost_calculator import NPCResult
@@ -31,7 +31,7 @@ from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.serialized_program import SerializedProgram
 from chik.types.blockchain_format.sized_bytes import bytes32, bytes48
-from chik.types.clvm_cost import CLVMCost
+from chik.types.klvm_cost import KLVMCost
 from chik.types.coin_spend import CoinSpend
 from chik.types.condition_opcodes import ConditionOpcode
 from chik.types.condition_with_args import ConditionWithArgs
@@ -71,7 +71,7 @@ def new_mi(mi: MempoolInfo, max_mempool_cost: int, min_replace_fee_per_cost: int
     return dataclasses.replace(
         mi,
         minimum_fee_per_cost_to_replace=FeeRate(uint64(min_replace_fee_per_cost)),
-        max_size_in_cost=CLVMCost(uint64(max_mempool_cost)),
+        max_size_in_cost=KLVMCost(uint64(max_mempool_cost)),
     )
 
 
@@ -289,10 +289,10 @@ class TestMempool:
         _ = await next_block(full_node_1, wallet_a, bt)
         _ = await next_block(full_node_1, wallet_a, bt)
 
-        max_block_cost_clvm = uint64(40000000)
-        max_mempool_cost = max_block_cost_clvm * 5
+        max_block_cost_klvm = uint64(40000000)
+        max_mempool_cost = max_block_cost_klvm * 5
         mempool_info = new_mi(EmptyMempoolInfo, max_mempool_cost, uint64(5))
-        fee_estimator = create_bitcoin_fee_estimator(max_block_cost_clvm)
+        fee_estimator = create_bitcoin_fee_estimator(max_block_cost_klvm)
         mempool = Mempool(mempool_info, fee_estimator)
         assert mempool.get_min_fee_rate(104000) == 0
 
@@ -1955,7 +1955,7 @@ class TestMempoolManager:
 # the following tests generate generator programs and run them through get_name_puzzle_conditions()
 
 COST_PER_BYTE = 12000
-MAX_BLOCK_COST_CLVM = 11000000000
+MAX_BLOCK_COST_KLVM = 11000000000
 
 
 def generator_condition_tester(
@@ -1963,7 +1963,7 @@ def generator_condition_tester(
     *,
     mempool_mode: bool = False,
     quote: bool = True,
-    max_cost: int = MAX_BLOCK_COST_CLVM,
+    max_cost: int = MAX_BLOCK_COST_KLVM,
     height: uint32,
     coin_amount: int = 123,
 ) -> NPCResult:
@@ -2151,7 +2151,7 @@ class TestGeneratorConditions:
         )
         generator = BlockGenerator(program, [], [])
         npc_result: NPCResult = get_name_puzzle_conditions(
-            generator, MAX_BLOCK_COST_CLVM, mempool_mode=False, height=softfork_height
+            generator, MAX_BLOCK_COST_KLVM, mempool_mode=False, height=softfork_height
         )
         assert npc_result.error is None
         assert len(npc_result.conds.spends) == 2
@@ -2450,7 +2450,7 @@ class TestMaliciousGenerators:
         assert npc_result.error is None
         assert len(npc_result.conds.spends) == 1
         # coin announcements are not propagated to python, but validated in rust
-        # TODO: optimize clvm to make this run in < 1 second
+        # TODO: optimize klvm to make this run in < 1 second
 
     @pytest.mark.benchmark
     def test_create_coin_duplicates(self, request: pytest.FixtureRequest, softfork_height):
@@ -2690,9 +2690,9 @@ def test_items_by_feerate(items: List[MempoolItem], expected: List[Coin]) -> Non
     fee_estimator = create_bitcoin_fee_estimator(uint64(11000000000))
 
     mempool_info = MempoolInfo(
-        CLVMCost(uint64(11000000000 * 3)),
+        KLVMCost(uint64(11000000000 * 3)),
         FeeRate(uint64(1000000)),
-        CLVMCost(uint64(11000000000)),
+        KLVMCost(uint64(11000000000)),
     )
     mempool = Mempool(mempool_info, fee_estimator)
     for i in items:
@@ -2743,9 +2743,9 @@ def test_full_mempool(items: List[int], add: int, expected: List[int]) -> None:
     fee_estimator = create_bitcoin_fee_estimator(uint64(11000000000))
 
     mempool_info = MempoolInfo(
-        CLVMCost(uint64(100)),
+        KLVMCost(uint64(100)),
         FeeRate(uint64(1000000)),
-        CLVMCost(uint64(100)),
+        KLVMCost(uint64(100)),
     )
     mempool = Mempool(mempool_info, fee_estimator)
     fee_rate: float = 3.0
@@ -2787,9 +2787,9 @@ def test_limit_expiring_transactions(height: bool, items: List[int], expected: L
     fee_estimator = create_bitcoin_fee_estimator(uint64(11000000000))
 
     mempool_info = MempoolInfo(
-        CLVMCost(uint64(100)),
+        KLVMCost(uint64(100)),
         FeeRate(uint64(1000000)),
-        CLVMCost(uint64(50)),
+        KLVMCost(uint64(50)),
     )
     mempool = Mempool(mempool_info, fee_estimator)
     mempool.new_tx_block(uint32(10), uint64(100000))
@@ -2861,9 +2861,9 @@ def test_limit_expiring_transactions(height: bool, items: List[int], expected: L
 def test_get_items_by_coin_ids(items: List[MempoolItem], coin_ids: List[bytes32], expected: List[MempoolItem]) -> None:
     fee_estimator = create_bitcoin_fee_estimator(uint64(11000000000))
     mempool_info = MempoolInfo(
-        CLVMCost(uint64(11000000000 * 3)),
+        KLVMCost(uint64(11000000000 * 3)),
         FeeRate(uint64(1000000)),
-        CLVMCost(uint64(11000000000)),
+        KLVMCost(uint64(11000000000)),
     )
     mempool = Mempool(mempool_info, fee_estimator)
     for i in items:
@@ -2897,9 +2897,9 @@ def test_aggregating_on_a_solution_then_a_more_cost_saving_one_appears() -> None
 
     fee_estimator = create_bitcoin_fee_estimator(uint64(11000000000))
     mempool_info = MempoolInfo(
-        CLVMCost(uint64(11000000000 * 3)),
+        KLVMCost(uint64(11000000000 * 3)),
         FeeRate(uint64(1000000)),
-        CLVMCost(uint64(11000000000)),
+        KLVMCost(uint64(11000000000)),
     )
     mempool = Mempool(mempool_info, fee_estimator)
     coins = [

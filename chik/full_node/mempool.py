@@ -7,13 +7,13 @@ from enum import Enum
 from typing import Callable, Dict, Iterator, List, Optional, Tuple
 
 from blspy import AugSchemeMPL, G2Element
-from chia_rs import Coin
+from chik_rs import Coin
 
 from chik.consensus.default_constants import DEFAULT_CONSTANTS
 from chik.full_node.fee_estimation import FeeMempoolInfo, MempoolInfo, MempoolItemInfo
 from chik.full_node.fee_estimator_interface import FeeEstimatorInterface
 from chik.types.blockchain_format.sized_bytes import bytes32
-from chik.types.clvm_cost import CLVMCost
+from chik.types.klvm_cost import KLVMCost
 from chik.types.coin_spend import CoinSpend
 from chik.types.eligible_coin_spends import EligibleCoinSpends
 from chik.types.internal_mempool_item import InternalMempoolItem
@@ -127,11 +127,11 @@ class Mempool:
             val = cursor.fetchone()[0]
             return uint64(0) if val is None else uint64(val)
 
-    def total_mempool_cost(self) -> CLVMCost:
+    def total_mempool_cost(self) -> KLVMCost:
         with self._db_conn:
             cursor = self._db_conn.execute("SELECT SUM(cost) FROM tx")
             val = cursor.fetchone()[0]
-            return CLVMCost(uint64(0) if val is None else uint64(val))
+            return KLVMCost(uint64(0) if val is None else uint64(val))
 
     def all_items(self) -> Iterator[MempoolItem]:
         with self._db_conn:
@@ -190,7 +190,7 @@ class Mempool:
         """
 
         if self.at_full_capacity(cost):
-            # TODO: make MempoolItem.cost be CLVMCost
+            # TODO: make MempoolItem.cost be KLVMCost
             current_cost = int(self.total_mempool_cost())
 
             # Iterates through all spends in increasing fee per cost
@@ -272,7 +272,7 @@ class Mempool:
 
         assert item.fee < MEMPOOL_ITEM_FEE_LIMIT
         assert item.npc_result.conds is not None
-        assert item.cost <= self.mempool_info.max_block_clvm_cost
+        assert item.cost <= self.mempool_info.max_block_klvm_cost
 
         with self._db_conn:
             # we have certain limits on transactions that will expire soon
@@ -302,7 +302,7 @@ class Mempool:
                     name, fee_per_cost, cumulative_cost = row
 
                     # there's space for us, stop pruning
-                    if cumulative_cost + item.cost <= self.mempool_info.max_block_clvm_cost:
+                    if cumulative_cost + item.cost <= self.mempool_info.max_block_klvm_cost:
                         break
 
                     # we can't evict any more transactions, abort (and don't
@@ -379,7 +379,7 @@ class Mempool:
         eligible_coin_spends = EligibleCoinSpends()
         coin_spends: List[CoinSpend] = []
         sigs: List[G2Element] = []
-        log.info(f"Starting to make block, max cost: {self.mempool_info.max_block_clvm_cost}")
+        log.info(f"Starting to make block, max cost: {self.mempool_info.max_block_klvm_cost}")
         with self._db_conn:
             cursor = self._db_conn.execute("SELECT name, fee FROM tx ORDER BY fee_per_cost DESC, seq ASC")
         for row in cursor:
@@ -395,7 +395,7 @@ class Mempool:
                 item_cost = item.npc_result.cost - cost_saving
                 log.info("Cumulative cost: %d, fee per cost: %0.4f", cost_sum, fee / item_cost)
                 if (
-                    item_cost + cost_sum > self.mempool_info.max_block_clvm_cost
+                    item_cost + cost_sum > self.mempool_info.max_block_klvm_cost
                     or fee + fee_sum > DEFAULT_CONSTANTS.MAX_COIN_AMOUNT
                 ):
                     break
@@ -412,7 +412,7 @@ class Mempool:
             return None
         log.info(
             f"Cumulative cost of block (real cost should be less) {cost_sum}. Proportion "
-            f"full: {cost_sum / self.mempool_info.max_block_clvm_cost}"
+            f"full: {cost_sum / self.mempool_info.max_block_klvm_cost}"
         )
         aggregated_signature = AugSchemeMPL.aggregate(sigs)
         agg = SpendBundle(coin_spends, aggregated_signature)

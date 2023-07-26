@@ -5,7 +5,7 @@ import asyncio
 from typing import List, Optional
 
 import pytest
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 from colorlog import getLogger
 
 from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward

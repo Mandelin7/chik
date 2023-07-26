@@ -16,8 +16,8 @@ def run_for_cost(
     puzzle_reveal: SerializedProgram, solution: SerializedProgram, additions_count: int, max_cost: int
 ) -> uint64:
     create_coins_cost = additions_count * ConditionCost.CREATE_COIN.value
-    clvm_cost, _ = puzzle_reveal.run_mempool_with_cost(max_cost, solution)
-    saved_cost = uint64(clvm_cost + create_coins_cost)
+    klvm_cost, _ = puzzle_reveal.run_mempool_with_cost(max_cost, solution)
+    saved_cost = uint64(klvm_cost + create_coins_cost)
     return saved_cost
 
 

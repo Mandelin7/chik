@@ -175,7 +175,7 @@ class VCWallet:
             coin_spends,
             self.standard_wallet.secret_key_store.secret_key_for_public_key,
             self.wallet_state_manager.constants.AGG_SIG_ME_ADDITIONAL_DATA,
-            self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM,
+            self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM,
         )
         now = uint64(int(time.time()))
         add_list: List[Coin] = list(spend_bundle.additions())
@@ -290,7 +290,7 @@ class VCWallet:
                 [coin_spend],
                 self.standard_wallet.secret_key_store.secret_key_for_public_key,
                 self.wallet_state_manager.constants.AGG_SIG_ME_ADDITIONAL_DATA,
-                self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM,
+                self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM,
             )
         ]
         if did_announcement is not None:

@@ -19,18 +19,18 @@ $port is the Full Node RPC API port
 The `transactions_generator` and `transactions_generator_ref_list` fields of a `FullBlock`
 contain the information necessary to produce transaction record details.
 
-`transactions_generator` is CLVM bytecode
+`transactions_generator` is KLVM bytecode
 `transactions_generator_ref_list` is a list of block heights as `uint32`
 
-When this CLVM code is run in the correct environment, it produces information that can
+When this KLVM code is run in the correct environment, it produces information that can
 then be verified by the consensus rules, or used to view some aspects of transaction history.
 
 The information for each spend is an "NPC" (Name, Puzzle, Condition):
         "coin_name": a unique 32 byte identifier
         "conditions": a list of condition expressions, as in [condition_opcodes.py](../chik/types/condition_opcodes.py)
-        "puzzle_hash": the sha256 of the CLVM bytecode that controls spending this coin
+        "puzzle_hash": the sha256 of the KLVM bytecode that controls spending this coin
 
-Condition Opcodes, such as AGG_SIG_ME, or CREATE_COIN are created by running the "puzzle", i.e. the CLVM bytecode
+Condition Opcodes, such as AGG_SIG_ME, or CREATE_COIN are created by running the "puzzle", i.e. the KLVM bytecode
 associated with the coin being spent. Condition Opcodes are verified by every client on the network for every spend,
 and in this way they control whether a spend is valid or not.
 
@@ -43,7 +43,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 import click
-from clvm.casts import int_from_bytes
+from klvm.casts import int_from_bytes
 
 from chik.consensus.constants import ConsensusConstants
 from chik.consensus.default_constants import DEFAULT_CONSTANTS
@@ -57,10 +57,10 @@ from chik.util.config import load_config
 from chik.util.default_root import DEFAULT_ROOT_PATH
 from chik.util.ints import uint32, uint64
 from chik.wallet.cat_wallet.cat_utils import match_cat_puzzle
-from chik.wallet.puzzles.load_clvm import load_serialized_clvm_maybe_recompile
+from chik.wallet.puzzles.load_klvm import load_serialized_klvm_maybe_recompile
 from chik.wallet.uncurried_puzzle import uncurry_puzzle
 
-DESERIALIZE_MOD = load_serialized_clvm_maybe_recompile(
+DESERIALIZE_MOD = load_serialized_klvm_maybe_recompile(
     "chiklisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles"
 )
 
@@ -187,7 +187,7 @@ def run_generator_with_args(
         return []
     generator_program = SerializedProgram.fromhex(generator_program_hex)
     block_generator = BlockGenerator(generator_program, generator_args, [])
-    return run_generator(block_generator, constants, min(constants.MAX_BLOCK_COST_CLVM, cost))
+    return run_generator(block_generator, constants, min(constants.MAX_BLOCK_COST_KLVM, cost))
 
 
 @click.command()

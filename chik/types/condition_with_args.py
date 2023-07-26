@@ -11,8 +11,8 @@ from chik.util.streamable import Streamable, streamable
 @dataclass(frozen=True)
 class ConditionWithArgs(Streamable):
     """
-    This structure is used to store parsed CLVM conditions
-    Conditions in CLVM have either format of (opcode, var1) or (opcode, var1, var2)
+    This structure is used to store parsed KLVM conditions
+    Conditions in KLVM have either format of (opcode, var1) or (opcode, var1, var2)
     """
 
     opcode: ConditionOpcode

@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Tuple
 
-from clvm.casts import int_from_bytes
+from klvm.casts import int_from_bytes
 
 from chik.consensus.condition_costs import ConditionCost
 from chik.consensus.default_constants import DEFAULT_CONSTANTS
@@ -32,11 +32,11 @@ class CoinSpend(Streamable):
 def compute_additions_with_cost(
     cs: CoinSpend,
     *,
-    max_cost: int = DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM,
+    max_cost: int = DEFAULT_CONSTANTS.MAX_BLOCK_COST_KLVM,
 ) -> Tuple[List[Coin], int]:
     """
     Run the puzzle in the specified CoinSpend and return the cost and list of
-    coins created by the puzzle, i.e. additions. If the cost (CLVM- and
+    coins created by the puzzle, i.e. additions. If the cost (KLVM- and
     condition cost) exceeds the specified max_cost, the function fails with a
     ValidationError exception. Byte cost is not included since at this point the
     puzzle and solution may have been decompressed, the true byte-cost can only be
@@ -63,7 +63,7 @@ def compute_additions_with_cost(
     return ret, cost
 
 
-def compute_additions(cs: CoinSpend, *, max_cost: int = DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM) -> List[Coin]:
+def compute_additions(cs: CoinSpend, *, max_cost: int = DEFAULT_CONSTANTS.MAX_BLOCK_COST_KLVM) -> List[Coin]:
     return compute_additions_with_cost(cs, max_cost=max_cost)[0]
 
 

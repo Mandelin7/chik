@@ -16,7 +16,7 @@ import pytest_asyncio
 # TODO: update after resolution in https://github.com/pytest-dev/pytest/issues/7469
 from _pytest.fixtures import SubRequest
 
-from chik.clvm.spend_sim import CostLogger
+from chik.klvm.spend_sim import CostLogger
 
 # Set spawn after stdlib imports, but before other imports
 from chik.consensus.constants import ConsensusConstants
@@ -313,7 +313,7 @@ async def five_nodes(db_version, self_hostname, blockchain_constants):
 
 @pytest_asyncio.fixture(scope="function")
 async def wallet_nodes():
-    async_gen = setup_simulators_and_wallets(2, 1, {"MEMPOOL_BLOCK_BUFFER": 1, "MAX_BLOCK_COST_CLVM": 400000000})
+    async_gen = setup_simulators_and_wallets(2, 1, {"MEMPOOL_BLOCK_BUFFER": 1, "MAX_BLOCK_COST_KLVM": 400000000})
     nodes, wallets, bt = await async_gen.__anext__()
     full_node_1 = nodes[0]
     full_node_2 = nodes[1]
@@ -436,7 +436,7 @@ async def two_nodes_two_wallets_with_same_keys(bt) -> AsyncIterator[SimulatorsAn
 
 @pytest_asyncio.fixture(scope="module")
 async def wallet_nodes_perf():
-    async_gen = setup_simulators_and_wallets(1, 1, {"MEMPOOL_BLOCK_BUFFER": 1, "MAX_BLOCK_COST_CLVM": 11000000000})
+    async_gen = setup_simulators_and_wallets(1, 1, {"MEMPOOL_BLOCK_BUFFER": 1, "MAX_BLOCK_COST_KLVM": 11000000000})
     nodes, wallets, bt = await async_gen.__anext__()
     full_node_1 = nodes[0]
     server_1 = full_node_1.full_node.server

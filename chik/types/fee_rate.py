@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 import typing_extensions
 
-from chik.types.clvm_cost import CLVMCost
+from chik.types.klvm_cost import KLVMCost
 from chik.types.mojos import Mojos
 from chik.util.ints import uint64
 from chik.util.streamable import Streamable, streamable
@@ -16,23 +16,23 @@ from chik.util.streamable import Streamable, streamable
 @dataclass(frozen=True)
 class FeeRate(Streamable):
     """
-    Represents Fee Rate in mojos divided by CLVM Cost.
+    Represents Fee Rate in mojos divided by KLVM Cost.
     Performs XCK/mojo conversion.
     Similar to 'Fee per cost'.
     """
 
-    mojos_per_clvm_cost: uint64
+    mojos_per_klvm_cost: uint64
 
     @classmethod
-    def create(cls, mojos: Mojos, clvm_cost: CLVMCost) -> FeeRate:
-        return cls(uint64(math.ceil(mojos / clvm_cost)))
+    def create(cls, mojos: Mojos, klvm_cost: KLVMCost) -> FeeRate:
+        return cls(uint64(math.ceil(mojos / klvm_cost)))
 
 
 @dataclass(frozen=True)
 class FeeRateV2:
     """
-    Represents Fee Rate in mojos divided by CLVM Cost.
+    Represents Fee Rate in mojos divided by KLVM Cost.
     Similar to 'Fee per cost'.
     """
 
-    mojos_per_clvm_cost: float
+    mojos_per_klvm_cost: float

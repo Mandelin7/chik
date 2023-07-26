@@ -1728,7 +1728,7 @@ class FullNode:
         percent_full_str = (
             (
                 ", percent full: "
-                + str(round(100.0 * float(block.transactions_info.cost) / self.constants.MAX_BLOCK_COST_CLVM, 3))
+                + str(round(100.0 * float(block.transactions_info.cost) / self.constants.MAX_BLOCK_COST_KLVM, 3))
                 + "%"
             )
             if block.transactions_info is not None
@@ -1846,7 +1846,7 @@ class FullNode:
             self.log.warning("Too many blocks added, not adding block")
             return None
 
-        # The clvm generator and aggregate signature are validated outside of the lock, to allow other blocks and
+        # The klvm generator and aggregate signature are validated outside of the lock, to allow other blocks and
         # transactions to get validated
         npc_result: Optional[NPCResult] = None
         pre_validation_time = None
@@ -1935,7 +1935,7 @@ class FullNode:
             percent_full_str = (
                 (
                     ", percent full: "
-                    + str(round(100.0 * float(block.transactions_info.cost) / self.constants.MAX_BLOCK_COST_CLVM, 3))
+                    + str(round(100.0 * float(block.transactions_info.cost) / self.constants.MAX_BLOCK_COST_KLVM, 3))
                     + "%"
                 )
                 if block.transactions_info is not None

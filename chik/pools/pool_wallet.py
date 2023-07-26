@@ -485,7 +485,7 @@ class PoolWallet:
             [coin_spend],
             pk_to_sk,
             self.wallet_state_manager.constants.AGG_SIG_ME_ADDITIONAL_DATA,
-            self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM,
+            self.wallet_state_manager.constants.MAX_BLOCK_COST_KLVM,
         )
 
     async def generate_fee_transaction(

@@ -1,6 +1,6 @@
 """
 This is an implementation of `sha256_treehash`, used to calculate
-puzzle hashes in clvm.
+puzzle hashes in klvm.
 
 This implementation goes to great pains to be non-recursive so we don't
 have to worry about blowing out the python stack.
@@ -10,15 +10,15 @@ from __future__ import annotations
 
 from typing import Callable, List, Optional, Set
 
-from clvm import CLVMObject
+from klvm import KLVMObject
 
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.util.hash import std_hash
 
-Op = Callable[[List["CLVMObject"], List["Op"], Set[bytes32]], None]
+Op = Callable[[List["KLVMObject"], List["Op"], Set[bytes32]], None]
 
 
-def sha256_treehash(sexp: CLVMObject, precalculated: Optional[Set[bytes32]] = None) -> bytes32:
+def sha256_treehash(sexp: KLVMObject, precalculated: Optional[Set[bytes32]] = None) -> bytes32:
     """
     Hash values in `precalculated` are presumed to have been hashed already.
     """
@@ -26,7 +26,7 @@ def sha256_treehash(sexp: CLVMObject, precalculated: Optional[Set[bytes32]] = No
     if precalculated is None:
         precalculated = set()
 
-    def handle_sexp(sexp_stack: List[CLVMObject], op_stack: List[Op], precalculated: Set[bytes32]) -> None:
+    def handle_sexp(sexp_stack: List[KLVMObject], op_stack: List[Op], precalculated: Set[bytes32]) -> None:
         sexp = sexp_stack.pop()
         if sexp.pair:
             p0, p1 = sexp.pair
@@ -43,12 +43,12 @@ def sha256_treehash(sexp: CLVMObject, precalculated: Optional[Set[bytes32]] = No
                 r = std_hash(b"\1" + sexp.atom)
             sexp_stack.append(r)
 
-    def handle_pair(sexp_stack: List[CLVMObject], op_stack: List[Op], precalculated: Set[bytes32]) -> None:
+    def handle_pair(sexp_stack: List[KLVMObject], op_stack: List[Op], precalculated: Set[bytes32]) -> None:
         p0 = sexp_stack.pop()
         p1 = sexp_stack.pop()
         sexp_stack.append(std_hash(b"\2" + p0 + p1))
 
-    def roll(sexp_stack: List[CLVMObject], op_stack: List[Op], precalculated: Set[bytes32]) -> None:
+    def roll(sexp_stack: List[KLVMObject], op_stack: List[Op], precalculated: Set[bytes32]) -> None:
         p0 = sexp_stack.pop()
         p1 = sexp_stack.pop()
         sexp_stack.append(p0)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from clvm_tools.binutils import assemble
+from klvm_tools.binutils import assemble
 
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.sized_bytes import bytes32

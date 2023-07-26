@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from blspy import G1Element, G2Element
-from clvm_tools import binutils
+from klvm_tools import binutils
 
 from chik.types.announcement import Announcement
 from chik.types.blockchain_format.coin import Coin
@@ -15,14 +15,14 @@ from chik.types.coin_spend import CoinSpend, compute_additions
 from chik.types.condition_opcodes import ConditionOpcode
 from chik.types.spend_bundle import SpendBundle
 from chik.util.ints import uint64
-from chik.wallet.puzzles.load_clvm import load_clvm
-from tests.clvm.coin_store import BadSpendBundleError, CoinStore, CoinTimestamp
+from chik.wallet.puzzles.load_klvm import load_klvm
+from tests.klvm.coin_store import BadSpendBundleError, CoinStore, CoinTimestamp
 
-SINGLETON_MOD = load_clvm("singleton_top_layer.clsp")
-LAUNCHER_PUZZLE = load_clvm("singleton_launcher.clsp")
-P2_SINGLETON_MOD = load_clvm("p2_singleton_or_delayed_puzhash.clsp")
-POOL_MEMBER_MOD = load_clvm("pool_member_innerpuz.clsp")
-POOL_WAITINGROOM_MOD = load_clvm("pool_waitingroom_innerpuz.clsp")
+SINGLETON_MOD = load_klvm("singleton_top_layer.clsp")
+LAUNCHER_PUZZLE = load_klvm("singleton_launcher.clsp")
+P2_SINGLETON_MOD = load_klvm("p2_singleton_or_delayed_puzhash.clsp")
+POOL_MEMBER_MOD = load_klvm("pool_member_innerpuz.clsp")
+POOL_WAITINGROOM_MOD = load_klvm("pool_waitingroom_innerpuz.clsp")
 
 LAUNCHER_PUZZLE_HASH = LAUNCHER_PUZZLE.get_tree_hash()
 SINGLETON_MOD_HASH = SINGLETON_MOD.get_tree_hash()
@@ -33,7 +33,7 @@ ANYONE_CAN_SPEND_WITH_PADDING_PUZZLE_HASH = Program.to(binutils.assemble("(a (q 
 
 POOL_REWARD_PREFIX_MAINNET = bytes32.fromhex("ccd5bb71183532bff220ba46c268991a00000000000000000000000000000000")
 
-MAX_BLOCK_COST_CLVM = int(1e18)
+MAX_BLOCK_COST_KLVM = int(1e18)
 
 
 class PuzzleDB:
@@ -417,7 +417,7 @@ def spend_coin_to_singleton(
     coin_spend = CoinSpend(farmed_coin, ANYONE_CAN_SPEND_PUZZLE, conditions)
     spend_bundle = SpendBundle.aggregate([launcher_spend_bundle, SpendBundle([coin_spend], G2Element())])
 
-    additions, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_CLVM)
+    additions, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_KLVM)
 
     launcher_coin = launcher_spend_bundle.coin_spends[0].coin
 
@@ -518,7 +518,7 @@ def test_lifecycle_with_coinstore_as_wallet():
         coin_spend = SINGLETON_WALLET.coin_spend_for_conditions(PUZZLE_DB, conditions=singleton_conditions)
         spend_bundle = SpendBundle([coin_spend, p2_singleton_coin_spend], G2Element())
 
-        _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_CLVM)
+        _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_KLVM)
         now.seconds += 500
         now.height += 1
 
@@ -547,7 +547,7 @@ def test_lifecycle_with_coinstore_as_wallet():
         coin_spend = SINGLETON_WALLET.coin_spend_for_conditions(PUZZLE_DB, conditions=singleton_conditions)
         spend_bundle = SpendBundle([coin_spend, p2_singleton_coin_spend], G2Element())
 
-        _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_CLVM)
+        _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_KLVM)
         now.seconds += 500
         now.height += 1
 
@@ -598,7 +598,7 @@ def test_lifecycle_with_coinstore_as_wallet():
 
     spend_bundle = SpendBundle([singleton_coin_spend], G2Element())
 
-    _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_CLVM)
+    _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_KLVM)
 
     assert len(list(coin_store.all_unspent_coins())) == 1
 
@@ -634,7 +634,7 @@ def test_lifecycle_with_coinstore_as_wallet():
         spend_bundle = SpendBundle([coin_spend, p2_singleton_coin_spend], G2Element())
         spend_bundle.debug()
 
-        _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_CLVM)
+        _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_KLVM)
         now.seconds += 500
         now.height += 1
 
@@ -650,7 +650,7 @@ def test_lifecycle_with_coinstore_as_wallet():
     )
     spend_bundle = SpendBundle([coin_spend], G2Element())
 
-    _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_CLVM)
+    _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_KLVM)
     now.seconds += 500
     now.height += 1
     change_count = SINGLETON_WALLET.update_state(PUZZLE_DB, removals)
@@ -687,7 +687,7 @@ def test_lifecycle_with_coinstore_as_wallet():
         )
         spend_bundle = SpendBundle([coin_spend, p2_singleton_coin_spend], G2Element())
 
-        _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_CLVM)
+        _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_KLVM)
         now.seconds += 500
         now.height += 1
 
@@ -715,7 +715,7 @@ def test_lifecycle_with_coinstore_as_wallet():
     PUZZLE_DB.add_puzzle(full_puzzle)
 
     try:
-        _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_CLVM)
+        _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_KLVM)
         assert 0
     except BadSpendBundleError as ex:
         assert ex.args[0] == "condition validation failure Err.ASSERT_HEIGHT_RELATIVE_FAILED"
@@ -723,7 +723,7 @@ def test_lifecycle_with_coinstore_as_wallet():
     now.seconds += 350000
     now.height += 1445
 
-    _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_CLVM)
+    _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_KLVM)
 
     SINGLETON_WALLET.update_state(PUZZLE_DB, removals)
 
@@ -738,7 +738,7 @@ def test_lifecycle_with_coinstore_as_wallet():
     spend_bundle = SpendBundle([coin_spend], G2Element())
     spend_bundle.debug()
 
-    _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_CLVM)
+    _, removals = coin_store.update_coin_store_for_spend_bundle(spend_bundle, now, MAX_BLOCK_COST_KLVM)
     update_count = SINGLETON_WALLET.update_state(PUZZLE_DB, removals)
 
     assert update_count == 0

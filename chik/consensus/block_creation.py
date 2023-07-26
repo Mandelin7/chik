@@ -7,8 +7,8 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 import blspy
 from blspy import G1Element, G2Element
-from chia_rs import compute_merkle_set_root
-from chiabip158 import PyBIP158
+from chik_rs import compute_merkle_set_root
+from chikbip158 import PyBIP158
 
 from chik.consensus.block_record import BlockRecord
 from chik.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
@@ -131,7 +131,7 @@ def create_foliage(
         if block_generator is not None:
             generator_block_heights_list = block_generator.block_height_list
             result: NPCResult = get_name_puzzle_conditions(
-                block_generator, constants.MAX_BLOCK_COST_CLVM, mempool_mode=True, height=height
+                block_generator, constants.MAX_BLOCK_COST_KLVM, mempool_mode=True, height=height
             )
             cost = result.cost
 

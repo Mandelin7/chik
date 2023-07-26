@@ -5,7 +5,7 @@ from typing import List
 
 import pytest
 from blspy import AugSchemeMPL
-from clvm.casts import int_to_bytes
+from klvm.casts import int_to_bytes
 
 from chik.consensus.pot_iterations import is_overflow_block
 from chik.full_node.signage_point import SignagePoint

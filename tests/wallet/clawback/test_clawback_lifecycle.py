@@ -5,7 +5,7 @@ from typing import Dict, Optional, Tuple
 import pytest
 from blspy import AugSchemeMPL, G1Element, G2Element, PrivateKey
 
-from chik.clvm.spend_sim import CostLogger, SimClient, SpendSim, sim_and_client
+from chik.klvm.spend_sim import CostLogger, SimClient, SpendSim, sim_and_client
 from chik.consensus.default_constants import DEFAULT_CONSTANTS
 from chik.simulator.time_out_assert import time_out_assert
 from chik.types.blockchain_format.program import INFINITE_COST, Program
@@ -36,8 +36,8 @@ from chik.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import (
 from chik.wallet.uncurried_puzzle import uncurry_puzzle
 from chik.wallet.util.merkle_utils import check_merkle_proof
 from chik.wallet.util.wallet_types import RemarkDataType
-from tests.clvm.benchmark_costs import cost_of_spend_bundle
-from tests.clvm.test_puzzles import public_key_for_index, secret_exponent_for_index
+from tests.klvm.benchmark_costs import cost_of_spend_bundle
+from tests.klvm.test_puzzles import public_key_for_index, secret_exponent_for_index
 from tests.util.key_tool import KeyTool
 
 ACS = Program.to(1)

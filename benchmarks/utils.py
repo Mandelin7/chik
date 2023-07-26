@@ -31,8 +31,8 @@ from chik.util.ints import uint8, uint32, uint64, uint128
 # farmer puzzle hash
 ph = bytes32(b"a" * 32)
 
-with open(Path(os.path.realpath(__file__)).parent / "clvm_generator.bin", "rb") as f:
-    clvm_generator = f.read()
+with open(Path(os.path.realpath(__file__)).parent / "klvm_generator.bin", "rb") as f:
+    klvm_generator = f.read()
 
 
 _T_Enum = TypeVar("_T_Enum", bound=enum.Enum)
@@ -172,7 +172,7 @@ def rand_full_block() -> FullBlock:
         foliage,
         foliage_transaction_block,
         transactions_info,
-        SerializedProgram.from_bytes(clvm_generator),
+        SerializedProgram.from_bytes(klvm_generator),
         [],
     )
 
