@@ -40,12 +40,11 @@ from chik.util.hash import std_hash
 from chik.util.ints import uint16, uint32, uint64
 from chik.util.streamable import ConversionError, InvalidTypeError
 from chik.wallet.cat_wallet.cat_constants import DEFAULT_CATS
-from chik.wallet.cat_wallet.cat_utils import construct_cat_puzzle
+from chik.wallet.cat_wallet.cat_utils import CAT_MOD, construct_cat_puzzle
 from chik.wallet.cat_wallet.cat_wallet import CATWallet
 from chik.wallet.derive_keys import master_sk_to_wallet_sk, master_sk_to_wallet_sk_unhardened
 from chik.wallet.did_wallet.did_wallet import DIDWallet
 from chik.wallet.nft_wallet.nft_wallet import NFTWallet
-from chik.wallet.puzzles.cat_loader import CAT_MOD
 from chik.wallet.trading.trade_status import TradeStatus
 from chik.wallet.transaction_record import TransactionRecord
 from chik.wallet.transaction_sorting import SortKey
@@ -306,7 +305,14 @@ async def test_send_transaction(wallet_rpc_environment: WalletRpcTestEnvironment
         await client.send_transaction(1, uint64(100000000000000001), addr)
 
     # Tests sending a basic transaction
-    tx = await client.send_transaction(1, tx_amount, addr, memos=["this is a basic tx"])
+    tx = await client.send_transaction(
+        1,
+        tx_amount,
+        addr,
+        memos=["this is a basic tx"],
+        excluded_amounts=[uint64(250000000000)],
+        excluded_coin_ids=[bytes32([0] * 32).hex()],
+    )
     transaction_id = tx.name
 
     spend_bundle = tx.spend_bundle
@@ -379,18 +385,20 @@ async def test_get_farmed_amount(wallet_rpc_environment: WalletRpcTestEnvironmen
     wallet_rpc_client = env.wallet_1.rpc_client
     await full_node_api.farm_blocks_to_wallet(2, wallet)
 
-    result = await wallet_rpc_client.get_farmed_amount()
+    get_farmed_amount_result = await wallet_rpc_client.get_farmed_amount()
+    get_timestamp_for_height_result = await wallet_rpc_client.get_timestamp_for_height(uint32(2))
 
     expected_result = {
+        "blocks_won": 2,
         "farmed_amount": 4_000_000_000_000,
         "farmer_reward_amount": 500_000_000_000,
         "fee_amount": 0,
         "last_height_farmed": 2,
+        "last_time_farmed": get_timestamp_for_height_result,
         "pool_reward_amount": 3_500_000_000_000,
         "success": True,
     }
-
-    assert result == expected_result
+    assert get_farmed_amount_result == expected_result
 
 
 @pytest.mark.asyncio
@@ -500,6 +508,8 @@ async def test_create_signed_transaction(
         coins=selected_coin,
         fee=amount_fee,
         wallet_id=wallet_id,
+        # shouldn't actually block it
+        excluded_amounts=[uint64(selected_coin[0].amount)] if selected_coin is not None else [],
     )
     change_expected = not selected_coin or selected_coin[0].amount - amount_total > 0
     assert_tx_amounts(tx, outputs, amount_fee=amount_fee, change_expected=change_expected, is_cat=is_cat)
@@ -507,7 +517,7 @@ async def test_create_signed_transaction(
     # Farm the transaction and make sure the wallet balance reflects it correct
     spend_bundle = tx.spend_bundle
     assert spend_bundle is not None
-    push_res = await full_node_rpc.push_tx(spend_bundle)
+    push_res = await wallet_1_rpc.push_transactions([tx])
     assert push_res["success"]
     await farm_transaction(full_node_api, wallet_1_node, spend_bundle)
     await time_out_assert(20, get_confirmed_balance, generated_funds - amount_total, wallet_1_rpc, wallet_id)
@@ -591,7 +601,7 @@ async def test_create_signed_transaction_with_puzzle_announcement(wallet_rpc_env
 
 
 @pytest.mark.asyncio
-async def test_create_signed_transaction_with_exclude_coins(wallet_rpc_environment: WalletRpcTestEnvironment) -> None:
+async def test_create_signed_transaction_with_excluded_coins(wallet_rpc_environment: WalletRpcTestEnvironment) -> None:
     env: WalletRpcTestEnvironment = wallet_rpc_environment
     wallet_1: Wallet = env.wallet_1.wallet
     wallet_1_rpc: WalletRpcClient = env.wallet_1.rpc_client
@@ -604,7 +614,7 @@ async def test_create_signed_transaction_with_exclude_coins(wallet_rpc_environme
         assert len(selected_coins) == 1
         outputs = await create_tx_outputs(wallet_1, [(uint64(250000000000), None)])
 
-        tx = await wallet_1_rpc.create_signed_transaction(outputs, exclude_coins=selected_coins)
+        tx = await wallet_1_rpc.create_signed_transaction(outputs, excluded_coins=selected_coins)
 
         assert len(tx.removals) == 1
         assert tx.removals[0] != selected_coins[0]
@@ -617,7 +627,7 @@ async def test_create_signed_transaction_with_exclude_coins(wallet_rpc_environme
         outputs = await create_tx_outputs(wallet_1, [(uint64(1750000000000), None)])
 
         with pytest.raises(ValueError):
-            await wallet_1_rpc.create_signed_transaction(outputs, exclude_coins=selected_coins)
+            await wallet_1_rpc.create_signed_transaction(outputs, excluded_coins=selected_coins)
 
     await it_does_not_include_the_excluded_coins()
     await it_throws_an_error_when_all_spendable_coins_are_excluded()
@@ -954,6 +964,16 @@ async def test_cat_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment):
     assert addr_0 != addr_1
 
     # Test CAT spend without a fee
+    with pytest.raises(ValueError):
+        await client.cat_spend(
+            cat_0_id,
+            uint64(4),
+            addr_1,
+            uint64(0),
+            ["the cat memo"],
+            excluded_amounts=[uint64(20)],
+            excluded_coin_ids=[bytes32([0] * 32).hex()],
+        )
     tx_res = await client.cat_spend(cat_0_id, uint64(4), addr_1, uint64(0), ["the cat memo"])
     assert tx_res.wallet_id == cat_0_id
     spend_bundle = tx_res.spend_bundle
@@ -1120,27 +1140,134 @@ async def test_offer_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment)
     assert len(all_offers) == 2
 
     ###
-    # This is temporary code, delete it when we no longer care about incorrectly parsing CAT1s
-    # There's also temp code in wallet_rpc_api.py and wallet_funcs.py
-    with pytest.raises(ValueError, match="CAT1s are no longer supported"):
+    # This is temporary code, delete it when we no longer care about incorrectly parsing old offers
+    # There's also temp code in wallet_rpc_api.py
+    with pytest.raises(ValueError, match="Old offer format is no longer supported"):
         await wallet_1_rpc.fetch(
             "get_offer_summary",
             {
-                "offer": "offer1qqp83w76wzru6cmqvpsxygqq4c96al7mw0a8es5t4rp80gn8femj6mkjl8luv7wrldg87dhkq6ejylvc8f"
-                "vtprkkww3lthrg85m44nud6eesxhw0sx9m6p297u8zfd0mtjumc6k85sz38536z6h884rxujw2zfe704surksmm4m"
-                "7usy4u48tmafcajc4dc0dmqa4h9z5f27e3qnuzf37yr78sl6kslts9aua5zfdg3r7knncj78pzg4nvrn0a6dkjvmme7"
-                "jjzz72xmlruuhmawm0eedl7fpfjkhnf70al2tw34pdgqje0m8wt6v8uaxw8gtjlkfzlw4447fk429f42tmn9x6l4qm9u"
-                "2n404j74ls5yv2grt0tzstm2l8hukgx4v6h42908px8dh0avzhdlxw7ruj5t53etc9dt2n2wm7098ks89waeunnfexdn"
-                "dmhf5dmhyjs6wvjzvvlj0scdh3np6mgmur6m2jj2y474cwuaurph0tq28ee6y3hxahhkkfqzlc8g7hm3lllvrl2nhlm7"
-                "2hgau9lgdumy9m99hy78dv5uwdr69jfkvu6a5qc0jlzkas6cry3zh7hasdwg785nmhhsl680m4fxdseavzdk8mg93dank"
-                "88ue2hned4tarn0al7gl4wq6ct4gd3c3q5a6l2gjlvd8ftteddfxxq5v4zdu0ycv2vuwslf7rz2u56nl7guqatk0ut7cy"
-                "ga0zu096k7rhdl99kc5jmscmtdz9vme2mmg86dwq7nk088spawraxfgftl0lqkycapflf725mjht2law69wh0rq8l7ue"
-                "gztx0xnvgc8y7wvvuwv3th5pcwckkm07jacznlgeuu8kcw0yuu4utjrm2mut8ekm8rmzp6vlzcm6e4f8xzytjx3ytnye"
-                "kany0a9l4tq0zxnh3rjwhve88658nd0xwhmgectl33u3us6klkk5c7vjyuurr6yetk7ua654my4cmxmtrjazfu3ara9"
-                "yc449jqxg4mfgx0sw3p9"
+                "offer": "offer1qqr83wcuu2rykcmqvpsxygqq0qthwpmsrsutadthxda7ppk8wemm74e88h2dh265k7fv7kdk2etmg99xpm0yu8ddl4rkhl73mflmfasl4h75w6lllup4t7urp0mstehm8cnmc6mdxn0rvdejdfpway2ccm6srenn6urvdmgvand96gat25z42f4u2sh7ad7upvhfty77v6ak76dmrdxrzdgn89mlr58ya6j77yax8095r2u2g826yg9jq4q6xzt4g6yveqnhg6r77lrt3weksdwcwz5ava4t5mtdem5syjejwg53q6t5lfd2t5p6dds9dylj7jxw2fmquugdnkvke5jckmsr8ne4akwha9hv9y24x6shezhaxqjegegprjp6h8hua2a24lntev22zkxdkhya5u7k6uhenv2jwwf8nddcs99707290u0yw7jv8w500yarnlew75keam9mwejmanardkdpk6awxj7ndl9ka35zfvydvfj646fuq7j6zv5uzl3czrw76psrnaudu2d65mtez7m9sz9xat52s87v6vmlpmknvju0u4wq5kklflwuamnaczl8vkne284ehyamaaxuzkcdvpjg3tlt7cxhy0r6fammc0arha65nxcv7kpxmra5zck7emrn7v4teuk6473eh7l39mqp5zafdmygm0tf0hp2ug20fhk7mlkmve4atg76xv9mw0xe2ped72mvkqall4hstp0a9jsxyyasz6dl7zmka2kwfx94w0knut43r4x447w3shmw5alldevrdu2gthelcjt8h6775p92ktlmlg846varj62rghj67e2hyhlauwkkv6nhnvt7wm6tt2kh2xw6kze0ttxsqplfct7mk4jvnykm0arw2juvnmkudgyerj59dn4ja8r5avud67zd7mr2cl54skynhs4twu2qgwrcdzcchhfee008e30yazzwu96h2uhaprejkrgns5w8nds244k3uyfhtmmzne29hmmdsvvlrtr02w0nc0thtkpywwmmxuqfc0tsssdflned"  # noqa: E501
+            },
+        )
+    with pytest.raises(ValueError, match="Old offer format is no longer supported"):
+        await wallet_1_rpc.fetch(
+            "check_offer_validity",
+            {
+                "offer": "offer1qqr83wcuu2rykcmqvpsxygqq0qthwpmsrsutadthxda7ppk8wemm74e88h2dh265k7fv7kdk2etmg99xpm0yu8ddl4rkhl73mflmfasl4h75w6lllup4t7urp0mstehm8cnmc6mdxn0rvdejdfpway2ccm6srenn6urvdmgvand96gat25z42f4u2sh7ad7upvhfty77v6ak76dmrdxrzdgn89mlr58ya6j77yax8095r2u2g826yg9jq4q6xzt4g6yveqnhg6r77lrt3weksdwcwz5ava4t5mtdem5syjejwg53q6t5lfd2t5p6dds9dylj7jxw2fmquugdnkvke5jckmsr8ne4akwha9hv9y24x6shezhaxqjegegprjp6h8hua2a24lntev22zkxdkhya5u7k6uhenv2jwwf8nddcs99707290u0yw7jv8w500yarnlew75keam9mwejmanardkdpk6awxj7ndl9ka35zfvydvfj646fuq7j6zv5uzl3czrw76psrnaudu2d65mtez7m9sz9xat52s87v6vmlpmknvju0u4wq5kklflwuamnaczl8vkne284ehyamaaxuzkcdvpjg3tlt7cxhy0r6fammc0arha65nxcv7kpxmra5zck7emrn7v4teuk6473eh7l39mqp5zafdmygm0tf0hp2ug20fhk7mlkmve4atg76xv9mw0xe2ped72mvkqall4hstp0a9jsxyyasz6dl7zmka2kwfx94w0knut43r4x447w3shmw5alldevrdu2gthelcjt8h6775p92ktlmlg846varj62rghj67e2hyhlauwkkv6nhnvt7wm6tt2kh2xw6kze0ttxsqplfct7mk4jvnykm0arw2juvnmkudgyerj59dn4ja8r5avud67zd7mr2cl54skynhs4twu2qgwrcdzcchhfee008e30yazzwu96h2uhaprejkrgns5w8nds244k3uyfhtmmzne29hmmdsvvlrtr02w0nc0thtkpywwmmxuqfc0tsssdflned"  # noqa: E501
+            },
+        )
+    with pytest.raises(ValueError, match="Old offer format is no longer supported"):
+        await wallet_1_rpc.fetch(
+            "take_offer",
+            {
+                "offer": "offer1qqr83wcuu2rykcmqvpsxygqq0qthwpmsrsutadthxda7ppk8wemm74e88h2dh265k7fv7kdk2etmg99xpm0yu8ddl4rkhl73mflmfasl4h75w6lllup4t7urp0mstehm8cnmc6mdxn0rvdejdfpway2ccm6srenn6urvdmgvand96gat25z42f4u2sh7ad7upvhfty77v6ak76dmrdxrzdgn89mlr58ya6j77yax8095r2u2g826yg9jq4q6xzt4g6yveqnhg6r77lrt3weksdwcwz5ava4t5mtdem5syjejwg53q6t5lfd2t5p6dds9dylj7jxw2fmquugdnkvke5jckmsr8ne4akwha9hv9y24x6shezhaxqjegegprjp6h8hua2a24lntev22zkxdkhya5u7k6uhenv2jwwf8nddcs99707290u0yw7jv8w500yarnlew75keam9mwejmanardkdpk6awxj7ndl9ka35zfvydvfj646fuq7j6zv5uzl3czrw76psrnaudu2d65mtez7m9sz9xat52s87v6vmlpmknvju0u4wq5kklflwuamnaczl8vkne284ehyamaaxuzkcdvpjg3tlt7cxhy0r6fammc0arha65nxcv7kpxmra5zck7emrn7v4teuk6473eh7l39mqp5zafdmygm0tf0hp2ug20fhk7mlkmve4atg76xv9mw0xe2ped72mvkqall4hstp0a9jsxyyasz6dl7zmka2kwfx94w0knut43r4x447w3shmw5alldevrdu2gthelcjt8h6775p92ktlmlg846varj62rghj67e2hyhlauwkkv6nhnvt7wm6tt2kh2xw6kze0ttxsqplfct7mk4jvnykm0arw2juvnmkudgyerj59dn4ja8r5avud67zd7mr2cl54skynhs4twu2qgwrcdzcchhfee008e30yazzwu96h2uhaprejkrgns5w8nds244k3uyfhtmmzne29hmmdsvvlrtr02w0nc0thtkpywwmmxuqfc0tsssdflned"  # noqa: E501
+            },
+        )
+    with pytest.raises(ValueError, match="Old offer format is no longer supported"):
+        await wallet_1_rpc.fetch(
+            "get_offer_summary",
+            {
+                "offer": "offer1qqqqqqsqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqx68z6sprqv0dvdkvr4rv8r8mwlw7mzuyht6gn74y8yx8ta952h2qqqqqqqqqqqqrls9lllq8ls9lllq8ls9l67lllsflczlllsflllqnlstlllqnll7zllxnlstq8lluz07zllszqgpq8lluz0llczlutl7tuqlllsfl6llllsflllqtljalllqnls9lllqnl30luqszqgplllqnll7qhl9tll7p8lqtll7p8lsgp8llllqnlcyptllllsfluzpdlllqyqszqgpq8lluz0lqdllllsfluzq9llllcyl7pq9lllluz0lqs9llll7p8lsg9llluqszqgpqyqszqgpqyqszq0llcylllsrlllllln63hlqtlnx08lluzqrlcpl7qukqhlllljplczllls8lc9lllsrlczlue0llcylup0llcyluxlllcylllshlmulllshle5lujgplllp0lhelllp0lhelllp0lnflevsrlsnq8llu9l7l8lp0ll7zllxnlcpqyqszq0lqyqszqgplllqy9cplcpsrll7qhlluplllezlllsnlllphlstq8ly2q0llcflllsmlctsrlj9q8llu2l79llluqcrluqsrll7q0lp0lstlctlutcplllq8ls3qyqluqcplllqtll7qllp0ll7q0lqtll7qllluylllczluh0llcylup0llcylufllqyqszq0lqstn7q0llcplup074hlluz07qhlluz0llczluflllcyla0lllcylutlllcyluhlllcyl7qmllllqnlcyqtllllsflcml7qgpqyqszqgpq8lluz0lqsp0llcpqyqszq0llcpluygpq8lqxq0llcplup0llcrlutlllcplup0llcrllljpluph7q0llcpsgqhllllq8ls3qyqluqcplllq8ls3qyqluqcpq8lqxq07p8lluz07p0ly7q0llcylll3plctlatcplmhszq0llllqtll7qllqhll7q0lqtll7qllluylllczllls8lllp8l3rl6csrll7q2el7qgplcpsrll7qvp37q0llcplup07fhlluz07qhlluz07r0lluz07zllluz0llcyl7qmnluzq9ucpluqszqgpqyqlllsrlczlaa0llcylup0llcyllls9lllq0ll7z0lz8l43q8lluql7p8ltrll7p8llup07ahlluz07qhlluz07yllluz0720lluz0llctlu607kuqlllsfletl7qgpqyqszqgpleeszq0llcplup0llcrlllsnlc3laugplllq8ls9lllq0ll7g8llup0llcrlllsnlllqyslllcdlu5cpq8lluql7qhlluplllcflllselefl7q07dyqlawgplllq8lszq0lszq07qvql7qgplcpszq0llcpp8ll7q0lpzqgplcpsrll7qgfsrlsrqyqluqcplllqnll7qhlluplllcflugl7kyqlllszk0lszq07qvqlllsflllqtljdlllqnls9lllqnlsmlllqnlshlllqnl30luqszqgpqyql7qgpqyqszqgplcpsrll7q0lqnlcplllqnlcplchszqgplcpsrll7qhllupl7p0lluql7p8lp8ll7qhl2mll7p8lqtll7p8lphll7p8lp0lcpqyqszqgplllqy9cplcpsrlshlmulllshle5lu5gplllp0lhelllp0lhelllp0lnflevsrlstq8llu9l7l8llup07vhlluz07qhlluz07pllluz0llctlu607dyql7qgpqyqsrll7zllxnlcpqyqszq0llczllls8lllqllstq8lluql7zllluqs9lllqtljalllqnls9lllqnlsnluqszqgplllqtljalllqnls9lllqnlsmluqszqgpq8lluql7zllluqsrlc9szq07qvqlllsflllqnlnplllqnl4lluqszq0llczlal0llcylup0llcylllsflllqnljllc9srll7p8ltllcyqtlszq0llcyllls9lexlllsflczlllsflctlllsflc9lllsrluqszqgpqyqlllsflchlllsfluphlll7p8lsgqhllllqnll7qhl9tll7p8lqtll7p8lsgz0llllqnll7qhlwmll7p8lqtll7p8lp8ll7p8lsg90llllqnll7zllxnljmq8lluz0790lszqgpqyqszq0llcyl7ppdlllszqgpqyqsrll7p8lsgzlllllqnlcyzlll7qgpqyqszqgpqyqszqgplczlad0llcylup0llcyla0lllcylualllcyllls9lllq0l30lllq8lsnledllls9le2lllsflczlllsfle8lllsflllqtlhdlllqnls9lllqnljnlllqnl40lllqnll7zllxnlcrwvqlllsfl6el7qgpqyqszqgplllqnlcrdllszqgpqyqszq0lqyqluqcplllqnl30lllqnlstlllqnlcyqhllllsflllqnll7p8l0rll7p8llu807h8llup07thlluz07qhlluz0llcyluhlllcyl7pqzlllszqgpluqszqgpq8lszqgplllqnll7p8lyrll7p8llu9llqdllaw0llczluh0llcylup0llcylllsflc4lllsflllzrlcyqtllll3rluzqt0l72uql7pq9luql7qgpq8lszqgpqyql7qgpq8lzwqgpluqszqgpqyqszqgpq8lqxqgplllqnll7qdqx7l0xc8wskqn8d5at9dfqmwyt5q675phnkk4zh4e2x9tklqa9fa0llcylllsrgqn55h9a7c7aq9zfj2tx6aa5268xz2r2ds5emgu9yut5hhkp96rrmll7p8lluql7qhlluql7qhlptll7p8lqtll7p8lq0lcpqyqsrll7p8lluqlllen8mll7qhllupl7p0lluql7p8lluz07r8lluz0llczlu00llcylup0llcyluyllqyqszq0lqyqsrll7qhlzmll7p8lqtll7p8lr8ll7p8llup07zhlluz07qhlluz07r0lszqgpq8lszqgpqyqsrlcpq8lqxq0llczllls8lc9lllsrlcylllsflcgluycplllqtl3dlllqnls9lllqnlsmlllqnlshluqszqgpqyqlllszzuqluqcplczllls8lllqllstq8lluql7zllluqs9lllqtl3alllqnls9lllqnlsnluqszqgplllqtl3alllqnls9lllqnlsmluqszqgpq8lluql7zllluqsrlc9szq07qvqluqcpq8lqxqgpqyqlll6pm3jc0w0dpj78zznpvxj057m22f2nk94gc3kus29jvxnefjjd4nklll6qehe6qve5g6r23z4txtrxjqhdg8npntzhw2w8yrkg7y50ksplt32lup0llaqvmuaqxv6ydp4g324n93nfqtk5rese43th98rjpmy0z28mgql4c4gpqyqsq00wsa2002kemp6v5g4avmmdc4edymhaj5vjzvnxuupgu00ufh83e8mt9q2autw93k0a55w5wf5mtdfdaxw9d3fk97dfqhtx8m2d32eqqqqqw3499peelczlllsrlczlllsrlczllls8lctlllsrlczllls8lllp8lstlllrhlshlllrmll7zllp0ll7qhlqmll7p8lqtll7p8lzllcpqyqszqgpqyqlllsrlczlutl7tuqlllsrlcgszq07qvqlllsrlcylllsflcylllsflc9lllsflllqtlsdlllqnls9lllqnl30luqszqgpluqszqgplllqtl30le0szqgplcpsrll7p8lluql7vhlqtll7qlllurl7pvqlllsrlctlllszqhllup07phlluz07qhlluz07z0lszqgpq8llup07phlluz07qhlluz07r0lszqgpqyqlllsrlctlllszq0lqkqgplcpsrlsrqyqlllsflllqxcgqwvaass7c74kdmgtgwq3v5kzcf7pdchnqjuw9yqd0agsgjr8tmua30nshgv7ddn8t3xehd0htnk5luqcpq8lsrll7q0lluellg96ufqk9maa268cn0r6xsre3fs33hcp384eu0uxj77w5fa0n8u008lsrq8lluellgyyddvdkw7jgeu9ugpwah0mk34v4un87qgnqaphe48qss0nmf637mlc2w3499pe4q8llu607qvqlllnelaqhyk2jzy6hxkmuzskhzpz5m6mwylj0h0akznfr3r7sw0e9n8ka2ycplll8ll6pp0j4c0pkvfpy06hd4gelhdvdp3798ghlx6m6eawkk5f4dcazw5cszq0lqyq5xlm42y5nv02th262u6tkmtmrq28nggx4mgvj35gewqav8wcn28jfgtphpthhwrs2pqys2s8zmwv6pur6s6vtyytar26hgp0tgcrc2xg0cxkqdfx3zyyckk769hp4p5dmvcfshc9a4j7feww6uvqc2mthvez7ttx"  # noqa: E501
+            },
+        )
+    with pytest.raises(ValueError, match="Old offer format is no longer supported"):
+        await wallet_1_rpc.fetch(
+            "check_offer_validity",
+            {
+                "offer": "offer1qqqqqqsqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqx68z6sprqv0dvdkvr4rv8r8mwlw7mzuyht6gn74y8yx8ta952h2qqqqqqqqqqqqrls9lllq8ls9lllq8ls9l67lllsflczlllsflllqnlstlllqnll7zllxnlstq8lluz07zllszqgpq8lluz0llczlutl7tuqlllsfl6llllsflllqtljalllqnls9lllqnl30luqszqgplllqnll7qhl9tll7p8lqtll7p8lsgp8llllqnlcyptllllsfluzpdlllqyqszqgpq8lluz0lqdllllsfluzq9llllcyl7pq9lllluz0lqs9llll7p8lsg9llluqszqgpqyqszqgpqyqszq0llcylllsrlllllln63hlqtlnx08lluzqrlcpl7qukqhlllljplczllls8lc9lllsrlczlue0llcylup0llcyluxlllcylllshlmulllshle5lujgplllp0lhelllp0lhelllp0lnflevsrlsnq8llu9l7l8lp0ll7zllxnlcpqyqszq0lqyqszqgplllqy9cplcpsrll7qhlluplllezlllsnlllphlstq8ly2q0llcflllsmlctsrlj9q8llu2l79llluqcrluqsrll7q0lp0lstlctlutcplllq8ls3qyqluqcplllqtll7qllp0ll7q0lqtll7qllluylllczluh0llcylup0llcylufllqyqszq0lqstn7q0llcplup074hlluz07qhlluz0llczluflllcyla0lllcylutlllcyluhlllcyl7qmllllqnlcyqtllllsflcml7qgpqyqszqgpq8lluz0lqsp0llcpqyqszq0llcpluygpq8lqxq0llcplup0llcrlutlllcplup0llcrllljpluph7q0llcpsgqhllllq8ls3qyqluqcplllq8ls3qyqluqcpq8lqxq07p8lluz07p0ly7q0llcylll3plctlatcplmhszq0llllqtll7qllqhll7q0lqtll7qllluylllczllls8lllp8l3rl6csrll7q2el7qgplcpsrll7qvp37q0llcplup07fhlluz07qhlluz07r0lluz07zllluz0llcyl7qmnluzq9ucpluqszqgpqyqlllsrlczlaa0llcylup0llcyllls9lllq0ll7z0lz8l43q8lluql7p8ltrll7p8llup07ahlluz07qhlluz07yllluz0720lluz0llctlu607kuqlllsfletl7qgpqyqszqgpleeszq0llcplup0llcrlllsnlc3laugplllq8ls9lllq0ll7g8llup0llcrlllsnlllqyslllcdlu5cpq8lluql7qhlluplllcflllselefl7q07dyqlawgplllq8lszq0lszq07qvql7qgplcpszq0llcpp8ll7q0lpzqgplcpsrll7qgfsrlsrqyqluqcplllqnll7qhlluplllcflugl7kyqlllszk0lszq07qvqlllsflllqtljdlllqnls9lllqnlsmlllqnlshlllqnl30luqszqgpqyql7qgpqyqszqgplcpsrll7q0lqnlcplllqnlcplchszqgplcpsrll7qhllupl7p0lluql7p8lp8ll7qhl2mll7p8lqtll7p8lphll7p8lp0lcpqyqszqgplllqy9cplcpsrlshlmulllshle5lu5gplllp0lhelllp0lhelllp0lnflevsrlstq8llu9l7l8llup07vhlluz07qhlluz07pllluz0llctlu607dyql7qgpqyqsrll7zllxnlcpqyqszq0llczllls8lllqllstq8lluql7zllluqs9lllqtljalllqnls9lllqnlsnluqszqgplllqtljalllqnls9lllqnlsmluqszqgpq8lluql7zllluqsrlc9szq07qvqlllsflllqnlnplllqnl4lluqszq0llczlal0llcylup0llcylllsflllqnljllc9srll7p8ltllcyqtlszq0llcyllls9lexlllsflczlllsflctlllsflc9lllsrluqszqgpqyqlllsflchlllsfluphlll7p8lsgqhllllqnll7qhl9tll7p8lqtll7p8lsgz0llllqnll7qhlwmll7p8lqtll7p8lp8ll7p8lsg90llllqnll7zllxnljmq8lluz0790lszqgpqyqszq0llcyl7ppdlllszqgpqyqsrll7p8lsgzlllllqnlcyzlll7qgpqyqszqgpqyqszqgplczlad0llcylup0llcyla0lllcylualllcyllls9lllq0l30lllq8lsnledllls9le2lllsflczlllsfle8lllsflllqtlhdlllqnls9lllqnljnlllqnl40lllqnll7zllxnlcrwvqlllsfl6el7qgpqyqszqgplllqnlcrdllszqgpqyqszq0lqyqluqcplllqnl30lllqnlstlllqnlcyqhllllsflllqnll7p8l0rll7p8llu807h8llup07thlluz07qhlluz0llcyluhlllcyl7pqzlllszqgpluqszqgpq8lszqgplllqnll7p8lyrll7p8llu9llqdllaw0llczluh0llcylup0llcylllsflc4lllsflllzrlcyqtllll3rluzqt0l72uql7pq9luql7qgpq8lszqgpqyql7qgpq8lzwqgpluqszqgpqyqszqgpq8lqxqgplllqnll7qdqx7l0xc8wskqn8d5at9dfqmwyt5q675phnkk4zh4e2x9tklqa9fa0llcylllsrgqn55h9a7c7aq9zfj2tx6aa5268xz2r2ds5emgu9yut5hhkp96rrmll7p8lluql7qhlluql7qhlptll7p8lqtll7p8lq0lcpqyqsrll7p8lluqlllen8mll7qhllupl7p0lluql7p8lluz07r8lluz0llczlu00llcylup0llcyluyllqyqszq0lqyqsrll7qhlzmll7p8lqtll7p8lr8ll7p8llup07zhlluz07qhlluz07r0lszqgpq8lszqgpqyqsrlcpq8lqxq0llczllls8lc9lllsrlcylllsflcgluycplllqtl3dlllqnls9lllqnlsmlllqnlshluqszqgpqyqlllszzuqluqcplczllls8lllqllstq8lluql7zllluqs9lllqtl3alllqnls9lllqnlsnluqszqgplllqtl3alllqnls9lllqnlsmluqszqgpq8lluql7zllluqsrlc9szq07qvqluqcpq8lqxqgpqyqlll6pm3jc0w0dpj78zznpvxj057m22f2nk94gc3kus29jvxnefjjd4nklll6qehe6qve5g6r23z4txtrxjqhdg8npntzhw2w8yrkg7y50ksplt32lup0llaqvmuaqxv6ydp4g324n93nfqtk5rese43th98rjpmy0z28mgql4c4gpqyqsq00wsa2002kemp6v5g4avmmdc4edymhaj5vjzvnxuupgu00ufh83e8mt9q2autw93k0a55w5wf5mtdfdaxw9d3fk97dfqhtx8m2d32eqqqqqw3499peelczlllsrlczlllsrlczllls8lctlllsrlczllls8lllp8lstlllrhlshlllrmll7zllp0ll7qhlqmll7p8lqtll7p8lzllcpqyqszqgpqyqlllsrlczlutl7tuqlllsrlcgszq07qvqlllsrlcylllsflcylllsflc9lllsflllqtlsdlllqnls9lllqnl30luqszqgpluqszqgplllqtl30le0szqgplcpsrll7p8lluql7vhlqtll7qlllurl7pvqlllsrlctlllszqhllup07phlluz07qhlluz07z0lszqgpq8llup07phlluz07qhlluz07r0lszqgpqyqlllsrlctlllszq0lqkqgplcpsrlsrqyqlllsflllqxcgqwvaass7c74kdmgtgwq3v5kzcf7pdchnqjuw9yqd0agsgjr8tmua30nshgv7ddn8t3xehd0htnk5luqcpq8lsrll7q0lluellg96ufqk9maa268cn0r6xsre3fs33hcp384eu0uxj77w5fa0n8u008lsrq8lluellgyyddvdkw7jgeu9ugpwah0mk34v4un87qgnqaphe48qss0nmf637mlc2w3499pe4q8llu607qvqlllnelaqhyk2jzy6hxkmuzskhzpz5m6mwylj0h0akznfr3r7sw0e9n8ka2ycplll8ll6pp0j4c0pkvfpy06hd4gelhdvdp3798ghlx6m6eawkk5f4dcazw5cszq0lqyq5xlm42y5nv02th262u6tkmtmrq28nggx4mgvj35gewqav8wcn28jfgtphpthhwrs2pqys2s8zmwv6pur6s6vtyytar26hgp0tgcrc2xg0cxkqdfx3zyyckk769hp4p5dmvcfshc9a4j7feww6uvqc2mthvez7ttx"  # noqa: E501
+            },
+        )
+    with pytest.raises(ValueError, match="Old offer format is no longer supported"):
+        await wallet_1_rpc.fetch(
+            "take_offer",
+            {
+                "offer": "offer1qqqqqqsqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqx68z6sprqv0dvdkvr4rv8r8mwlw7mzuyht6gn74y8yx8ta952h2qqqqqqqqqqqqrls9lllq8ls9lllq8ls9l67lllsflczlllsflllqnlstlllqnll7zllxnlstq8lluz07zllszqgpq8lluz0llczlutl7tuqlllsfl6llllsflllqtljalllqnls9lllqnl30luqszqgplllqnll7qhl9tll7p8lqtll7p8lsgp8llllqnlcyptllllsfluzpdlllqyqszqgpq8lluz0lqdllllsfluzq9llllcyl7pq9lllluz0lqs9llll7p8lsg9llluqszqgpqyqszqgpqyqszq0llcylllsrlllllln63hlqtlnx08lluzqrlcpl7qukqhlllljplczllls8lc9lllsrlczlue0llcylup0llcyluxlllcylllshlmulllshle5lujgplllp0lhelllp0lhelllp0lnflevsrlsnq8llu9l7l8lp0ll7zllxnlcpqyqszq0lqyqszqgplllqy9cplcpsrll7qhlluplllezlllsnlllphlstq8ly2q0llcflllsmlctsrlj9q8llu2l79llluqcrluqsrll7q0lp0lstlctlutcplllq8ls3qyqluqcplllqtll7qllp0ll7q0lqtll7qllluylllczluh0llcylup0llcylufllqyqszq0lqstn7q0llcplup074hlluz07qhlluz0llczluflllcyla0lllcylutlllcyluhlllcyl7qmllllqnlcyqtllllsflcml7qgpqyqszqgpq8lluz0lqsp0llcpqyqszq0llcpluygpq8lqxq0llcplup0llcrlutlllcplup0llcrllljpluph7q0llcpsgqhllllq8ls3qyqluqcplllq8ls3qyqluqcpq8lqxq07p8lluz07p0ly7q0llcylll3plctlatcplmhszq0llllqtll7qllqhll7q0lqtll7qllluylllczllls8lllp8l3rl6csrll7q2el7qgplcpsrll7qvp37q0llcplup07fhlluz07qhlluz07r0lluz07zllluz0llcyl7qmnluzq9ucpluqszqgpqyqlllsrlczlaa0llcylup0llcyllls9lllq0ll7z0lz8l43q8lluql7p8ltrll7p8llup07ahlluz07qhlluz07yllluz0720lluz0llctlu607kuqlllsfletl7qgpqyqszqgpleeszq0llcplup0llcrlllsnlc3laugplllq8ls9lllq0ll7g8llup0llcrlllsnlllqyslllcdlu5cpq8lluql7qhlluplllcflllselefl7q07dyqlawgplllq8lszq0lszq07qvql7qgplcpszq0llcpp8ll7q0lpzqgplcpsrll7qgfsrlsrqyqluqcplllqnll7qhlluplllcflugl7kyqlllszk0lszq07qvqlllsflllqtljdlllqnls9lllqnlsmlllqnlshlllqnl30luqszqgpqyql7qgpqyqszqgplcpsrll7q0lqnlcplllqnlcplchszqgplcpsrll7qhllupl7p0lluql7p8lp8ll7qhl2mll7p8lqtll7p8lphll7p8lp0lcpqyqszqgplllqy9cplcpsrlshlmulllshle5lu5gplllp0lhelllp0lhelllp0lnflevsrlstq8llu9l7l8llup07vhlluz07qhlluz07pllluz0llctlu607dyql7qgpqyqsrll7zllxnlcpqyqszq0llczllls8lllqllstq8lluql7zllluqs9lllqtljalllqnls9lllqnlsnluqszqgplllqtljalllqnls9lllqnlsmluqszqgpq8lluql7zllluqsrlc9szq07qvqlllsflllqnlnplllqnl4lluqszq0llczlal0llcylup0llcylllsflllqnljllc9srll7p8ltllcyqtlszq0llcyllls9lexlllsflczlllsflctlllsflc9lllsrluqszqgpqyqlllsflchlllsfluphlll7p8lsgqhllllqnll7qhl9tll7p8lqtll7p8lsgz0llllqnll7qhlwmll7p8lqtll7p8lp8ll7p8lsg90llllqnll7zllxnljmq8lluz0790lszqgpqyqszq0llcyl7ppdlllszqgpqyqsrll7p8lsgzlllllqnlcyzlll7qgpqyqszqgpqyqszqgplczlad0llcylup0llcyla0lllcylualllcyllls9lllq0l30lllq8lsnledllls9le2lllsflczlllsfle8lllsflllqtlhdlllqnls9lllqnljnlllqnl40lllqnll7zllxnlcrwvqlllsfl6el7qgpqyqszqgplllqnlcrdllszqgpqyqszq0lqyqluqcplllqnl30lllqnlstlllqnlcyqhllllsflllqnll7p8l0rll7p8llu807h8llup07thlluz07qhlluz0llcyluhlllcyl7pqzlllszqgpluqszqgpq8lszqgplllqnll7p8lyrll7p8llu9llqdllaw0llczluh0llcylup0llcylllsflc4lllsflllzrlcyqtllll3rluzqt0l72uql7pq9luql7qgpq8lszqgpqyql7qgpq8lzwqgpluqszqgpqyqszqgpq8lqxqgplllqnll7qdqx7l0xc8wskqn8d5at9dfqmwyt5q675phnkk4zh4e2x9tklqa9fa0llcylllsrgqn55h9a7c7aq9zfj2tx6aa5268xz2r2ds5emgu9yut5hhkp96rrmll7p8lluql7qhlluql7qhlptll7p8lqtll7p8lq0lcpqyqsrll7p8lluqlllen8mll7qhllupl7p0lluql7p8lluz07r8lluz0llczlu00llcylup0llcyluyllqyqszq0lqyqsrll7qhlzmll7p8lqtll7p8lr8ll7p8llup07zhlluz07qhlluz07r0lszqgpq8lszqgpqyqsrlcpq8lqxq0llczllls8lc9lllsrlcylllsflcgluycplllqtl3dlllqnls9lllqnlsmlllqnlshluqszqgpqyqlllszzuqluqcplczllls8lllqllstq8lluql7zllluqs9lllqtl3alllqnls9lllqnlsnluqszqgplllqtl3alllqnls9lllqnlsmluqszqgpq8lluql7zllluqsrlc9szq07qvqluqcpq8lqxqgpqyqlll6pm3jc0w0dpj78zznpvxj057m22f2nk94gc3kus29jvxnefjjd4nklll6qehe6qve5g6r23z4txtrxjqhdg8npntzhw2w8yrkg7y50ksplt32lup0llaqvmuaqxv6ydp4g324n93nfqtk5rese43th98rjpmy0z28mgql4c4gpqyqsq00wsa2002kemp6v5g4avmmdc4edymhaj5vjzvnxuupgu00ufh83e8mt9q2autw93k0a55w5wf5mtdfdaxw9d3fk97dfqhtx8m2d32eqqqqqw3499peelczlllsrlczlllsrlczllls8lctlllsrlczllls8lllp8lstlllrhlshlllrmll7zllp0ll7qhlqmll7p8lqtll7p8lzllcpqyqszqgpqyqlllsrlczlutl7tuqlllsrlcgszq07qvqlllsrlcylllsflcylllsflc9lllsflllqtlsdlllqnls9lllqnl30luqszqgpluqszqgplllqtl30le0szqgplcpsrll7p8lluql7vhlqtll7qlllurl7pvqlllsrlctlllszqhllup07phlluz07qhlluz07z0lszqgpq8llup07phlluz07qhlluz07r0lszqgpqyqlllsrlctlllszq0lqkqgplcpsrlsrqyqlllsflllqxcgqwvaass7c74kdmgtgwq3v5kzcf7pdchnqjuw9yqd0agsgjr8tmua30nshgv7ddn8t3xehd0htnk5luqcpq8lsrll7q0lluellg96ufqk9maa268cn0r6xsre3fs33hcp384eu0uxj77w5fa0n8u008lsrq8lluellgyyddvdkw7jgeu9ugpwah0mk34v4un87qgnqaphe48qss0nmf637mlc2w3499pe4q8llu607qvqlllnelaqhyk2jzy6hxkmuzskhzpz5m6mwylj0h0akznfr3r7sw0e9n8ka2ycplll8ll6pp0j4c0pkvfpy06hd4gelhdvdp3798ghlx6m6eawkk5f4dcazw5cszq0lqyq5xlm42y5nv02th262u6tkmtmrq28nggx4mgvj35gewqav8wcn28jfgtphpthhwrs2pqys2s8zmwv6pur6s6vtyytar26hgp0tgcrc2xg0cxkqdfx3zyyckk769hp4p5dmvcfshc9a4j7feww6uvqc2mthvez7ttx"  # noqa: E501
             },
         )
     ###
+
+    await wallet_1_rpc.create_offer_for_ids(
+        {uint32(1): -5, cat_asset_id.hex(): 1},
+        driver_dict=driver_dict,
+    )
+    assert len([o for o in await wallet_1_rpc.get_all_offers() if o.status == TradeStatus.PENDING_ACCEPT.value]) == 2
+    await wallet_1_rpc.cancel_offers(batch_size=1)
+    assert len([o for o in await wallet_1_rpc.get_all_offers() if o.status == TradeStatus.PENDING_ACCEPT.value]) == 0
+
+    await farm_transaction_block(full_node_api, wallet_node)
+
+    await wallet_1_rpc.create_offer_for_ids(
+        {uint32(1): -5, cat_asset_id.hex(): 1},
+        driver_dict=driver_dict,
+    )
+    await wallet_1_rpc.create_offer_for_ids(
+        {uint32(1): 5, cat_asset_id.hex(): -1},
+        driver_dict=driver_dict,
+    )
+    assert len([o for o in await wallet_1_rpc.get_all_offers() if o.status == TradeStatus.PENDING_ACCEPT.value]) == 2
+    await wallet_1_rpc.cancel_offers(cancel_all=True)
+    assert len([o for o in await wallet_1_rpc.get_all_offers() if o.status == TradeStatus.PENDING_ACCEPT.value]) == 0
+
+    await wallet_1_rpc.create_offer_for_ids(
+        {uint32(1): 5, cat_asset_id.hex(): -1},
+        driver_dict=driver_dict,
+    )
+    assert len([o for o in await wallet_1_rpc.get_all_offers() if o.status == TradeStatus.PENDING_ACCEPT.value]) == 1
+    await wallet_1_rpc.cancel_offers(asset_id=bytes32([0] * 32))
+    assert len([o for o in await wallet_1_rpc.get_all_offers() if o.status == TradeStatus.PENDING_ACCEPT.value]) == 1
+    await wallet_1_rpc.cancel_offers(asset_id=cat_asset_id)
+    assert len([o for o in await wallet_1_rpc.get_all_offers() if o.status == TradeStatus.PENDING_ACCEPT.value]) == 0
+
+
+@pytest.mark.asyncio
+async def test_get_coin_records_by_names(wallet_rpc_environment: WalletRpcTestEnvironment) -> None:
+    env: WalletRpcTestEnvironment = wallet_rpc_environment
+    wallet_node: WalletNode = env.wallet_1.node
+    client: WalletRpcClient = env.wallet_1.rpc_client
+    store = wallet_node.wallet_state_manager.coin_store
+    full_node_api = env.full_node.api
+    # Generate some funds
+    generated_funds = await generate_funds(full_node_api, env.wallet_1, 5)
+    address = encode_puzzle_hash(await env.wallet_1.wallet.get_new_puzzlehash(), "txck")
+    # Spend half of it back to the same wallet get some spent coins in the wallet
+    tx = await client.send_transaction(1, uint64(generated_funds / 2), address)
+    assert tx.spend_bundle is not None
+    await time_out_assert(20, tx_in_mempool, True, client, tx.name)
+    await farm_transaction(full_node_api, wallet_node, tx.spend_bundle)
+    await full_node_api.wait_for_wallet_synced(wallet_node=wallet_node, timeout=5)
+    # Prepare some records and parameters first
+    result = await store.get_coin_records()
+    coins = {record.coin for record in result.records}
+    coins_unspent = {record.coin for record in result.records if not record.spent}
+    coin_ids = [coin.name() for coin in coins]
+    coin_ids_unspent = [coin.name() for coin in coins_unspent]
+    assert len(coin_ids) > 0
+    assert len(coin_ids_unspent) > 0
+    # Do some queries to trigger all parameters
+    # 1. Empty coin_ids
+    assert await client.get_coin_records_by_names([]) == []
+    # 2. All coins
+    rpc_result = await client.get_coin_records_by_names(coin_ids + coin_ids_unspent)
+    assert set(record.coin for record in rpc_result) == {*coins, *coins_unspent}
+    # 3. All spent coins
+    rpc_result = await client.get_coin_records_by_names(coin_ids, include_spent_coins=True)
+    assert set(record.coin for record in rpc_result) == coins
+    # 4. All unspent coins
+    rpc_result = await client.get_coin_records_by_names(coin_ids_unspent, include_spent_coins=False)
+    assert set(record.coin for record in rpc_result) == coins_unspent
+    # 5. Filter start/end height
+    filter_records = result.records[:10]
+    assert len(filter_records) == 10
+    filter_coin_ids = [record.name() for record in filter_records]
+    filter_coins = set(record.coin for record in filter_records)
+    min_height = min(record.confirmed_block_height for record in filter_records)
+    max_height = max(record.confirmed_block_height for record in filter_records)
+    assert min_height != max_height
+    rpc_result = await client.get_coin_records_by_names(filter_coin_ids, start_height=min_height, end_height=max_height)
+    assert set(record.coin for record in rpc_result) == filter_coins
+    # 8. Test the failure case
+    with pytest.raises(ValueError, match="not found"):
+        await client.get_coin_records_by_names(coin_ids, include_spent_coins=False)
 
 
 @pytest.mark.asyncio
@@ -1474,7 +1601,8 @@ async def test_select_coins_rpc(wallet_rpc_environment: WalletRpcTestEnvironment
 
     addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txck")
     coin_300: List[Coin]
-    for tx_amount in [uint64(1000), uint64(300), uint64(1000), uint64(1000), uint64(10000)]:
+    tx_amounts: List[uint64] = [uint64(1000), uint64(300), uint64(1000), uint64(1000), uint64(10000)]
+    for tx_amount in tx_amounts:
         funds -= tx_amount
         # create coins for tests
         tx = await client.send_transaction(1, tx_amount, addr)
@@ -1501,11 +1629,15 @@ async def test_select_coins_rpc(wallet_rpc_environment: WalletRpcTestEnvironment
     assert len(max_coins) == 2 and max_coins[0].amount == uint64(1000)
 
     # test excluded coin amounts
+    non_1000_amt: int = sum(a for a in tx_amounts if a != 1000)
     excluded_amt_coins: List[Coin] = await client_2.select_coins(
-        amount=1000, wallet_id=1, excluded_amounts=[uint64(1000)]
+        amount=non_1000_amt, wallet_id=1, excluded_amounts=[uint64(1000)]
     )
     assert excluded_amt_coins is not None
-    assert len(excluded_amt_coins) == 1 and excluded_amt_coins[0].amount == uint64(10000)
+    assert (
+        len(excluded_amt_coins) == len(tuple(a for a in tx_amounts if a != 1000))
+        and sum(c.amount for c in excluded_amt_coins) == non_1000_amt
+    )
 
     # test excluded coins
     with pytest.raises(ValueError):
@@ -1517,8 +1649,10 @@ async def test_select_coins_rpc(wallet_rpc_environment: WalletRpcTestEnvironment
 
     # test get coins
     all_coins, _, _ = await client_2.get_spendable_coins(
-        wallet_id=1, excluded_coin_ids=[excluded_amt_coins[0].name().hex()]
+        wallet_id=1, excluded_coin_ids=[c.name().hex() for c in excluded_amt_coins]
     )
+    assert excluded_amt_coins not in all_coins
+    all_coins, _, _ = await client_2.get_spendable_coins(wallet_id=1, excluded_amounts=[uint64(1000)])
     assert excluded_amt_coins not in all_coins
     all_coins_2, _, _ = await client_2.get_spendable_coins(wallet_id=1, max_coin_amount=uint64(999))
     assert all_coins_2[0].coin == coin_300[0]
@@ -1937,14 +2071,35 @@ async def test_set_wallet_resync_on_startup(wallet_rpc_environment: WalletRpcTes
 
     wallet_node: WalletNode = env.wallet_1.node
     wallet_node_2: WalletNode = env.wallet_2.node
+    # Test Clawback resync
+    tx = await wc.send_transaction(
+        wallet_id=1,
+        amount=uint64(500),
+        address=address,
+        fee=uint64(0),
+        puzzle_decorator_override=[{"decorator": "CLAWBACK", "clawback_timelock": 5}],
+    )
+    clawback_coin_id = tx.additions[0].name()
+    assert tx.spend_bundle is not None
+    await farm_transaction(full_node_api, wallet_node, tx.spend_bundle)
+    await time_out_assert(20, wc.get_synced)
+    await asyncio.sleep(10)
+    resp = await wc.spend_clawback_coins([clawback_coin_id], 0)
+    assert resp["success"]
+    assert len(resp["transaction_ids"]) == 1
+    await time_out_assert_not_none(
+        10, full_node_api.full_node.mempool_manager.get_spendbundle, bytes32.from_hexstr(resp["transaction_ids"][0])
+    )
+    await farm_transaction_block(full_node_api, wallet_node)
+    await time_out_assert(20, wc.get_synced)
     wallet_node_2._close()
     await wallet_node_2._await_closed()
     # set flag to reset wallet sync data on start
     await client.set_wallet_resync_on_startup()
     fingerprint = wallet_node.logged_in_fingerprint
     assert wallet_node._wallet_state_manager
-    # 2 reward coins, 1 DID, 1 NFT
-    assert len(await wallet_node._wallet_state_manager.coin_store.get_all_unspent_coins()) == 4
+    # 2 reward coins, 1 DID, 1 NFT, 1 clawbacked coin
+    assert len(await wallet_node._wallet_state_manager.coin_store.get_all_unspent_coins()) == 5
     assert await wallet_node._wallet_state_manager.nft_store.count() == 1
     # standard wallet, did wallet, nft wallet, did nft wallet
     assert len(await wallet_node.wallet_state_manager.user_store.get_all_wallet_info_entries()) == 4
@@ -1965,6 +2120,10 @@ async def test_set_wallet_resync_on_startup(wallet_rpc_environment: WalletRpcTes
     after_txs = await wallet_node_2.wallet_state_manager.tx_store.get_all_transactions()
     # transactions should be the same
     assert after_txs == before_txs
+    # Check clawback
+    clawback_tx = await wallet_node_2.wallet_state_manager.tx_store.get_transaction_record(clawback_coin_id)
+    assert clawback_tx is not None
+    assert clawback_tx.confirmed
     # only coin_store was populated in this case, but now should be empty
     assert len(await wallet_node_2._wallet_state_manager.coin_store.get_all_unspent_coins()) == 0
     assert await wallet_node_2._wallet_state_manager.nft_store.count() == 0
@@ -2081,7 +2240,7 @@ async def test_cat_spend_run_tail(wallet_rpc_environment: WalletRpcTestEnvironme
                 cat_puzzle,
                 Program.to(
                     [
-                        Program.to([[51, our_ph, tx_amount], [51, None, -113, None, None]]),
+                        Program.to([[51, our_ph, tx_amount, [our_ph]], [51, None, -113, None, None]]),
                         None,
                         cat_coin.name(),
                         coin_as_list(cat_coin),

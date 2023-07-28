@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import dataclasses
+import enum
 import logging
 import multiprocessing
 import traceback
@@ -49,6 +50,7 @@ from chik.util.generator_tools import get_block_header, tx_removals_and_addition
 from chik.util.hash import std_hash
 from chik.util.inline_executor import InlineExecutor
 from chik.util.ints import uint16, uint32, uint64, uint128
+from chik.util.priority_mutex import PriorityMutex
 from chik.util.setproctitle import getproctitle, setproctitle
 
 log = logging.getLogger(__name__)
@@ -77,6 +79,12 @@ class StateChangeSummary:
     new_rewards: List[Coin]
 
 
+class BlockchainMutexPriority(enum.IntEnum):
+    # lower values are higher priority
+    low = 1
+    high = 0
+
+
 class Blockchain(BlockchainInterface):
     constants: ConsensusConstants
 
@@ -102,7 +110,7 @@ class Blockchain(BlockchainInterface):
     _shut_down: bool
 
     # Lock to prevent simultaneous reads and writes
-    lock: asyncio.Lock
+    priority_mutex: PriorityMutex[BlockchainMutexPriority]
     compact_proof_lock: asyncio.Lock
 
     @staticmethod
@@ -122,7 +130,9 @@ class Blockchain(BlockchainInterface):
         in the consensus constants config.
         """
         self = Blockchain()
-        self.lock = asyncio.Lock()  # External lock handled by full node
+        # Blocks are validated under high priority, and transactions under low priority. This guarantees blocks will
+        # be validated first.
+        self.priority_mutex = PriorityMutex.create(priority_type=BlockchainMutexPriority)
         self.compact_proof_lock = asyncio.Lock()
         if single_threaded:
             self.pool = InlineExecutor()
@@ -440,7 +450,11 @@ class Blockchain(BlockchainInterface):
             block_generator: Optional[BlockGenerator] = await self.get_block_generator(block)
             assert block_generator is not None
             npc_result = get_name_puzzle_conditions(
-                block_generator, self.constants.MAX_BLOCK_COST_KLVM, mempool_mode=False, height=block.height
+                block_generator,
+                self.constants.MAX_BLOCK_COST_KLVM,
+                mempool_mode=False,
+                height=block.height,
+                constants=self.constants,
             )
         tx_removals, tx_additions = tx_removals_and_additions(npc_result.conds)
         return tx_removals, tx_additions, npc_result
@@ -804,7 +818,7 @@ class Blockchain(BlockchainInterface):
         """
         records: List[BlockRecord] = []
         hashes: List[bytes32] = []
-        assert batch_size < 999  # sqlite in python 3.7 has a limit on 999 variables in queries
+        assert batch_size < self.block_store.db_wrapper.host_parameter_limit
         for height in heights:
             header_hash: Optional[bytes32] = self.height_to_hash(height)
             if header_hash is None:

@@ -11,10 +11,9 @@ from chik.types.blockchain_format.serialized_program import SerializedProgram
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.coin_spend import CoinSpend
 from chik.util.ints import uint64
-from chik.wallet.cat_wallet.cat_utils import construct_cat_puzzle
+from chik.wallet.cat_wallet.cat_utils import CAT_MOD, construct_cat_puzzle
 from chik.wallet.outer_puzzles import construct_puzzle, get_inner_puzzle, get_inner_solution, match_puzzle, solve_puzzle
 from chik.wallet.puzzle_drivers import PuzzleInfo, Solver
-from chik.wallet.puzzles.cat_loader import CAT_MOD
 from chik.wallet.uncurried_puzzle import uncurry_puzzle
 
 

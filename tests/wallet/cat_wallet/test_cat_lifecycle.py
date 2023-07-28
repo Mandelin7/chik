@@ -16,12 +16,12 @@ from chik.types.spend_bundle import SpendBundle
 from chik.util.errors import Err
 from chik.util.ints import uint64
 from chik.wallet.cat_wallet.cat_utils import (
+    CAT_MOD,
     SpendableCAT,
     construct_cat_puzzle,
     unsigned_spend_bundle_for_spendable_cats,
 )
 from chik.wallet.lineage_proof import LineageProof
-from chik.wallet.puzzles.cat_loader import CAT_MOD
 from chik.wallet.puzzles.tails import DelegatedLimitations, EverythingWithSig, GenesisById, GenesisByPuzhash
 from tests.klvm.benchmark_costs import cost_of_spend_bundle
 from tests.klvm.test_puzzles import secret_exponent_for_index

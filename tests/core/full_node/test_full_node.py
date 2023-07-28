@@ -5,7 +5,7 @@ import dataclasses
 import random
 import time
 from secrets import token_bytes
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, cast
 
 import pytest
 from blspy import AugSchemeMPL, G2Element, PrivateKey
@@ -26,6 +26,7 @@ from chik.server.address_manager import AddressManager
 from chik.server.outbound_message import Message, NodeType
 from chik.server.server import ChikServer
 from chik.simulator.block_tools import BlockTools, create_block_tools_async, get_signage_point
+from chik.simulator.full_node_simulator import FullNodeSimulator
 from chik.simulator.keyring import TempKeyring
 from chik.simulator.setup_services import setup_full_node
 from chik.simulator.simulator_protocol import FarmNewBlockProtocol
@@ -2026,10 +2027,12 @@ async def test_node_start_with_existing_blocks(db_version: int) -> None:
                 db_version=db_version,
                 reuse_db=True,
             ):
-                await service._api.farm_blocks_to_puzzlehash(count=blocks_per_cycle)
+                simulator_api = cast(FullNodeSimulator, service._api)
+                await simulator_api.farm_blocks_to_puzzlehash(count=blocks_per_cycle)
 
                 expected_height += blocks_per_cycle
-                block_record = service._api.full_node._blockchain.get_peak()
+                assert simulator_api.full_node._blockchain is not None
+                block_record = simulator_api.full_node._blockchain.get_peak()
 
                 assert block_record is not None, f"block_record is None on cycle {cycle + 1}"
                 assert block_record.height == expected_height, f"wrong height on cycle {cycle + 1}"

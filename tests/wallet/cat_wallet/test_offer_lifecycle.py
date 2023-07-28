@@ -16,6 +16,7 @@ from chik.types.mempool_inclusion_status import MempoolInclusionStatus
 from chik.types.spend_bundle import SpendBundle
 from chik.util.ints import uint64
 from chik.wallet.cat_wallet.cat_utils import (
+    CAT_MOD,
     SpendableCAT,
     construct_cat_puzzle,
     unsigned_spend_bundle_for_spendable_cats,
@@ -23,7 +24,6 @@ from chik.wallet.cat_wallet.cat_utils import (
 from chik.wallet.outer_puzzles import AssetType
 from chik.wallet.payment import Payment
 from chik.wallet.puzzle_drivers import PuzzleInfo
-from chik.wallet.puzzles.cat_loader import CAT_MOD
 from chik.wallet.trading.offer import OFFER_MOD, NotarizedPayment, Offer
 
 acs = Program.to(1)

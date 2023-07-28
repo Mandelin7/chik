@@ -55,6 +55,7 @@ from tests.blockchain.blockchain_test_utils import (
     _validate_and_add_block_multi_result,
     _validate_and_add_block_no_error,
 )
+from tests.conftest import Mode
 from tests.util.blockchain import create_blockchain
 
 log = logging.getLogger(__name__)
@@ -141,7 +142,10 @@ class TestGenesisBlock:
 
 class TestBlockHeaderValidation:
     @pytest.mark.asyncio
-    async def test_long_chain(self, empty_blockchain, default_1000_blocks):
+    async def test_long_chain(self, empty_blockchain, default_1000_blocks, consensus_mode: Mode):
+        if consensus_mode != Mode.PLAIN:
+            pytest.skip("only run in PLAIN mode to save time")
+
         blocks = default_1000_blocks
         for block in blocks:
             if (
@@ -166,6 +170,7 @@ class TestBlockHeaderValidation:
                     block.finished_sub_slots[0].challenge_chain.new_difficulty,
                     block.finished_sub_slots[0].challenge_chain.new_sub_slot_iters,
                 )
+                assert error
                 assert error.code == Err.INVALID_NEW_SUB_SLOT_ITERS
 
                 # Also fails calling the outer methods, but potentially with a different error
@@ -189,6 +194,7 @@ class TestBlockHeaderValidation:
                     block.finished_sub_slots[0].challenge_chain.new_difficulty,
                     block.finished_sub_slots[0].challenge_chain.new_sub_slot_iters,
                 )
+                assert error
                 assert error.code == Err.INVALID_NEW_DIFFICULTY
 
                 # Also fails calling the outer methods, but potentially with a different error
@@ -208,9 +214,7 @@ class TestBlockHeaderValidation:
                     new_finished_ss_3.challenge_chain.get_hash(),
                 )
                 log.warning(f"Number of slots: {len(block.finished_sub_slots)}")
-                block_bad_3 = recursive_replace(
-                    block, "finished_sub_slots", [new_finished_ss_3] + block.finished_sub_slots[1:]
-                )
+                block_bad_3 = recursive_replace(block, "finished_sub_slots", [new_finished_ss_3])
 
                 header_block_bad_3 = get_block_header(block_bad_3, [], [])
                 _, error = validate_finished_header_block(
@@ -221,6 +225,7 @@ class TestBlockHeaderValidation:
                     block.finished_sub_slots[0].challenge_chain.new_difficulty,
                     block.finished_sub_slots[0].challenge_chain.new_sub_slot_iters,
                 )
+                assert error
                 assert error.code == Err.INVALID_SUB_EPOCH_SUMMARY
 
                 # Also fails calling the outer methods, but potentially with a different error
@@ -239,9 +244,7 @@ class TestBlockHeaderValidation:
                     "reward_chain.challenge_chain_sub_slot_hash",
                     new_finished_ss_4.challenge_chain.get_hash(),
                 )
-                block_bad_4 = recursive_replace(
-                    block, "finished_sub_slots", [new_finished_ss_4] + block.finished_sub_slots[1:]
-                )
+                block_bad_4 = recursive_replace(block, "finished_sub_slots", [new_finished_ss_4])
 
                 header_block_bad_4 = get_block_header(block_bad_4, [], [])
                 _, error = validate_finished_header_block(
@@ -252,6 +255,7 @@ class TestBlockHeaderValidation:
                     block.finished_sub_slots[0].challenge_chain.new_difficulty,
                     block.finished_sub_slots[0].challenge_chain.new_sub_slot_iters,
                 )
+                assert error
                 assert error.code == Err.INVALID_SUB_EPOCH_SUMMARY
 
                 # Also fails calling the outer methods, but potentially with a different error
@@ -768,12 +772,13 @@ class TestBlockHeaderValidation:
         blocks_base = default_400_blocks[: bt.constants.EPOCH_BLOCKS]
         assert len(blocks_base) == bt.constants.EPOCH_BLOCKS
         blocks_1 = bt.get_consecutive_blocks(1, block_list_input=blocks_base, force_overflow=True)
-        blocks_2 = bt.get_consecutive_blocks(1, skip_slots=3, block_list_input=blocks_base, force_overflow=True)
+        blocks_2 = bt.get_consecutive_blocks(1, skip_slots=5, block_list_input=blocks_base, force_overflow=True)
         for block in blocks_base:
             await _validate_and_add_block(empty_blockchain, block, skip_prevalidation=True)
         await _validate_and_add_block(
             empty_blockchain, blocks_1[-1], expected_result=AddBlockResult.NEW_PEAK, skip_prevalidation=True
         )
+        assert blocks_1[-1].header_hash != blocks_2[-1].header_hash
         await _validate_and_add_block(
             empty_blockchain, blocks_2[-1], expected_result=AddBlockResult.ADDED_AS_ORPHAN, skip_prevalidation=True
         )
@@ -1364,6 +1369,8 @@ class TestBlockHeaderValidation:
 
     @pytest.mark.asyncio
     async def test_pool_target_contract(self, empty_blockchain, bt):
+        if bt.constants.SOFT_FORK3_HEIGHT == 0:
+            pytest.skip("Skipped temporarily until adding more pool plots.")
         # 20c invalid pool target with contract
         blocks_initial = bt.get_consecutive_blocks(2)
         await _validate_and_add_block(empty_blockchain, blocks_initial[0])
@@ -1502,11 +1509,11 @@ class TestBlockHeaderValidation:
             # enable softfork2 at height 0, to make it apply to this test
             # the test constants set MAX_FUTURE_TIME to 10 days, restore it to
             # default for this test
-            constants = bt.constants.replace(SOFT_FORK2_HEIGHT=0, MAX_FUTURE_TIME=5 * 60)
-            time_delta = 2 * 60
+            constants = bt.constants.replace(SOFT_FORK2_HEIGHT=0, MAX_FUTURE_TIME=5 * 60, MAX_FUTURE_TIME2=2 * 60)
+            time_delta = 2 * 60 + 1
         else:
             constants = bt.constants.replace(MAX_FUTURE_TIME=5 * 60)
-            time_delta = 5 * 60
+            time_delta = 5 * 60 + 1
 
         blocks = bt.get_consecutive_blocks(1)
 
@@ -2002,7 +2009,19 @@ class TestBodyValidation:
                 assert c is not None and c.spent
 
     @pytest.mark.asyncio
-    @pytest.mark.parametrize("opcode", [ConditionOpcode.AGG_SIG_ME, ConditionOpcode.AGG_SIG_UNSAFE])
+    @pytest.mark.parametrize(
+        "opcode",
+        [
+            ConditionOpcode.AGG_SIG_ME,
+            ConditionOpcode.AGG_SIG_UNSAFE,
+            ConditionOpcode.AGG_SIG_PARENT,
+            ConditionOpcode.AGG_SIG_PUZZLE,
+            ConditionOpcode.AGG_SIG_AMOUNT,
+            ConditionOpcode.AGG_SIG_PUZZLE_AMOUNT,
+            ConditionOpcode.AGG_SIG_PARENT_AMOUNT,
+            ConditionOpcode.AGG_SIG_PARENT_PUZZLE,
+        ],
+    )
     @pytest.mark.parametrize(
         "with_garbage,expected",
         [
@@ -2010,7 +2029,27 @@ class TestBodyValidation:
             (False, (AddBlockResult.NEW_PEAK, None, 2)),
         ],
     )
-    async def test_aggsig_garbage(self, empty_blockchain, opcode, with_garbage, expected, bt):
+    async def test_aggsig_garbage(self, empty_blockchain, opcode, with_garbage, expected, bt, consensus_mode: Mode):
+        # in the 2.0 hard fork, we relax the strict 2-parameters rule of
+        # AGG_SIG_* conditions, in consensus mode. In mempool mode we always
+        # apply strict rules.
+        if consensus_mode == Mode.HARD_FORK_2_0 and with_garbage:
+            expected = (AddBlockResult.NEW_PEAK, None, 2)
+
+        # before the 2.0 hard fork, these conditions do not exist
+        # but WalletTool still lets us create them, and aggregate them into the
+        # block signature. When the pre-hard fork node sees them, the conditions
+        # are ignored, but the aggregate signature is corrupt.
+        if consensus_mode != Mode.HARD_FORK_2_0 and opcode in [
+            ConditionOpcode.AGG_SIG_PARENT,
+            ConditionOpcode.AGG_SIG_PUZZLE,
+            ConditionOpcode.AGG_SIG_AMOUNT,
+            ConditionOpcode.AGG_SIG_PUZZLE_AMOUNT,
+            ConditionOpcode.AGG_SIG_PARENT_AMOUNT,
+            ConditionOpcode.AGG_SIG_PARENT_PUZZLE,
+        ]:
+            expected = (AddBlockResult.INVALID_BLOCK, Err.BAD_AGGREGATE_SIGNATURE, None)
+
         b = empty_blockchain
         blocks = bt.get_consecutive_blocks(
             3,
@@ -2027,7 +2066,7 @@ class TestBodyValidation:
         wt: WalletTool = bt.get_pool_wallet_tool()
 
         tx1: SpendBundle = wt.generate_signed_transaction(
-            10, wt.get_new_puzzlehash(), list(blocks[-1].get_included_reward_coins())[0]
+            uint64(10), wt.get_new_puzzlehash(), list(blocks[-1].get_included_reward_coins())[0]
         )
         coin1: Coin = tx1.additions()[0]
         secret_key = wt.get_private_key_for_puzzle_hash(coin1.puzzle_hash)
@@ -2037,7 +2076,9 @@ class TestBodyValidation:
         args = [public_key, b"msg"] + ([b"garbage"] if with_garbage else [])
         conditions = {opcode: [ConditionWithArgs(opcode, args)]}
 
-        tx2: SpendBundle = wt.generate_signed_transaction(10, wt.get_new_puzzlehash(), coin1, condition_dic=conditions)
+        tx2: SpendBundle = wt.generate_signed_transaction(
+            uint64(10), wt.get_new_puzzlehash(), coin1, condition_dic=conditions
+        )
         assert coin1 in tx2.removals()
 
         bundles = SpendBundle.aggregate([tx1, tx2])
@@ -2430,7 +2471,7 @@ class TestBodyValidation:
         await _validate_and_add_block(b, block_2, expected_error=Err.INVALID_TRANSACTIONS_GENERATOR_HASH)
 
     @pytest.mark.asyncio
-    async def test_invalid_transactions_ref_list(self, empty_blockchain, bt):
+    async def test_invalid_transactions_ref_list(self, empty_blockchain, bt, consensus_mode: Mode):
         # No generator should have [1]s for the root
         b = empty_blockchain
         blocks = bt.get_consecutive_blocks(
@@ -2469,7 +2510,7 @@ class TestBodyValidation:
         await _validate_and_add_block(b, blocks[-1])
         wt: WalletTool = bt.get_pool_wallet_tool()
         tx: SpendBundle = wt.generate_signed_transaction(
-            10, wt.get_new_puzzlehash(), list(blocks[-1].get_included_reward_coins())[0]
+            uint64(10), wt.get_new_puzzlehash(), list(blocks[-1].get_included_reward_coins())[0]
         )
         blocks = bt.get_consecutive_blocks(5, block_list_input=blocks, guarantee_transaction_block=False)
         for block in blocks[-5:]:
@@ -2480,7 +2521,12 @@ class TestBodyValidation:
         )
         await _validate_and_add_block(b, blocks[-1])
         generator_arg = detect_potential_template_generator(blocks[-1].height, blocks[-1].transactions_generator)
-        assert generator_arg is not None
+        if consensus_mode == Mode.HARD_FORK_2_0:
+            # once the hard for activates, we don't use this form of block
+            # compression anymore
+            assert generator_arg is None
+        else:
+            assert generator_arg is not None
 
         blocks = bt.get_consecutive_blocks(
             1,
@@ -2490,7 +2536,14 @@ class TestBodyValidation:
             previous_generator=generator_arg,
         )
         block = blocks[-1]
-        assert len(block.transactions_generator_ref_list) > 0
+        if consensus_mode == Mode.HARD_FORK_2_0:
+            # once the hard for activates, we don't use this form of block
+            # compression anymore
+            assert len(block.transactions_generator_ref_list) == 0
+            # the remaining tests assume a reflist
+            return
+        else:
+            assert len(block.transactions_generator_ref_list) > 0
 
         block_2 = recursive_replace(block, "transactions_info.generator_refs_root", bytes([1] * 32))
         block_2 = recursive_replace(
@@ -2561,7 +2614,11 @@ class TestBodyValidation:
 
         block_generator: BlockGenerator = BlockGenerator(blocks[-1].transactions_generator, [], [])
         npc_result = get_name_puzzle_conditions(
-            block_generator, b.constants.MAX_BLOCK_COST_KLVM * 1000, mempool_mode=False, height=softfork_height
+            block_generator,
+            b.constants.MAX_BLOCK_COST_KLVM * 1000,
+            mempool_mode=False,
+            height=softfork_height,
+            constants=bt.constants,
         )
         err = (await b.add_block(blocks[-1], PreValidationResult(None, uint64(1), npc_result, True)))[1]
         assert err in [Err.BLOCK_COST_EXCEEDS_MAX]
@@ -2622,6 +2679,7 @@ class TestBodyValidation:
             min(b.constants.MAX_BLOCK_COST_KLVM * 1000, block.transactions_info.cost),
             mempool_mode=False,
             height=softfork_height,
+            constants=bt.constants,
         )
         result, err, _ = await b.add_block(block_2, PreValidationResult(None, uint64(1), npc_result, False))
         assert err == Err.INVALID_BLOCK_COST
@@ -2646,6 +2704,7 @@ class TestBodyValidation:
             min(b.constants.MAX_BLOCK_COST_KLVM * 1000, block.transactions_info.cost),
             mempool_mode=False,
             height=softfork_height,
+            constants=bt.constants,
         )
         result, err, _ = await b.add_block(block_2, PreValidationResult(None, uint64(1), npc_result, False))
         assert err == Err.INVALID_BLOCK_COST
@@ -2670,6 +2729,7 @@ class TestBodyValidation:
             min(b.constants.MAX_BLOCK_COST_KLVM * 1000, block.transactions_info.cost),
             mempool_mode=False,
             height=softfork_height,
+            constants=bt.constants,
         )
 
         result, err, _ = await b.add_block(block_2, PreValidationResult(None, uint64(1), npc_result, False))
@@ -3488,7 +3548,7 @@ async def test_chain_failed_rollback(empty_blockchain, bt):
     await b.coin_store.rollback_to_block(2)
     print(f"{await b.coin_store.get_coin_record(spend_bundle.coin_spends[0].coin.name())}")
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Invalid operation to set spent"):
         await _validate_and_add_block(b, blocks_reorg_chain[-1])
 
     assert b.get_peak().height == 19

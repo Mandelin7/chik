@@ -5,11 +5,13 @@ from unittest import TestCase
 
 from blspy import AugSchemeMPL, BasicSchemeMPL, G1Element, G2Element
 
+from chik.consensus.default_constants import DEFAULT_CONSTANTS
 from chik.types.blockchain_format.program import Program
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.coin_spend import CoinSpend
 from chik.types.spend_bundle import SpendBundle
 from chik.util.hash import std_hash
+from chik.util.ints import uint64
 from chik.wallet.puzzles import (
     p2_conditions,
     p2_delegated_conditions,
@@ -63,7 +65,7 @@ def do_test_spend(
     this time, signatures are not verified.
     """
 
-    coin_db = CoinStore()
+    coin_db = CoinStore(DEFAULT_CONSTANTS)
 
     puzzle_hash = puzzle_reveal.get_tree_hash()
 
@@ -101,7 +103,7 @@ def default_payments_and_conditions(
         (throwaway_puzzle_hash(initial_index + 1, key_lookup), initial_index * 10),
         (throwaway_puzzle_hash(initial_index + 2, key_lookup), (initial_index + 1) * 10),
     ]
-    conditions = Program.to([make_create_coin_condition(ph, amount, []) for ph, amount in payments])
+    conditions = Program.to([make_create_coin_condition(ph, uint64(amount), []) for ph, amount in payments])
     return payments, conditions
 
 

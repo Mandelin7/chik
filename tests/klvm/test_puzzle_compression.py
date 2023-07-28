@@ -10,12 +10,12 @@ from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.coin_spend import CoinSpend
 from chik.types.spend_bundle import SpendBundle
 from chik.util.ints import uint64
-from chik.wallet.cat_wallet.cat_utils import construct_cat_puzzle
-from chik.wallet.puzzles.cat_loader import CAT_MOD
+from chik.wallet.cat_wallet.cat_utils import CAT_MOD, construct_cat_puzzle
 from chik.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import puzzle_for_pk
-from chik.wallet.trading.offer import OFFER_MOD, OFFER_MOD_OLD
+from chik.wallet.trading.offer import OFFER_MOD
 from chik.wallet.util.puzzle_compression import (
     LATEST_VERSION,
+    OFFER_MOD_OLD,
     compress_object_with_puzzles,
     decompress_object_with_puzzles,
     lowest_best_version,

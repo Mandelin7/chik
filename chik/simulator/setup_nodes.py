@@ -3,14 +3,16 @@ from __future__ import annotations
 import asyncio
 import logging
 from pathlib import Path
-from typing import Any, AsyncGenerator, AsyncIterator, Dict, List, Optional, Tuple, Union
+from typing import Any, AsyncGenerator, AsyncIterator, Dict, List, Optional, Tuple, Union, cast
 
 from chik.consensus.constants import ConsensusConstants
 from chik.daemon.server import WebSocketServer
 from chik.farmer.farmer import Farmer
+from chik.farmer.farmer_api import FarmerAPI
 from chik.full_node.full_node import FullNode
 from chik.full_node.full_node_api import FullNodeAPI
 from chik.harvester.harvester import Harvester
+from chik.harvester.harvester_api import HarvesterAPI
 from chik.protocols.shared_protocol import Capability
 from chik.server.server import ChikServer
 from chik.server.start_service import Service
@@ -31,15 +33,19 @@ from chik.simulator.setup_services import (
 from chik.simulator.socket import find_available_listen_port
 from chik.simulator.time_out_assert import time_out_assert_custom_interval
 from chik.timelord.timelord import Timelord
+from chik.timelord.timelord_api import TimelordAPI
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.peer_info import UnresolvedPeerInfo
 from chik.util.hash import std_hash
 from chik.util.ints import uint16, uint32
 from chik.util.keychain import Keychain
 from chik.wallet.wallet_node import WalletNode
+from chik.wallet.wallet_node_api import WalletNodeAPI
 
 SimulatorsAndWallets = Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools]
-SimulatorsAndWalletsServices = Tuple[List[Service[FullNode]], List[Service[WalletNode]], BlockTools]
+SimulatorsAndWalletsServices = Tuple[
+    List[Service[FullNode, FullNodeSimulator]], List[Service[WalletNode, WalletNodeAPI]], BlockTools
+]
 
 
 def cleanup_keyring(keyring: TempKeyring) -> None:
@@ -146,7 +152,7 @@ async def setup_simulators_and_wallets(
     db_version: int = 1,
     config_overrides: Optional[Dict[str, int]] = None,
     disable_capabilities: Optional[List[Capability]] = None,
-) -> AsyncGenerator[Tuple[List[FullNodeAPI], List[Tuple[WalletNode, ChikServer]], BlockTools], None]:
+) -> AsyncGenerator[Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools], None]:
     with TempKeyring(populate=True) as keychain1, TempKeyring(populate=True) as keychain2:
         res = await setup_simulators_and_wallets_inner(
             db_version,
@@ -189,7 +195,9 @@ async def setup_simulators_and_wallets_service(
     db_version: int = 1,
     config_overrides: Optional[Dict[str, int]] = None,
     disable_capabilities: Optional[List[Capability]] = None,
-) -> AsyncGenerator[Tuple[List[Service[FullNode]], List[Service[WalletNode]], BlockTools], None]:
+) -> AsyncGenerator[
+    Tuple[List[Service[FullNode, FullNodeSimulator]], List[Service[WalletNode, WalletNodeAPI]], BlockTools], None
+]:
     with TempKeyring(populate=True) as keychain1, TempKeyring(populate=True) as keychain2:
         res = await setup_simulators_and_wallets_inner(
             db_version,
@@ -227,13 +235,15 @@ async def setup_simulators_and_wallets_inner(
     disable_capabilities: Optional[List[Capability]],
 ) -> Tuple[
     List[BlockTools],
-    List[AsyncGenerator[Union[Service[FullNode], Service[WalletNode]], None]],
-    List[Service[FullNode]],
-    List[Service[WalletNode]],
+    List[AsyncGenerator[Union[Service[FullNode, FullNodeSimulator], Service[WalletNode, WalletNodeAPI]], None]],
+    List[Service[FullNode, FullNodeSimulator]],
+    List[Service[WalletNode, WalletNodeAPI]],
 ]:
-    simulators: List[Service[FullNode]] = []
-    wallets: List[Service[WalletNode]] = []
-    node_iters: List[AsyncGenerator[Union[Service[FullNode], Service[WalletNode]], None]] = []
+    simulators: List[Service[FullNode, FullNodeSimulator]] = []
+    wallets: List[Service[WalletNode, WalletNodeAPI]] = []
+    node_iters: List[
+        AsyncGenerator[Union[Service[FullNode, FullNodeSimulator], Service[WalletNode, WalletNodeAPI]], None]
+    ] = []
     bt_tools: List[BlockTools] = []
     consensus_constants: ConsensusConstants = constants_for_dic(dic)
     for index in range(0, simulator_count):
@@ -243,14 +253,17 @@ async def setup_simulators_and_wallets_inner(
                 consensus_constants, const_dict=dic, keychain=keychain1, config_overrides=config_overrides
             )
         )  # block tools modifies constants
-        sim = setup_full_node(
-            consensus_constants=bt_tools[index].constants,
-            db_name=db_name,
-            self_hostname=bt_tools[index].config["self_hostname"],
-            local_bt=bt_tools[index],
-            simulator=True,
-            db_version=db_version,
-            disable_capabilities=disable_capabilities,
+        sim = cast(
+            AsyncGenerator[Service[FullNode, FullNodeSimulator], None],
+            setup_full_node(
+                consensus_constants=bt_tools[index].constants,
+                db_name=db_name,
+                self_hostname=bt_tools[index].config["self_hostname"],
+                local_bt=bt_tools[index],
+                simulator=True,
+                db_version=db_version,
+                disable_capabilities=disable_capabilities,
+            ),
         )
         service = await sim.__anext__()
         simulators.append(service)
@@ -289,7 +302,7 @@ async def setup_farmer_multi_harvester(
     consensus_constants: ConsensusConstants,
     *,
     start_services: bool,
-) -> AsyncIterator[Tuple[List[Service[Harvester]], Service[Farmer], BlockTools]]:
+) -> AsyncIterator[Tuple[List[Service[Harvester, HarvesterAPI]], Service[Farmer, FarmerAPI], BlockTools]]:
     farmer_node_iterators = [
         setup_farmer(
             block_tools,
@@ -342,7 +355,9 @@ async def setup_full_system(
     b_tools: Optional[BlockTools] = None,
     b_tools_1: Optional[BlockTools] = None,
     db_version: int = 1,
-) -> AsyncGenerator[Tuple[Any, Any, Harvester, Farmer, Any, Service[Timelord], object, object, Any, ChikServer], None]:
+) -> AsyncGenerator[
+    Tuple[Any, Any, Harvester, Farmer, Any, Service[Timelord, TimelordAPI], object, object, Any, ChikServer], None
+]:
     with TempKeyring(populate=True) as keychain1, TempKeyring(populate=True) as keychain2:
         daemon_ws, node_iters, ret = await setup_full_system_inner(
             b_tools, b_tools_1, False, consensus_constants, db_version, keychain1, keychain2, shared_b_tools
@@ -361,7 +376,17 @@ async def setup_full_system_connect_to_deamon(
     db_version: int = 1,
 ) -> AsyncGenerator[
     Tuple[
-        Any, Any, Harvester, Farmer, Any, Service[Timelord], object, object, Any, ChikServer, Optional[WebSocketServer]
+        Any,
+        Any,
+        Harvester,
+        Farmer,
+        Any,
+        Service[Timelord, TimelordAPI],
+        object,
+        object,
+        Any,
+        ChikServer,
+        Optional[WebSocketServer],
     ],
     None,
 ]:
@@ -387,7 +412,7 @@ async def setup_full_system_inner(
 ) -> Tuple[
     Optional[WebSocketServer],
     List[AsyncGenerator[object, None]],
-    Tuple[Any, Any, Harvester, Farmer, Any, Service[Timelord], object, object, Any, ChikServer],
+    Tuple[Any, Any, Harvester, Farmer, Any, Service[Timelord, TimelordAPI], object, object, Any, ChikServer],
 ]:
     if b_tools is None:
         b_tools = await create_block_tools_async(constants=consensus_constants, keychain=keychain1)

@@ -42,11 +42,17 @@ if [ "$LAST_EXIT_CODE" -ne 0 ]; then
 	exit $LAST_EXIT_CODE
 fi
 
+# Creates a directory of licenses
+echo "Building pip and NPM license directory"
+pwd
+bash ./build_license_directory.sh
+
 # Builds CLI only rpm
 CLI_RPM_BASE="chik-blockchain-cli-$CHIK_INSTALLER_VERSION-1.$REDHAT_PLATFORM"
 mkdir -p "dist/$CLI_RPM_BASE/opt/chik"
 mkdir -p "dist/$CLI_RPM_BASE/usr/bin"
 cp -r dist/daemon/* "dist/$CLI_RPM_BASE/opt/chik/"
+
 ln -s ../../opt/chik/chik "dist/$CLI_RPM_BASE/usr/bin/chik"
 # This is built into the base build image
 # shellcheck disable=SC1091
@@ -66,9 +72,7 @@ fpm -s dir -t rpm \
   --depends /usr/lib64/libcrypt.so.1 \
   .
 # CLI only rpm done
-
 cp -r dist/daemon ../chik-blockchain-gui/packages/gui
-
 # Change to the gui package
 cd ../chik-blockchain-gui/packages/gui || exit 1
 

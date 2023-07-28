@@ -57,8 +57,8 @@ default_kwargs = {
     "MAX_GENERATOR_REF_LIST_SIZE": 512,  # Number of references allowed in the block generator ref list
     "POOL_SUB_SLOT_ITERS": 37600000000,  # iters limit * NUM_SPS
     "SOFT_FORK2_HEIGHT": 3886635,
-    # Spetember 2023
-    "SOFT_FORK3_HEIGHT": 4200000,
+    # October 23, 2023
+    "SOFT_FORK3_HEIGHT": 4474000,
     # June 2024
     "HARD_FORK_HEIGHT": 5496000,
     # June 2027
@@ -67,6 +67,8 @@ default_kwargs = {
     "PLOT_FILTER_64_HEIGHT": 15592000,
     # June 2033
     "PLOT_FILTER_32_HEIGHT": 20643000,
+    # Disallow plots from passing the plot filter for more than one out of any four consecutive signage points.
+    "UNIQUE_PLOTS_WINDOW": 4,
 }
 
 

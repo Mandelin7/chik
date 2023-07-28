@@ -3,16 +3,16 @@ from __future__ import annotations
 import os
 import sys
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 dependencies = [
     "aiofiles==23.1.0",  # Async IO for files
-    "anyio==3.6.2",
-    "boto3==1.26.131",  # AWS S3 for DL s3 plugin
-    "blspy==1.0.16",  # Signature library
+    "anyio==3.7.0",
+    "blspy==2.0.2",  # Signature library
+    "boto3==1.26.161",  # AWS S3 for DL s3 plugin
     "chikvdf==1.0.10",  # timelord and vdf verification
     "chikbip158==1.2",  # bip158-style wallet filters
-    "chikpos==1.0.11",  # proof of space
+    "chikpos==2.0.0rc1",  # proof of space
     "klvm==0.9.7",
     "klvm_tools==0.4.6",  # Currying, Program.to, other conveniences
     "chik_rs==0.2.9",
@@ -23,8 +23,8 @@ dependencies = [
     "colorama==0.4.6",  # Colorizes terminal output
     "colorlog==6.7.0",  # Adds color to logs
     "concurrent-log-handler==0.9.24",  # Concurrently log and rotate logs
-    "cryptography==40.0.2",  # Python cryptography library for TLS - keyring conflict
-    "filelock==3.12.0",  # For reading and writing config multiprocess and multithread safely  (non-reentrant locks)
+    "cryptography==41.0.1",  # Python cryptography library for TLS - keyring conflict
+    "filelock==3.12.2",  # For reading and writing config multiprocess and multithread safely  (non-reentrant locks)
     "keyring==23.13.1",  # Store keys in MacOS Keychain, Windows Credential Locker
     "PyYAML==6.0",  # Used for config file format
     "setproctitle==1.3.2",  # Gives the chik processes readable names
@@ -33,7 +33,7 @@ dependencies = [
     "dnspython==2.3.0",  # Query DNS seeds
     "watchdog==2.2.0",  # Filesystem event watching - watches keyring.yaml
     "dnslib==0.9.23",  # dns lib
-    "typing-extensions==4.6.0",  # typing backports like Protocol and TypedDict
+    "typing-extensions==4.6.3",  # typing backports like Protocol and TypedDict
     "zstd==1.5.5.1",
     "packaging==23.1",
     "psutil==5.9.4",
@@ -59,11 +59,11 @@ dev_dependencies = [
     "twine",
     "isort",
     "flake8",
-    "mypy==1.3.0",
+    "mypy",
     "black==23.3.0",
     "aiohttp_cors",  # For blackd
     "ipython",  # For asyncio debugging
-    "pyinstaller==5.11.0",
+    "pyinstaller==5.13.0",
     "types-aiofiles",
     "types-cryptography",
     "types-pkg_resources",
@@ -82,7 +82,7 @@ kwargs = dict(
     description="Chik blockchain full node, farmer, timelord, and wallet.",
     url="https://chiknetwork.com/",
     license="Apache License",
-    python_requires=">=3.7, <4",
+    python_requires=">=3.8.1, <4",
     keywords="chik blockchain node",
     install_requires=dependencies,
     extras_require=dict(
@@ -90,47 +90,7 @@ kwargs = dict(
         upnp=upnp_dependencies,
         legacy_keyring=legacy_keyring_dependencies,
     ),
-    packages=[
-        "build_scripts",
-        "chik",
-        "chik.cmds",
-        "chik.klvm",
-        "chik.consensus",
-        "chik.daemon",
-        "chik.data_layer",
-        "chik.full_node",
-        "chik.timelord",
-        "chik.farmer",
-        "chik.harvester",
-        "chik.introducer",
-        "chik.plot_sync",
-        "chik.plotters",
-        "chik.plotting",
-        "chik.pools",
-        "chik.protocols",
-        "chik.rpc",
-        "chik.seeder",
-        "chik.server",
-        "chik.simulator",
-        "chik.types.blockchain_format",
-        "chik.types",
-        "chik.util",
-        "chik.wallet",
-        "chik.wallet.db_wallet",
-        "chik.wallet.puzzles",
-        "chik.wallet.puzzles.clawback",
-        "chik.wallet.puzzles.prefarm",
-        "chik.wallet.cat_wallet",
-        "chik.wallet.did_wallet",
-        "chik.wallet.nft_wallet",
-        "chik.wallet.trading",
-        "chik.wallet.util",
-        "chik.wallet.vc_wallet",
-        "chik.wallet.vc_wallet.vc_puzzles",
-        "chik.wallet.vc_wallet.cr_puzzles",
-        "chik.ssl",
-        "mozilla-ca",
-    ],
+    packages=find_packages(include=["build_scripts", "chik", "chik.*", "mozilla-ca"]),
     entry_points={
         "console_scripts": [
             "chik = chik.cmds.chik:main",

@@ -28,6 +28,7 @@ from chik.protocols.protocol_message_types import ProtocolMessageTypes
 from chik.protocols.protocol_state_machine import message_requires_reply
 from chik.protocols.protocol_timing import INVALID_PROTOCOL_BAN_SECONDS
 from chik.protocols.shared_protocol import protocol_version
+from chik.server.api_protocol import ApiProtocol
 from chik.server.introducer_peers import IntroducerPeers
 from chik.server.outbound_message import Message, NodeType
 from chik.server.ssl_context import private_ssl_paths, public_ssl_paths
@@ -122,7 +123,7 @@ class ChikServer:
     _network_id: str
     _inbound_rate_limit_percent: int
     _outbound_rate_limit_percent: int
-    api: Any
+    api: ApiProtocol
     node: Any
     root_path: Path
     config: Dict[str, Any]
@@ -147,7 +148,7 @@ class ChikServer:
         cls,
         port: int,
         node: Any,
-        api: Any,
+        api: ApiProtocol,
         local_type: NodeType,
         ping_interval: int,
         network_id: str,

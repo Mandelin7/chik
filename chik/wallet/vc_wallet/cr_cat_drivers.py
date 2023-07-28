@@ -12,10 +12,9 @@ from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.coin_spend import CoinSpend
 from chik.util.hash import std_hash
 from chik.util.ints import uint64
-from chik.wallet.cat_wallet.cat_utils import construct_cat_puzzle
+from chik.wallet.cat_wallet.cat_utils import CAT_MOD, construct_cat_puzzle
 from chik.wallet.lineage_proof import LineageProof
 from chik.wallet.payment import Payment
-from chik.wallet.puzzles.cat_loader import CAT_MOD
 from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.puzzles.singleton_top_layer_v1_1 import SINGLETON_LAUNCHER_HASH, SINGLETON_MOD_HASH
 from chik.wallet.uncurried_puzzle import UncurriedPuzzle, uncurry_puzzle

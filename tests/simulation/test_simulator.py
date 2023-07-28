@@ -8,6 +8,7 @@ from chik.cmds.units import units
 from chik.server.server import ChikServer
 from chik.simulator.block_tools import BlockTools
 from chik.simulator.full_node_simulator import FullNodeSimulator, backoff_times
+from chik.simulator.setup_nodes import SimulatorsAndWallets
 from chik.types.peer_info import PeerInfo
 from chik.util.ints import uint16, uint64
 from chik.wallet.wallet_node import WalletNode
@@ -214,24 +215,18 @@ async def test_process_transaction_records(
     ],
 )
 async def test_create_coins_with_amounts(
-    amounts: List[uint64],
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChikServer]], BlockTools],
+    self_hostname: str, amounts: List[uint64], simulator_and_wallet: SimulatorsAndWallets
 ) -> None:
     [[full_node_api], [[wallet_node, wallet_server]], _] = simulator_and_wallet
-
-    await wallet_server.start_client(PeerInfo("127.0.0.1", uint16(full_node_api.server._port)), None)
-
+    await wallet_server.start_client(PeerInfo(self_hostname, uint16(full_node_api.server._port)), None)
     # Avoiding an attribute hint issue below.
     assert wallet_node.wallet_state_manager is not None
-
     wallet = wallet_node.wallet_state_manager.main_wallet
-
     await full_node_api.farm_rewards_to_wallet(amount=sum(amounts), wallet=wallet)
     # Get some more coins.  The creator helper doesn't get you all the coins you
     # need yet.
     await full_node_api.farm_blocks_to_wallet(count=2, wallet=wallet)
     coins = await full_node_api.create_coins_with_amounts(amounts=amounts, wallet=wallet)
-
     assert sorted(coin.amount for coin in coins) == sorted(amounts)
 
 

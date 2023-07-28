@@ -6,6 +6,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 from blspy import G1Element, G2Element
 from klvm_tools import binutils
 
+from chik.consensus.default_constants import DEFAULT_CONSTANTS
 from chik.types.announcement import Announcement
 from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.program import Program
@@ -474,7 +475,7 @@ def test_lifecycle_with_coinstore_as_wallet():
     #######
     # farm a coin
 
-    coin_store = CoinStore(int.from_bytes(POOL_REWARD_PREFIX_MAINNET, "big"))
+    coin_store = CoinStore(DEFAULT_CONSTANTS, int.from_bytes(POOL_REWARD_PREFIX_MAINNET, "big"))
     now = CoinTimestamp(10012300, 1)
 
     DELAY_SECONDS = 86400

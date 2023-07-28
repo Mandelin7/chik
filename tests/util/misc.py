@@ -17,8 +17,14 @@ from types import TracebackType
 from typing import Any, Callable, Collection, Iterator, List, Optional, Type, Union
 
 import pytest
+from chik_rs import Coin
 from typing_extensions import Protocol, final
 
+from chik.types.blockchain_format.sized_bytes import bytes32
+from chik.types.condition_opcodes import ConditionOpcode
+from chik.util.hash import std_hash
+from chik.util.ints import uint64
+from chik.wallet.util.compute_hints import HintedCoin
 from tests.core.data_layer.util import ChikRoot
 
 
@@ -332,3 +338,32 @@ class DataCasesDecorator(Protocol):
 
 def named_datacases(name: str) -> DataCasesDecorator:
     return functools.partial(datacases, _name=name)
+
+
+@dataclasses.dataclass
+class CoinGenerator:
+    _seed: int = -1
+
+    def _get_hash(self) -> bytes32:
+        self._seed += 1
+        return std_hash(self._seed)
+
+    def _get_amount(self) -> uint64:
+        self._seed += 1
+        return uint64(self._seed)
+
+    def get(self, parent_coin_id: Optional[bytes32] = None, include_hint: bool = True) -> HintedCoin:
+        if parent_coin_id is None:
+            parent_coin_id = self._get_hash()
+        hint = None
+        if include_hint:
+            hint = self._get_hash()
+        return HintedCoin(Coin(parent_coin_id, self._get_hash(), self._get_amount()), hint)
+
+
+def coin_creation_args(hinted_coin: HintedCoin) -> List[Any]:
+    if hinted_coin.hint is not None:
+        memos = [hinted_coin.hint]
+    else:
+        memos = []
+    return [ConditionOpcode.CREATE_COIN, hinted_coin.coin.puzzle_hash, hinted_coin.coin.amount, memos]

@@ -9,6 +9,7 @@ from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.coin_spend import CoinSpend
 from chik.util.ints import uint64
 from chik.wallet.cat_wallet.cat_utils import (
+    CAT_MOD,
     SpendableCAT,
     construct_cat_puzzle,
     match_cat_puzzle,
@@ -16,7 +17,6 @@ from chik.wallet.cat_wallet.cat_utils import (
 )
 from chik.wallet.lineage_proof import LineageProof
 from chik.wallet.puzzle_drivers import PuzzleInfo, Solver
-from chik.wallet.puzzles.cat_loader import CAT_MOD
 from chik.wallet.uncurried_puzzle import UncurriedPuzzle, uncurry_puzzle
 
 

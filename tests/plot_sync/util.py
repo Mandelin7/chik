@@ -6,7 +6,9 @@ from secrets import token_bytes
 from typing import Optional
 
 from chik.farmer.farmer import Farmer
+from chik.farmer.farmer_api import FarmerAPI
 from chik.harvester.harvester import Harvester
+from chik.harvester.harvester_api import HarvesterAPI
 from chik.plot_sync.sender import Sender
 from chik.protocols.harvester_protocol import PlotSyncIdentifier
 from chik.server.outbound_message import Message, NodeType
@@ -36,7 +38,9 @@ def plot_sync_identifier(current_sync_id: uint64, message_id: uint64) -> PlotSyn
     return PlotSyncIdentifier(uint64(int(time.time())), current_sync_id, message_id)
 
 
-async def start_harvester_service(harvester_service: Service[Harvester], farmer_service: Service[Farmer]) -> Harvester:
+async def start_harvester_service(
+    harvester_service: Service[Harvester, HarvesterAPI], farmer_service: Service[Farmer, FarmerAPI]
+) -> Harvester:
     # Set the `last_refresh_time` of the plot manager to avoid initial plot loading
     harvester: Harvester = harvester_service._node
     harvester.plot_manager.last_refresh_time = time.time()

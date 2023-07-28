@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 from chik.full_node.full_node import FullNode
+from chik.full_node.full_node_api import FullNodeAPI
 from chik.server.outbound_message import NodeType
 from chik.server.start_service import Service, async_run
 from chik.simulator.block_tools import BlockTools, test_constants
@@ -34,7 +35,7 @@ def create_full_node_simulator_service(
     bt: BlockTools,
     connect_to_daemon: bool = True,
     override_capabilities: List[Tuple[uint16, str]] = None,
-) -> Service[FullNode]:
+) -> Service[FullNode, FullNodeAPI]:
     service_config = config[SERVICE_NAME]
     constants = bt.constants
 
@@ -83,7 +84,7 @@ async def async_main(test_mode: bool = False, automated_testing: bool = False, r
             "full_node.selected_network": "testnet0",
             "full_node.database_path": service_config["simulator_database_path"],
             "full_node.peers_file_path": service_config["simulator_peers_file_path"],
-            "full_node.introducer_peer": {"host": "127.0.0.1", "port": 59789},
+            "full_node.introducer_peer": {"host": "127.0.0.1", "port": 58555},
         }
     overrides["simulator.use_current_time"] = True
 

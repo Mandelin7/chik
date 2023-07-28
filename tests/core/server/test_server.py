@@ -1,19 +1,43 @@
 from __future__ import annotations
 
-from typing import Callable, Tuple
+import logging
+from dataclasses import dataclass
+from typing import Callable, Tuple, cast
 
 import pytest
 from packaging.version import Version
 
 from chik.cmds.init_funcs import chik_full_version_str
 from chik.full_node.full_node_api import FullNodeAPI
-from chik.protocols.shared_protocol import protocol_version
+from chik.protocols.full_node_protocol import RequestTransaction
+from chik.protocols.protocol_message_types import ProtocolMessageTypes
+from chik.protocols.shared_protocol import Error, protocol_version
+from chik.protocols.wallet_protocol import RejectHeaderRequest
+from chik.server.outbound_message import make_msg
 from chik.server.server import ChikServer
+from chik.server.ws_connection import WSChikConnection, error_response_version
 from chik.simulator.block_tools import BlockTools
 from chik.simulator.setup_nodes import SimulatorsAndWalletsServices
+from chik.simulator.time_out_assert import time_out_assert
+from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.peer_info import PeerInfo
-from chik.util.ints import uint16
+from chik.util.api_decorators import api_request
+from chik.util.errors import ApiError, Err
+from chik.util.ints import int16, uint16, uint32
 from tests.connection_utils import connect_and_get_peer
+
+
+@dataclass
+class TestAPI:
+    log: logging.Logger = logging.getLogger(__name__)
+
+    def ready(self) -> bool:
+        return True
+
+    # API call from FullNodeAPI
+    @api_request()
+    async def request_transaction(self, request: RequestTransaction) -> None:
+        raise ApiError(Err.NO_TRANSACTIONS_WHILE_SYNCING, f"Some error message: {request.transaction_id}", bytes(b"ab"))
 
 
 @pytest.mark.asyncio
@@ -47,8 +71,104 @@ async def test_connection_versions(
 ) -> None:
     [full_node_service], [wallet_service], _ = one_wallet_and_one_simulator_services
     wallet_node = wallet_service._node
-    await wallet_node.server.start_client(PeerInfo(self_hostname, uint16(full_node_service._api.server._port)), None)
-    connection = wallet_node.server.all_connections[full_node_service._node.server.node_id]
-    assert connection.protocol_version == Version(protocol_version)
-    assert connection.version == Version(chik_full_version_str())
-    assert connection.get_version() == chik_full_version_str()
+    full_node = full_node_service._node
+    await wallet_node.server.start_client(
+        PeerInfo(self_hostname, uint16(cast(FullNodeAPI, full_node_service._api).server._port)), None
+    )
+    outgoing_connection = wallet_node.server.all_connections[full_node.server.node_id]
+    incoming_connection = full_node.server.all_connections[wallet_node.server.node_id]
+    for connection in [outgoing_connection, incoming_connection]:
+        assert connection.protocol_version == Version(protocol_version)
+        assert connection.version == chik_full_version_str()
+        assert connection.get_version() == chik_full_version_str()
+
+
+@pytest.mark.asyncio
+async def test_api_not_ready(
+    self_hostname: str,
+    one_wallet_and_one_simulator_services: SimulatorsAndWalletsServices,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    [full_node_service], [wallet_service], _ = one_wallet_and_one_simulator_services
+    wallet_node = wallet_service._node
+    full_node = full_node_service._node
+    await wallet_node.server.start_client(
+        PeerInfo(self_hostname, uint16(cast(FullNodeAPI, full_node_service._api).server._port)), None
+    )
+    wallet_node.log_out()
+    assert not wallet_service._api.ready()
+    connection = full_node.server.all_connections[wallet_node.server.node_id]
+
+    def request_ignored() -> bool:
+        return "API not ready, ignore request: {'data': '0x00000000', 'id': None, 'type': 53}" in caplog.text
+
+    with caplog.at_level(logging.WARNING):
+        assert await connection.send_message(
+            make_msg(ProtocolMessageTypes.reject_header_request, RejectHeaderRequest(uint32(0)))
+        )
+        await time_out_assert(10, request_ignored)
+
+
+@pytest.mark.parametrize("version", ["0.0.34", "0.0.35", "0.0.36"])
+@pytest.mark.asyncio
+async def test_error_response(
+    one_wallet_and_one_simulator_services: SimulatorsAndWalletsServices,
+    self_hostname: str,
+    caplog: pytest.LogCaptureFixture,
+    version: str,
+) -> None:
+    [full_node_service], [wallet_service], _ = one_wallet_and_one_simulator_services
+    wallet_node = wallet_service._node
+    full_node = full_node_service._node
+
+    full_node.server.api = TestAPI()
+
+    await wallet_node.server.start_client(
+        PeerInfo(self_hostname, uint16(cast(FullNodeAPI, full_node_service._api).server._port)), None
+    )
+    wallet_connection = full_node.server.all_connections[wallet_node.server.node_id]
+    full_node_connection = wallet_node.server.all_connections[full_node.server.node_id]
+    test_version = Version(version)
+    wallet_connection.protocol_version = test_version
+    request = RequestTransaction(bytes32(32 * b"1"))
+    error_message = f"Some error message: {request.transaction_id}"
+    with caplog.at_level(logging.DEBUG):
+        response = await full_node_connection.call_api(TestAPI.request_transaction, request, timeout=5)
+        error = ApiError(Err.NO_TRANSACTIONS_WHILE_SYNCING, error_message)
+        assert f"ApiError: {error} from {wallet_connection.peer_node_id}, {wallet_connection.peer_info}" in caplog.text
+        if test_version >= error_response_version:
+            assert response == Error(int16(Err.NO_TRANSACTIONS_WHILE_SYNCING.value), error_message, bytes(b"ab"))
+            assert "Request timeout:" not in caplog.text
+        else:
+            assert response is None
+            assert "Request timeout:" in caplog.text
+
+
+@pytest.mark.parametrize(
+    "error", [Error(int16(Err.UNKNOWN.value), "1", bytes([1, 2, 3])), Error(int16(Err.UNKNOWN.value), "2", None)]
+)
+@pytest.mark.asyncio
+async def test_error_receive(
+    one_wallet_and_one_simulator_services: SimulatorsAndWalletsServices,
+    self_hostname: str,
+    caplog: pytest.LogCaptureFixture,
+    error: Error,
+) -> None:
+    [full_node_service], [wallet_service], _ = one_wallet_and_one_simulator_services
+    wallet_node = wallet_service._node
+    full_node = full_node_service._node
+    await wallet_node.server.start_client(
+        PeerInfo(self_hostname, uint16(cast(FullNodeAPI, full_node_service._api).server._port)), None
+    )
+    wallet_connection = full_node.server.all_connections[wallet_node.server.node_id]
+    full_node_connection = wallet_node.server.all_connections[full_node.server.node_id]
+    message = make_msg(ProtocolMessageTypes.error, error)
+
+    def error_log_found(connection: WSChikConnection) -> bool:
+        return f"ApiError: {error} from {connection.peer_node_id}, {connection.peer_info}" in caplog.text
+
+    with caplog.at_level(logging.WARNING):
+        await full_node_connection.outgoing_queue.put(message)
+        await wallet_connection.outgoing_queue.put(message)
+        await time_out_assert(10, error_log_found, True, full_node_connection)
+        await time_out_assert(10, error_log_found, True, wallet_connection)

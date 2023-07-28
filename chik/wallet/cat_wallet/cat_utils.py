@@ -13,12 +13,14 @@ from chik.types.condition_opcodes import ConditionOpcode
 from chik.types.spend_bundle import SpendBundle
 from chik.util.condition_tools import conditions_dict_for_solution
 from chik.wallet.lineage_proof import LineageProof
-from chik.wallet.puzzles.cat_loader import CAT_MOD
+from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.uncurried_puzzle import UncurriedPuzzle
 
 NULL_SIGNATURE = G2Element()
 
 ANYONE_CAN_SPEND_PUZZLE = Program.to(1)  # simply return the conditions
+CAT_MOD = load_klvm_maybe_recompile("cat_v2.clsp", package_or_requirement="chik.wallet.puzzles")
+CAT_MOD_HASH = CAT_MOD.get_tree_hash()
 
 
 def empty_program() -> Program:

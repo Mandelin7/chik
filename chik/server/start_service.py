@@ -14,6 +14,7 @@ from typing import Any, Awaitable, Callable, Coroutine, Dict, Generic, List, Opt
 from chik.cmds.init_funcs import chik_full_version_str
 from chik.daemon.server import service_launch_lock_path
 from chik.rpc.rpc_server import RpcApiProtocol, RpcServer, RpcServiceProtocol, start_rpc_server
+from chik.server.api_protocol import ApiProtocol
 from chik.server.chik_policy import set_chik_policy
 from chik.server.outbound_message import NodeType
 from chik.server.server import ChikServer
@@ -34,6 +35,7 @@ main_pid: Optional[int] = None
 
 T = TypeVar("T")
 _T_RpcServiceProtocol = TypeVar("_T_RpcServiceProtocol", bound=RpcServiceProtocol)
+_T_ApiProtocol = TypeVar("_T_ApiProtocol", bound=ApiProtocol)
 
 RpcInfo = Tuple[Type[RpcApiProtocol], int]
 
@@ -42,12 +44,12 @@ class ServiceException(Exception):
     pass
 
 
-class Service(Generic[_T_RpcServiceProtocol]):
+class Service(Generic[_T_RpcServiceProtocol, _T_ApiProtocol]):
     def __init__(
         self,
         root_path: Path,
         node: _T_RpcServiceProtocol,
-        peer_api: Any,
+        peer_api: _T_ApiProtocol,
         node_type: NodeType,
         advertised_port: int,
         service_name: str,

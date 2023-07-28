@@ -3,7 +3,7 @@ from __future__ import annotations
 import io
 from typing import Any, Callable, Dict, Set, Tuple
 
-from chik_rs import run_chik_program, tree_hash
+from chik_rs import ALLOW_BACKREFS, run_chik_program, tree_hash
 from klvm import SExp
 from klvm.casts import int_from_bytes
 from klvm.EvalError import EvalError
@@ -40,7 +40,7 @@ class Program(SExp):
             b"\x01",
             blob,
             50,
-            0,
+            ALLOW_BACKREFS,
         )
         return Program.to(ret)
 

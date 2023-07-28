@@ -1,11 +1,6 @@
 # File created by: python manage-mypy.py build-exclusions
-chik.cmds.plots
-chik.cmds.plotters
 chik.cmds.start_funcs
-chik.cmds.wallet
-chik.cmds.wallet_funcs
 chik.daemon.server
-chik.data_layer.data_layer_wallet
 chik.introducer.introducer
 chik.introducer.introducer_api
 chik.plotters.bladebit
@@ -17,14 +12,12 @@ chik.plotting.util
 chik.pools.pool_puzzles
 chik.pools.pool_wallet
 chik.pools.pool_wallet_info
-chik.rpc.harvester_rpc_client
 chik.rpc.rpc_client
 chik.rpc.util
 chik.rpc.wallet_rpc_api
 chik.rpc.wallet_rpc_client
 chik.seeder.crawl_store
 chik.seeder.crawler
-chik.seeder.crawler_api
 chik.seeder.dns_server
 chik.seeder.peer_record
 chik.seeder.start_crawler
@@ -53,7 +46,6 @@ chik.util.profiler
 chik.util.service_groups
 chik.util.ssl_check
 chik.wallet.block_record
-chik.wallet.cat_wallet.cat_wallet
 chik.wallet.chiklisp
 chik.wallet.did_wallet.did_wallet
 chik.wallet.did_wallet.did_wallet_puzzles
@@ -69,14 +61,12 @@ chik.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle
 chik.wallet.puzzles.p2_m_of_n_delegate_direct
 chik.wallet.puzzles.p2_puzzle_hash
 chik.wallet.puzzles.prefarm.spend_prefarm
-chik.wallet.puzzles.puzzle_utils
 chik.wallet.puzzles.singleton_top_layer
 chik.wallet.puzzles.tails
 chik.wallet.trading.trade_store
 chik.wallet.transaction_record
 chik.wallet.util.debug_spend_bundle
 chik.wallet.util.new_peak_queue
-chik.wallet.wallet
 chik.wallet.wallet_coin_store
 chik.wallet.wallet_interested_store
 chik.wallet.wallet_node_api
@@ -104,9 +94,6 @@ tests.core.custom_types.test_coin
 tests.core.custom_types.test_spend_bundle
 tests.core.daemon.test_daemon
 tests.core.full_node.full_sync.test_full_sync
-tests.core.full_node.stores.test_block_store
-tests.core.full_node.stores.test_coin_store
-tests.core.full_node.stores.test_full_node_store
 tests.core.full_node.stores.test_hint_store
 tests.core.full_node.stores.test_sync_store
 tests.core.full_node.test_address_manager
@@ -138,7 +125,6 @@ tests.core.util.test_keychain
 tests.core.util.test_keyring_wrapper
 tests.core.util.test_lru_cache
 tests.core.util.test_significant_bits
-tests.generator.test_list_to_batches
 tests.generator.test_scan
 tests.plotting.test_plot_manager
 tests.pools.test_pool_cmdline
@@ -148,11 +134,9 @@ tests.pools.test_wallet_pool_store
 tests.simulation.test_simulation
 tests.tools.test_run_block
 tests.util.benchmark_cost
-tests.util.db_connection
 tests.util.generator_tools_testing
 tests.util.key_tool
 tests.util.test_full_block_utils
-tests.util.test_lock_queue
 tests.util.test_misc
 tests.util.test_network
 tests.wallet.cat_wallet.test_cat_lifecycle
