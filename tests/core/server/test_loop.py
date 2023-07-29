@@ -21,7 +21,7 @@ here = pathlib.Path(__file__).parent
 
 # TODO: CAMPid 0945094189459712842390t591
 IP = "127.0.0.1"
-PORT = 8444
+PORT = 9678
 NUM_CLIENTS = 500
 
 
