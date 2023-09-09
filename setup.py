@@ -12,10 +12,10 @@ dependencies = [
     "boto3==1.26.161",  # AWS S3 for DL s3 plugin
     "chikvdf==1.0.10",  # timelord and vdf verification
     "chikbip158==1.2",  # bip158-style wallet filters
-    "chikpos==2.0.0rc1",  # proof of space
+    "chikpos==2.0.2",  # proof of space
     "klvm==0.9.7",
     "klvm_tools==0.4.6",  # Currying, Program.to, other conveniences
-    "chik_rs==0.2.9",
+    "chik_rs==0.2.10",
     "klvm-tools-rs==0.1.34",  # Rust implementation of klvm_tools' compiler
     "aiohttp==3.8.4",  # HTTP server for full node rpc
     "aiosqlite==0.19.0",  # asyncio wrapper for sqlite, to store blocks
@@ -59,7 +59,7 @@ dev_dependencies = [
     "twine",
     "isort",
     "flake8",
-    "mypy",
+    "mypy==1.4.1",
     "black==23.3.0",
     "aiohttp_cors",  # For blackd
     "ipython",  # For asyncio debugging

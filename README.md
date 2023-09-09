@@ -26,7 +26,7 @@ For more information, see our website and downloads at <a href="https://www.chik
 <p>chik init</p>
 <p>#add your plot directories</p>
 <p>chik plots add -d /yourplotpath</p>
-<p>chik start famer</p>
+<p>chik start farmer</p>
 <p># The GUI requires you have Ubuntu Desktop or a similar windowing system installed.<p>
 <p># You can not install and run the GUI as root</p>
 <p>cd /home/'yourusername'/chik-blockchain/</p>
