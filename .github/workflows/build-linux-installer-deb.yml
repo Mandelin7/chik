@@ -54,11 +54,11 @@ jobs:
             glue-name: "build-amd64-deb"
             madmax-suffix: "x86-64"
             bladebit-suffix: "ubuntu-x86-64.tar.gz"
-#          - runs-on: [Linux, ARM64]
-#            arch: arm64
-#            glue-name: "build-arm64-deb"
-#            madmax-suffix: "arm64"
-#            bladebit-suffix: "ubuntu-arm64.tar.gz"
+          - runs-on: [Linux, ARM64]
+            arch: arm64
+            glue-name: "build-arm64-deb"
+            madmax-suffix: "arm64"
+            bladebit-suffix: "ubuntu-arm64.tar.gz"
 
     steps:
     - uses: Chik-Network/actions/clean-workspace@main
