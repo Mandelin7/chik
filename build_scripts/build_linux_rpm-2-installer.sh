@@ -26,7 +26,6 @@ echo "Chik Installer Version is: $CHIK_INSTALLER_VERSION"
 echo "Installing npm and electron packagers"
 cd npm_linux || exit 1
 npm ci
-PATH=$(npm bin):$PATH
 cd .. || exit 1
 
 echo "Create dist/"
@@ -86,11 +85,11 @@ if [ "$REDHAT_PLATFORM" = "arm64" ]; then
   OPT_ARCH="--arm64"
 fi
 PRODUCT_NAME="chik"
-echo electron-builder build --linux rpm "${OPT_ARCH}" \
+echo npx electron-builder build --linux rpm "${OPT_ARCH}" \
   --config.extraMetadata.name=chik-blockchain \
   --config.productName="${PRODUCT_NAME}" --config.linux.desktop.Name="Chik Blockchain" \
   --config.rpm.packageName="chik-blockchain"
-electron-builder build --linux rpm "${OPT_ARCH}" \
+npx electron-builder build --linux rpm "${OPT_ARCH}" \
   --config.extraMetadata.name=chik-blockchain \
   --config.productName="${PRODUCT_NAME}" --config.linux.desktop.Name="Chik Blockchain" \
   --config.rpm.packageName="chik-blockchain"
