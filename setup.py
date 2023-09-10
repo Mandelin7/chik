@@ -10,7 +10,7 @@ dependencies = [
     "anyio==3.7.0",
     "blspy==2.0.2",  # Signature library
     "boto3==1.26.161",  # AWS S3 for DL s3 plugin
-    "chikvdf==1.0.10",  # timelord and vdf verification
+    "chikvdf==1.0.11",  # timelord and vdf verification
     "chikbip158==1.2",  # bip158-style wallet filters
     "chikpos==2.0.2",  # proof of space
     "klvm==0.9.7",
