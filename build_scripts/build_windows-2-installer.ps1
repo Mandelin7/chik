@@ -35,6 +35,7 @@ Write-Output "Setup npm packager"
 Write-Output "   ---"
 Set-Location -Path ".\npm_windows" -PassThru
 npm ci
+$Env:Path = $(npm bin) + ";" + $Env:Path
 
 Set-Location -Path "..\..\" -PassThru
 
@@ -68,7 +69,7 @@ Write-Output "   ---"
 
 Write-Output "   ---"
 Write-Output "electron-builder create package directory"
-npx electron-builder build --win --x64 --config.productName="Chik" --dir
+electron-builder build --win --x64 --config.productName="Chik" --dir
 Get-ChildItem dist\win-unpacked\resources
 Write-Output "   ---"
 
@@ -88,7 +89,7 @@ If ($env:HAS_SIGNING_SECRET) {
 
 Write-Output "   ---"
 Write-Output "electron-builder create installer"
-npx electron-builder build --win --x64 --config.productName="Chik" --pd ".\dist\win-unpacked"
+electron-builder build --win --x64 --config.productName="Chik" --pd ".\dist\win-unpacked"
 Write-Output "   ---"
 
 If ($env:HAS_SIGNING_SECRET) {
