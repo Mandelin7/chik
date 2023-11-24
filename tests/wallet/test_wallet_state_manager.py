@@ -5,9 +5,13 @@ from typing import AsyncIterator
 
 import pytest
 
+from chik.protocols.wallet_protocol import CoinState
+from chik.server.outbound_message import NodeType
 from chik.simulator.setup_nodes import SimulatorsAndWallets
+from chik.types.blockchain_format.coin import Coin
 from chik.types.blockchain_format.sized_bytes import bytes32
-from chik.util.ints import uint32
+from chik.types.peer_info import PeerInfo
+from chik.util.ints import uint16, uint32
 from chik.wallet.derivation_record import DerivationRecord
 from chik.wallet.derive_keys import master_sk_to_wallet_sk, master_sk_to_wallet_sk_unhardened
 from chik.wallet.util.wallet_types import WalletType
@@ -77,3 +81,17 @@ async def test_get_private_key_failure(simulator_and_wallet: SimulatorsAndWallet
     invalid_puzzle_hash = bytes32(b"1" * 32)
     with pytest.raises(ValueError, match=f"No key for puzzle hash: {invalid_puzzle_hash.hex()}"):
         await wallet_state_manager.get_private_key(bytes32(b"1" * 32))
+
+
+@pytest.mark.asyncio
+async def test_determine_coin_type(simulator_and_wallet: SimulatorsAndWallets, self_hostname: str) -> None:
+    full_nodes, wallets, _ = simulator_and_wallet
+    full_node_api = full_nodes[0]
+    full_node_server = full_node_api.full_node.server
+    wallet_node, wallet_server = wallets[0]
+    await wallet_server.start_client(PeerInfo(self_hostname, uint16(full_node_server._port)), None)
+    wallet_state_manager: WalletStateManager = wallet_node.wallet_state_manager
+    peer = wallet_node.server.get_connections(NodeType.FULL_NODE)[0]
+    assert (None, None) == await wallet_state_manager.determine_coin_type(
+        peer, CoinState(Coin(bytes32(b"1" * 32), bytes32(b"1" * 32), 0), uint32(0), uint32(0)), None
+    )

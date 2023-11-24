@@ -18,7 +18,7 @@ from chik_rs import (
     NO_RELATIVE_CONDITIONS_ON_EPHEMERAL,
 )
 from chik_rs import get_puzzle_and_solution_for_coin as get_puzzle_and_solution_for_coin_rust
-from chik_rs import run_block_generator, run_chik_program
+from chik_rs import run_block_generator, run_block_generator2, run_chik_program
 from klvm.casts import int_from_bytes
 
 from chik.consensus.constants import ConsensusConstants
@@ -37,7 +37,7 @@ from chik.util.ints import uint16, uint32, uint64
 from chik.wallet.puzzles.load_klvm import load_serialized_klvm_maybe_recompile
 
 DESERIALIZE_MOD = load_serialized_klvm_maybe_recompile(
-    "chiklisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles"
+    "chiklisp_deserialisation.clsp", package_or_requirement="chik.consensus.puzzles"
 )
 
 log = logging.getLogger(__name__)
@@ -51,6 +51,8 @@ def get_name_puzzle_conditions(
     height: uint32,
     constants: ConsensusConstants,
 ) -> NPCResult:
+    run_block = run_block_generator
+
     flags = 0
     if mempool_mode:
         flags = flags | MEMPOOL_MODE
@@ -91,9 +93,12 @@ def get_name_puzzle_conditions(
             | ALLOW_BACKREFS
         )
 
+    if height >= constants.HARD_FORK_FIX_HEIGHT:
+        run_block = run_block_generator2
+
     try:
         block_args = [bytes(gen) for gen in generator.generator_refs]
-        err, result = run_block_generator(bytes(generator.program), block_args, max_cost, flags)
+        err, result = run_block(bytes(generator.program), block_args, max_cost, flags)
         assert (err is None) != (result is None)
         if err is not None:
             return NPCResult(uint16(err), None, uint64(0))

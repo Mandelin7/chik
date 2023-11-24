@@ -14,13 +14,7 @@ chik.pools.pool_wallet
 chik.pools.pool_wallet_info
 chik.rpc.rpc_client
 chik.rpc.util
-chik.rpc.wallet_rpc_api
 chik.rpc.wallet_rpc_client
-chik.seeder.crawl_store
-chik.seeder.crawler
-chik.seeder.dns_server
-chik.seeder.peer_record
-chik.seeder.start_crawler
 chik.simulator.full_node_simulator
 chik.simulator.keyring
 chik.simulator.setup_services
@@ -39,7 +33,6 @@ chik.util.hash
 chik.util.json_util
 chik.util.keychain
 chik.util.keyring_wrapper
-chik.util.make_test_constants
 chik.util.merkle_set
 chik.util.partial_func
 chik.util.profiler
@@ -83,7 +76,6 @@ tests.klvm.test_chiklisp_deserialization
 tests.klvm.test_program
 tests.klvm.test_puzzle_compression
 tests.klvm.test_puzzles
-tests.klvm.test_serialized_program
 tests.klvm.test_singletons
 tests.klvm.test_spend_sim
 tests.conftest
@@ -97,7 +89,6 @@ tests.core.full_node.full_sync.test_full_sync
 tests.core.full_node.stores.test_hint_store
 tests.core.full_node.stores.test_sync_store
 tests.core.full_node.test_address_manager
-tests.core.full_node.test_block_height_map
 tests.core.full_node.test_conditions
 tests.core.full_node.test_full_node
 tests.core.full_node.test_node_load
@@ -161,6 +152,7 @@ tests.wallet.test_wallet_interested_store
 tests.wallet.test_wallet_key_val_store
 tests.wallet.test_wallet_user_store
 tests.weight_proof.test_weight_proof
+tests.timelord.test_new_peak
 tools.analyze-chain
 tools.run_block
 tools.test_full_sync

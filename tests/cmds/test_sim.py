@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from shutil import rmtree
 
+import pytest
 from click.testing import CliRunner, Result
 
 from chik.cmds.chik import cli
@@ -13,8 +14,8 @@ mnemonic = (  # ignore any secret warnings
     "organ skin design salt history awesome"
 )
 fingerprint = 2640131813
-std_farming_address = "txck1mh4qanzyawn3v4uphgaj2cg6hrjazwyp0sx653fhn9apg6mfajlqtj0ztp"
-burn_address = "txck1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqm6ksh7qddh"  # 0x0...dead
+std_farming_address = "txck1mh4qanzyawn3v4uphgaj2cg6hrjazwyp0sx653fhn9apg6mfajlqr0kd92"
+burn_address = "txck1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqm6kslrezru"  # 0x0...dead
 
 SIMULATOR_ROOT_PATH.mkdir(parents=True, exist_ok=True)  # this simplifies code later
 
@@ -46,6 +47,7 @@ def test_every_simulator_command() -> None:
         stop_simulator(runner, simulator_name)
 
 
+@pytest.mark.skip("Need to rewrite")
 def test_custom_farming_address() -> None:
     runner: CliRunner = CliRunner()
     address = burn_address

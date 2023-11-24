@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import time
 from typing import cast
 
 import pytest
@@ -11,13 +12,14 @@ from chik.protocols.protocol_message_types import ProtocolMessageTypes
 from chik.protocols.wallet_protocol import RequestChildren
 from chik.seeder.crawler import Crawler
 from chik.seeder.crawler_api import CrawlerAPI
+from chik.seeder.peer_record import PeerRecord, PeerReliability
 from chik.server.outbound_message import make_msg
 from chik.server.start_service import Service
 from chik.simulator.setup_nodes import SimulatorsAndWalletsServices
 from chik.simulator.time_out_assert import time_out_assert
 from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.peer_info import PeerInfo
-from chik.util.ints import uint16, uint32, uint128
+from chik.util.ints import uint16, uint32, uint64, uint128
 
 
 @pytest.mark.asyncio
@@ -68,3 +70,43 @@ async def test_valid_message(
     )
     assert await connection.send_message(msg)
     await time_out_assert(10, peer_added)
+
+
+@pytest.mark.asyncio
+async def test_crawler_to_db(
+    crawler_service: Service[Crawler, CrawlerAPI], one_node: SimulatorsAndWalletsServices
+) -> None:
+    """
+    This is a lot more of an integration test, but it tests the whole process. We add a node to the crawler, then we
+    save it to the db and validate.
+    """
+    [full_node_service], _, _ = one_node
+    full_node = full_node_service._node
+    crawler = crawler_service._node
+    crawl_store = crawler.crawl_store
+    assert crawl_store is not None
+    peer_address = "127.0.0.1"
+
+    # create peer records
+    peer_record = PeerRecord(
+        peer_address,
+        peer_address,
+        uint32(full_node.server.get_port()),
+        False,
+        uint64(0),
+        uint32(0),
+        uint64(0),
+        uint64(int(time.time())),
+        uint64(0),
+        "undefined",
+        uint64(0),
+        tls_version="unknown",
+    )
+    peer_reliability = PeerReliability(peer_address, tries=1, successes=1)
+
+    # add peer to the db & mark it as connected
+    await crawl_store.add_peer(peer_record, peer_reliability)
+    assert peer_record == crawl_store.host_to_records[peer_address]
+
+    # validate the db data
+    await time_out_assert(20, crawl_store.get_good_peers, [peer_address])

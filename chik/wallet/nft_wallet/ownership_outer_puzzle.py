@@ -11,7 +11,9 @@ from chik.wallet.puzzle_drivers import PuzzleInfo, Solver
 from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.uncurried_puzzle import UncurriedPuzzle, uncurry_puzzle
 
-OWNERSHIP_LAYER_MOD = load_klvm_maybe_recompile("nft_ownership_layer.clsp")
+OWNERSHIP_LAYER_MOD = load_klvm_maybe_recompile(
+    "nft_ownership_layer.clsp", package_or_requirement="chik.wallet.nft_wallet.puzzles"
+)
 
 
 def match_ownership_layer_puzzle(puzzle: UncurriedPuzzle) -> Tuple[bool, List[Program]]:

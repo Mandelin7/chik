@@ -11,7 +11,10 @@ from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.puzzles.singleton_top_layer_v1_1 import SINGLETON_LAUNCHER_HASH, SINGLETON_MOD_HASH
 from chik.wallet.uncurried_puzzle import UncurriedPuzzle
 
-TRANSFER_PROGRAM_MOD = load_klvm_maybe_recompile("nft_ownership_transfer_program_one_way_claim_with_royalties.clsp")
+TRANSFER_PROGRAM_MOD = load_klvm_maybe_recompile(
+    "nft_ownership_transfer_program_one_way_claim_with_royalties.clsp",
+    package_or_requirement="chik.wallet.nft_wallet.puzzles",
+)
 
 
 def match_transfer_program_puzzle(puzzle: UncurriedPuzzle) -> Tuple[bool, List[Program]]:

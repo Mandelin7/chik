@@ -26,6 +26,7 @@ from chik.util.errors import KeychainFingerprintExists
 from chik.util.ints import uint32
 from chik.util.keychain import Keychain
 from chik.util.lock import Lockfile
+from chik.util.misc import SignalHandlers
 from chik.wallet.derive_keys import master_sk_to_wallet_sk
 
 """
@@ -157,7 +158,8 @@ async def get_full_chik_simulator(
         ca_key_path = chik_root / config["private_ssl_ca"]["key"]
 
         ws_server = WebSocketServer(chik_root, ca_crt_path, ca_key_path, crt_path, key_path)
-        await ws_server.setup_process_global_state()
-        async with ws_server.run():
-            async for simulator in start_simulator(chik_root, automated_testing):
-                yield simulator, chik_root, config, mnemonic, fingerprint, keychain
+        async with SignalHandlers.manage() as signal_handlers:
+            await ws_server.setup_process_global_state(signal_handlers=signal_handlers)
+            async with ws_server.run():
+                async for simulator in start_simulator(chik_root, automated_testing):
+                    yield simulator, chik_root, config, mnemonic, fingerprint, keychain

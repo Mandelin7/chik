@@ -11,7 +11,9 @@ from chik.wallet.puzzle_drivers import PuzzleInfo, Solver
 from chik.wallet.puzzles.load_klvm import load_klvm_maybe_recompile
 from chik.wallet.uncurried_puzzle import UncurriedPuzzle, uncurry_puzzle
 
-NFT_STATE_LAYER_MOD = load_klvm_maybe_recompile("nft_state_layer.clsp")
+NFT_STATE_LAYER_MOD = load_klvm_maybe_recompile(
+    "nft_state_layer.clsp", package_or_requirement="chik.wallet.nft_wallet.puzzles"
+)
 NFT_STATE_LAYER_MOD_HASH = NFT_STATE_LAYER_MOD.get_tree_hash()
 
 

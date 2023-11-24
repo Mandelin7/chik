@@ -7,15 +7,15 @@ from setuptools import find_packages, setup
 
 dependencies = [
     "aiofiles==23.2.1",  # Async IO for files
-    "anyio==3.7.1",
+    "anyio==4.0.0",
     "blspy==2.0.2",  # Signature library
     "boto3==1.28.25",  # AWS S3 for DL s3 plugin
     "chikvdf==1.0.11",  # timelord and vdf verification
-    "chikbip158==1.2",  # bip158-style wallet filters
-    "chikpos==2.0.2",  # proof of space
+    "chikbip158==1.3",  # bip158-style wallet filters
+    "chikpos==2.0.3",  # proof of space
     "klvm==0.9.7",
     "klvm_tools==0.4.6",  # Currying, Program.to, other conveniences
-    "chik_rs==0.2.10",
+    "chik_rs==0.2.11",
     "klvm-tools-rs==0.1.34",  # Rust implementation of klvm_tools' compiler
     "aiohttp==3.8.5",  # HTTP server for full node rpc
     "aiosqlite==0.19.0",  # asyncio wrapper for sqlite, to store blocks
@@ -44,31 +44,33 @@ upnp_dependencies = [
 ]
 
 dev_dependencies = [
-    "build",
-    # >=7.2.4 for https://github.com/nedbat/coveragepy/issues/1604
-    "coverage>=7.2.4",
-    "diff-cover",
-    "pre-commit",
-    "py3createtorrent",
-    "pylint",
-    "pytest",
-    "pytest-asyncio>=0.18.1",  # require attribute 'fixture'
-    "pytest-cov",
-    "pytest-monitor; sys_platform == 'linux'",
-    "pytest-xdist",
-    "twine",
-    "isort",
-    "flake8",
+    # pinned for https://github.com/pylint-dev/pylint/issues/9069
+    "astroid==2.15.6",
+    "build==0.10.0",
+    "coverage==7.3.0",
+    "diff-cover==7.7.0",
+    "pre-commit==3.3.3",
+    "py3createtorrent==1.1.0",
+    "pylint==2.17.5",
+    "pytest==7.4.0",
+    "pytest-asyncio==0.21.1",
+    "pytest-cov==4.1.0",
+    "pytest-mock==3.11.1",
+    "pytest-monitor==1.6.6; sys_platform == 'linux'",
+    "pytest-xdist==3.3.1",
+    "twine==4.0.2",
+    "isort==5.12.0",
+    "flake8==6.1.0",
     "mypy==1.4.1",
     "black==23.7.0",
-    "aiohttp_cors",  # For blackd
-    "ipython",  # For asyncio debugging
+    "aiohttp_cors==0.7.0",  # For blackd
+    "ipython==8.12.2",  # For asyncio debugging
     "pyinstaller==5.13.0",
-    "types-aiofiles",
-    "types-cryptography",
-    "types-pkg_resources",
-    "types-pyyaml",
-    "types-setuptools",
+    "types-aiofiles==23.1.0.5",
+    "types-cryptography==3.3.23.2",
+    "types-pkg_resources==0.1.3",
+    "types-pyyaml==6.0.12.11",
+    "types-setuptools==68.0.0.3",
 ]
 
 legacy_keyring_dependencies = [

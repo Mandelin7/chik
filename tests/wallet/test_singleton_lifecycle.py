@@ -20,8 +20,8 @@ from tests.core.full_node.test_conditions import check_spend_bundle_validity, in
 SINGLETON_MOD = load_klvm("singleton_top_layer.clsp")
 LAUNCHER_PUZZLE = load_klvm("singleton_launcher.clsp")
 P2_SINGLETON_MOD = load_klvm("p2_singleton.clsp")
-POOL_MEMBER_MOD = load_klvm("pool_member_innerpuz.clsp")
-POOL_WAITINGROOM_MOD = load_klvm("pool_waitingroom_innerpuz.clsp")
+POOL_MEMBER_MOD = load_klvm("pool_member_innerpuz.clsp", package_or_requirement="chik.pools.puzzles")
+POOL_WAITINGROOM_MOD = load_klvm("pool_waitingroom_innerpuz.clsp", package_or_requirement="chik.pools.puzzles")
 
 LAUNCHER_PUZZLE_HASH = LAUNCHER_PUZZLE.get_tree_hash()
 SINGLETON_MOD_HASH = SINGLETON_MOD.get_tree_hash()

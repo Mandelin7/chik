@@ -19,6 +19,7 @@ from chik.util.chik_logging import initialize_logging
 from chik.util.config import load_config, load_config_cli, override_config
 from chik.util.default_root import DEFAULT_ROOT_PATH
 from chik.util.ints import uint16
+from chik.util.misc import SignalHandlers
 
 # See: https://bugs.python.org/issue29288
 "".encode("idna")
@@ -84,7 +85,7 @@ async def async_main(test_mode: bool = False, automated_testing: bool = False, r
             "full_node.selected_network": "testnet0",
             "full_node.database_path": service_config["simulator_database_path"],
             "full_node.peers_file_path": service_config["simulator_peers_file_path"],
-            "full_node.introducer_peer": {"host": "127.0.0.1", "port": 58555},
+            "full_node.introducer_peer": {"host": "127.0.0.1", "port": 59789},
         }
     overrides["simulator.use_current_time"] = True
 
@@ -107,8 +108,11 @@ async def async_main(test_mode: bool = False, automated_testing: bool = False, r
     service = create_full_node_simulator_service(root_path, override_config(config, overrides), bt)
     if test_mode:
         return service
-    await service.setup_process_global_state()
-    await service.run()
+
+    async with SignalHandlers.manage() as signal_handlers:
+        await service.setup_process_global_state(signal_handlers=signal_handlers)
+        await service.run()
+
     return 0
 
 

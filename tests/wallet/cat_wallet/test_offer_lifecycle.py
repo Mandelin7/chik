@@ -21,6 +21,7 @@ from chik.wallet.cat_wallet.cat_utils import (
     construct_cat_puzzle,
     unsigned_spend_bundle_for_spendable_cats,
 )
+from chik.wallet.conditions import ConditionValidTimes
 from chik.wallet.outer_puzzles import AssetType
 from chik.wallet.payment import Payment
 from chik.wallet.puzzle_drivers import PuzzleInfo
@@ -288,6 +289,7 @@ class TestOfferLifecycle:
                 },
                 {"xck": 900, str_to_tail_hash("red").hex(): 350},
                 driver_dict_as_infos,
+                ConditionValidTimes(),
             )
             assert new_offer.get_pending_amounts() == {
                 "xck": 1200,

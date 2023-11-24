@@ -14,14 +14,16 @@ from chik.types.blockchain_format.sized_bytes import bytes32
 from chik.types.generator_types import BlockGenerator
 from chik.types.spend_bundle_conditions import ELIGIBLE_FOR_DEDUP, Spend
 from chik.util.ints import uint32
-from chik.wallet.puzzles.load_klvm import load_klvm
-from chik.wallet.puzzles.rom_bootstrap_generator import GENERATOR_MOD
+from chik.wallet.puzzles.load_klvm import load_klvm, load_serialized_klvm_maybe_recompile
 
 MAX_COST = int(1e15)
 COST_PER_BYTE = int(12000)
 
 
-DESERIALIZE_MOD = load_klvm("chiklisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles")
+DESERIALIZE_MOD = load_klvm("chiklisp_deserialisation.clsp", package_or_requirement="chik.consensus.puzzles")
+GENERATOR_MOD: SerializedProgram = load_serialized_klvm_maybe_recompile(
+    "rom_bootstrap_generator.clsp", package_or_requirement="chik.consensus.puzzles"
+)
 
 
 GENERATOR_CODE = """
@@ -66,7 +68,8 @@ def block_generator() -> BlockGenerator:
 
 
 EXPECTED_ABBREVIATED_COST = 108379
-EXPECTED_COST = 113415
+EXPECTED_COST1 = 113415
+EXPECTED_COST2 = 108423
 EXPECTED_OUTPUT = (
     "ffffffa00000000000000000000000000000000000000000000000000000000000000000"
     "ff01ff8300c350ffffff33ffa00000000000000000000000000000000000000000000000"
@@ -125,10 +128,12 @@ class TestROM:
         npc_result = get_name_puzzle_conditions(
             gen, max_cost=MAX_COST, mempool_mode=False, height=uint32(softfork_height), constants=DEFAULT_CONSTANTS
         )
+        if softfork_height >= DEFAULT_CONSTANTS.HARD_FORK_HEIGHT:
+            cost = EXPECTED_COST2
+        else:
+            cost = EXPECTED_COST1
         assert npc_result.error is None
-        assert npc_result.cost == EXPECTED_COST + ConditionCost.CREATE_COIN.value + (
-            len(bytes(gen.program)) * COST_PER_BYTE
-        )
+        assert npc_result.cost == cost + ConditionCost.CREATE_COIN.value + (len(bytes(gen.program)) * COST_PER_BYTE)
         assert npc_result.conds is not None
 
         spend = Spend(

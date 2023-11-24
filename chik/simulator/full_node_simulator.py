@@ -27,6 +27,7 @@ from chik.util.config import lock_and_load_config, save_config
 from chik.util.ints import uint8, uint32, uint64, uint128
 from chik.wallet.payment import Payment
 from chik.wallet.transaction_record import TransactionRecord
+from chik.wallet.util.tx_config import DEFAULT_TX_CONFIG
 from chik.wallet.wallet import Wallet
 from chik.wallet.wallet_node import WalletNode
 from chik.wallet.wallet_state_manager import WalletStateManager
@@ -616,6 +617,7 @@ class FullNodeSimulator(FullNodeAPI):
                         tx = await wallet.generate_signed_transaction(
                             amount=outputs_group[0].amount,
                             puzzle_hash=outputs_group[0].puzzle_hash,
+                            tx_config=DEFAULT_TX_CONFIG,
                             primaries=outputs_group[1:],
                         )
                     await wallet.push_transaction(tx=tx)

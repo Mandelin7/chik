@@ -8,7 +8,7 @@ import traceback
 from dataclasses import dataclass, field
 from ipaddress import IPv4Network, IPv6Network, ip_network
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union, cast
+from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union, cast
 
 from aiohttp import (
     ClientResponseError,
@@ -553,19 +553,6 @@ class ChikServer:
             if on_disconnect is not None:
                 on_disconnect(connection)
 
-    async def send_to_others(
-        self,
-        messages: List[Message],
-        node_type: NodeType,
-        origin_peer: WSChikConnection,
-    ) -> None:
-        for node_id, connection in self.all_connections.items():
-            if node_id == origin_peer.peer_node_id:
-                continue
-            if connection.connection_type is node_type:
-                for message in messages:
-                    await connection.send_message(message)
-
     async def validate_broadcast_message_type(self, messages: List[Message], node_type: NodeType) -> None:
         for message in messages:
             if message_requires_reply(ProtocolMessageTypes(message.type)):
@@ -597,6 +584,15 @@ class ChikServer:
             connection = self.all_connections[node_id]
             for message in messages:
                 await connection.send_message(message)
+
+    async def call_api_of_specific(
+        self, request_method: Callable[..., Awaitable[Optional[Message]]], message_data: Streamable, node_id: bytes32
+    ) -> Optional[Any]:
+        if node_id in self.all_connections:
+            connection = self.all_connections[node_id]
+            return await connection.call_api(request_method, message_data)
+
+        return None
 
     def get_connections(
         self, node_type: Optional[NodeType] = None, *, outbound: Optional[bool] = None

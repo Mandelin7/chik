@@ -16,7 +16,7 @@ from chik.util.errors import Err
 from chik.wallet.puzzles.load_klvm import load_klvm
 from chik.wallet.util.merkle_utils import build_merkle_tree, build_merkle_tree_from_binary_tree, simplify_merkle_proof
 
-GRAFTROOT_MOD = load_klvm("graftroot_dl_offers.clsp")
+GRAFTROOT_MOD = load_klvm("graftroot_dl_offers.clsp", package_or_requirement="chik.data_layer.puzzles")
 
 # Always returns the last value
 # (mod solution

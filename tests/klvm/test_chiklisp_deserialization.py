@@ -6,7 +6,7 @@ from chik.types.blockchain_format.program import INFINITE_COST, Program
 from chik.util.byte_types import hexstr_to_bytes
 from chik.wallet.puzzles.load_klvm import load_klvm
 
-DESERIALIZE_MOD = load_klvm("chiklisp_deserialisation.clsp", package_or_requirement="chik.wallet.puzzles")
+DESERIALIZE_MOD = load_klvm("chiklisp_deserialisation.clsp", package_or_requirement="chik.consensus.puzzles")
 
 
 def serialized_atom_overflow(size):
