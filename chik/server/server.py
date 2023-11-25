@@ -39,6 +39,7 @@ from chik.util.errors import Err, ProtocolError
 from chik.util.ints import uint16
 from chik.util.network import WebServer, is_in_network, is_localhost, is_trusted_peer
 from chik.util.ssl_check import verify_ssl_certs_and_keys
+from chik.util.streamable import Streamable
 
 max_message_size = 50 * 1024 * 1024  # 50MB
 
