@@ -57,7 +57,7 @@ dev_dependencies = [
     "pytest-cov==4.1.0",
     "pytest-mock==3.11.1",
     "pytest-monitor==1.6.6; sys_platform == 'linux'",
-    "pytest-xdist==3.3.1",
+    "pytest-xdist==3.5.0",
     "twine==4.0.2",
     "isort==5.12.0",
     "flake8==6.1.0",
