@@ -1,6 +1,6 @@
 # Chik-Blockchain
 
-**Chik** is a modern community-centric green cryptocurrency based on a proof-of-space-and-time consensus algorithm. 
+**Chik** is a modern community-centric green cryptocurrency based on a proof-of-space-and-time consensus algorithm.       
 
 For more information, see our website and downloads at <a href="https://www.chiknetwork.com">Chik Network</a>.
 <p>You can learn more in the Chik Wiki: <a href="https://github.com/Chik-Network/chik-blockchain/wiki/Chik-Blockchain-Wiki">Quick Start Guide</a></p>
